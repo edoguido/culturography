@@ -1,0 +1,81 @@
+{
+  "pre-pride": {
+    "gexf_file": "pre-pride-network.gexf",
+    "cluster_info": {
+      "cluster1": {
+        "name": "finance_cluster",
+        "description": "Description of the finance cluster",
+        "similarities": {
+          "cluster2": 0.2,
+          "cluster3": 0.9,
+          "cluster4": 0.1
+        },
+        "polygon": {
+          "type": "Feature",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [[[100.0, 0.0], [101.0], [101.0, 1.0]]]
+          },
+          "properties": {
+            "center_position": [100.0, 80.0]
+          }
+        }
+      },
+      "cluster2": {
+        "name": "climate_cluster",
+        "description": "Description of the climate cluster",
+        "similarities": {
+          "cluster1": 0.2,
+          "cluster3": 0.4,
+          "cluster4": 0.5
+        },
+        "polygon": {
+          "type": "Feature",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [100.0, 0.0],
+                [101.0, 0.0],
+                [101.0, 1.0]
+              ]
+            ]
+          },
+          "properties": {
+            "center_position": [93.0, 85.0]
+          }
+        }
+      }
+    }
+  },
+  "post-pride": {
+    "gexf_file": "post-pride-network.gexf",
+    "cluster_info": {
+      "cluster1": {
+        "name": "finance_cluster",
+        "description": "Description of the finance cluster",
+        "similarities": {
+          "cluster2": 0.9,
+          "cluster3": 0.2,
+          "cluster4": 0.4
+        },
+        "polygon": {
+          "type": "Feature",
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [900.0, 0.0],
+                [111.0, 20.0],
+                [141.0, 1.0]
+              ]
+            ]
+          },
+          "properties": {
+            "center_position": [99.0, 82.0]
+          }
+        }
+      }
+    }
+  }
+}
