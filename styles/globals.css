@@ -2,6 +2,9 @@
 
 :root {
   --font-family: 'Space Grotesk';
+  --nav-height: 64px;
+  --sidebar-width: 480px;
+  --timeline-height: 120px;
 }
 
 html,
