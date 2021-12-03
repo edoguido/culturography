@@ -1,3 +1,4 @@
-import ProjectPage from '@/views/[project]'
+import ProjectPage, { getStaticPaths, getStaticProps } from '@/views/[project]'
 
 export default ProjectPage
+export { getStaticPaths, getStaticProps }

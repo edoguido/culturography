@@ -8,15 +8,19 @@ import * as Styled from './styled'
 
 import { VizLayoutContext } from '@/context/vizLayoutContext'
 import { globalCSSVarToPixels } from 'utils/theme'
+import client from 'utils/cms'
 
-const ProjectPage = () => {
+const ProjectPage = ({ data }) => {
   const [layoutState, setLayoutState] = useState(null)
 
   useEffect(() => {
     setLayoutState({
       sidebarWidth: globalCSSVarToPixels('--sidebar-width'),
       read: true,
+      data,
     })
+
+    console.log(data)
   }, [])
 
   return (
@@ -32,6 +36,59 @@ const ProjectPage = () => {
       </DefaultLayout>
     )
   )
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: [{ params: { project: 'test-story' } }],
+    fallback: false,
+  }
+}
+
+export async function getStaticProps({ params: { project } }) {
+  const query = `
+  *[
+      _type == 'story' && slug.current == '${project}'
+    ]{
+      ...,
+      network_json {
+        ...,
+        asset ->
+      },
+      story_chapters[] {
+        ...,
+        left_network_shapefile {
+          asset ->
+        },
+        right_network_shapefile {
+          asset ->
+        },
+        content[] {
+          ...,
+          content[] {
+            ...,
+            _type == 'story.chart' => {
+              ...,
+              dataset {
+                ...,
+                asset ->
+              }
+            }
+          }
+        }
+      }
+    }
+  `
+
+  const params = {}
+
+  const [data] = await client.fetch(query, params)
+
+  return {
+    props: {
+      data: data,
+    },
+  }
 }
 
 export default ProjectPage
