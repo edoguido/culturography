@@ -1,15 +1,12 @@
-import { VizLayoutContext } from '@/context/vizLayoutContext'
+import { useVizLayout, VizLayoutContext } from '@/context/vizLayoutContext'
 import { useContext } from 'react'
 import * as Styled from './styled'
 
 const ModeSwitcher = () => {
-  const [layout, setLayout] = useContext(VizLayoutContext)
+  const [state, dispatch] = useVizLayout()
 
   function handleChangeLayout() {
-    setLayout((prev) => ({
-      ...prev,
-      read: !prev.read,
-    }))
+    dispatch({ type: 'TOGGLE_READ_MODE' })
   }
 
   return (
