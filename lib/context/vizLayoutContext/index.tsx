@@ -50,18 +50,27 @@ export const vizLayoutReducer = (state, action) => {
       return { ...payload }
     }
 
-    case 'TOGGLE_DEV':
+    case 'TOGGLE_DEV': {
       return {
         ...state,
         development: !state.development,
       }
+    }
 
-    case 'DEV_TOGGLE_READ_MODE':
+    case 'DEV_TOGGLE_READ_MODE': {
       if (state.development === false) return { ...state }
       return {
         ...state,
         read: !state.read,
       }
+    }
+
+    case 'SET_APP_STATE': {
+      return {
+        ...state,
+        appState: payload.appState,
+      }
+    }
 
     case 'TOGGLE_READ_MODE':
       return {
@@ -102,10 +111,58 @@ export const vizLayoutReducer = (state, action) => {
       }
     }
 
-    case 'UPDATE_STORY_CHAPTER': {
+    // case 'UPDATE_STORY_CHAPTER': {
+    //   const {
+    //     story: { chapter },
+    //     clusters: { left, right },
+    //   } = payload
+
+    //   return {
+    //     ...state,
+    //     story: {
+    //       ...state.story,
+    //       chapter,
+    //     },
+    //     clusters: {
+    //       ...state.clusters,
+    //       left,
+    //       right,
+    //     },
+    //   }
+    // }
+
+    // case 'UPDATE_STORY_BLOCK': {
+    //   const {
+    //     story: { block },
+    //     clusters: { network_control, highlight },
+    //   } = payload
+
+    //   return {
+    //     ...state,
+    //     story: {
+    //       ...state.story,
+    //       block,
+    //     },
+    //     clusters: {
+    //       ...state.clusters,
+    //       highlight: highlight || null,
+    //       left: {
+    //         ...state.clusters.left,
+    //         zoom: network_control?.left_cluster_zoom || null,
+    //       },
+    //       right: {
+    //         ...state.clusters.right,
+    //         zoom: network_control?.right_cluster_zoom || null,
+    //       },
+    //     },
+    //   }
+    // }
+
+    case 'UPDATE_STORY_DATA': {
       const {
-        story: { chapter },
-        clusters: { left, right },
+        story: { chapter, block },
+        clusters: { left_network_shapefile, right_network_shapefile },
+        block: { highlight, network_control },
       } = payload
 
       return {
@@ -113,25 +170,6 @@ export const vizLayoutReducer = (state, action) => {
         story: {
           ...state.story,
           chapter,
-        },
-        clusters: {
-          ...state.clusters,
-          left,
-          right,
-        },
-      }
-    }
-
-    case 'UPDATE_STORY_BLOCK': {
-      const {
-        story: { block },
-        clusters: { highlight, left, right },
-      } = payload
-
-      return {
-        ...state,
-        story: {
-          ...state.story,
           block,
         },
         clusters: {
@@ -139,11 +177,13 @@ export const vizLayoutReducer = (state, action) => {
           highlight: highlight || null,
           left: {
             ...state.clusters.left,
-            zoom: left?.zoom || null,
+            shapefile: left_network_shapefile,
+            zoom: network_control?.left_cluster_zoom || null,
           },
           right: {
             ...state.clusters.right,
-            zoom: right?.zoom || null,
+            shapefile: right_network_shapefile,
+            zoom: network_control?.right_cluster_zoom || null,
           },
         },
       }
