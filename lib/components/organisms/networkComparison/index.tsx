@@ -6,6 +6,9 @@ import * as Styled from './styled'
 const NetworkComparison = () => {
   const [layout] = useVizLayout()
 
+  const leftNetworkAssetConfig = JSON.stringify(layout.clusters.left, null, 2)
+  const rightNetworkAssetConfig = JSON.stringify(layout.clusters.right, null, 2)
+
   return (
     <Styled.NetworkComparisonWrapper
       initial={false}
@@ -19,10 +22,10 @@ const NetworkComparison = () => {
     >
       <Styled.NetworkComparisonContent>
         <Styled.NetworkComparisonSingleNetworkWrapper>
-          Network
+          <pre>{leftNetworkAssetConfig}</pre>
         </Styled.NetworkComparisonSingleNetworkWrapper>
         <Styled.NetworkComparisonSingleNetworkWrapper>
-          Network
+          <pre>{rightNetworkAssetConfig}</pre>
         </Styled.NetworkComparisonSingleNetworkWrapper>
       </Styled.NetworkComparisonContent>
     </Styled.NetworkComparisonWrapper>

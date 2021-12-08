@@ -46,8 +46,9 @@ export const vizLayoutReducer = (state, action) => {
   const { payload, type } = action
 
   switch (type.toUpperCase()) {
-    case 'SET':
-      return { ...action.payload }
+    case 'SET': {
+      return { ...payload }
+    }
 
     case 'TOGGLE_DEV':
       return {
@@ -117,6 +118,33 @@ export const vizLayoutReducer = (state, action) => {
           ...state.clusters,
           left,
           right,
+        },
+      }
+    }
+
+    case 'UPDATE_STORY_BLOCK': {
+      const {
+        story: { block },
+        clusters: { highlight, left, right },
+      } = payload
+
+      return {
+        ...state,
+        story: {
+          ...state.story,
+          block,
+        },
+        clusters: {
+          ...state.clusters,
+          highlight: highlight || null,
+          left: {
+            ...state.clusters.left,
+            zoom: left?.zoom || null,
+          },
+          right: {
+            ...state.clusters.right,
+            zoom: right?.zoom || null,
+          },
         },
       }
     }
