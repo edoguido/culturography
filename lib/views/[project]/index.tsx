@@ -12,24 +12,6 @@ import Nav from 'components/molecules/nav'
 import DevArea from 'components/atoms/devArea'
 import * as Styled from './styled'
 
-// function prepareStoryData(storyData) {
-//   const { story_chapters, ...rest } = storyData
-
-//   const storyChaptersWithRefs = story_chapters.map((chapter) => ({
-//     ...chapter,
-//     chapter_content: chapter.chapter_content.map((block) => ({
-//       ...block,
-//       ref: createRef(),
-//     })),
-//     ref: createRef(),
-//   }))
-
-//   return {
-//     ...rest,
-//     story_chapters: storyChaptersWithRefs,
-//   }
-// }
-
 const ProjectPage = ({ data }) => {
   const [state, dispatch] = useReducer(vizLayoutReducer, null)
 
