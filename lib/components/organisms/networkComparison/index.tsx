@@ -1,13 +1,19 @@
+import dynamic from 'next/dynamic'
+
+const SingleNetwork = dynamic(
+  () => import('components/molecules/singleNetwork'),
+  { ssr: false }
+)
+
+// import SingleNetwork from 'components/molecules/singleNetwork'
+import * as Styled from './styled'
+
+import { globalCSSVarToPixels } from 'utils/theme'
 import { motionOptions } from '@/const/motionProps'
 import { useVizLayout } from '@/context/vizLayoutContext'
-import { globalCSSVarToPixels } from 'utils/theme'
-import * as Styled from './styled'
 
 const NetworkComparison = () => {
   const [layout] = useVizLayout()
-
-  const leftNetworkAssetConfig = JSON.stringify(layout.clusters.left, null, 2)
-  const rightNetworkAssetConfig = JSON.stringify(layout.clusters.right, null, 2)
 
   return (
     <Styled.NetworkComparisonWrapper
@@ -22,11 +28,13 @@ const NetworkComparison = () => {
     >
       <Styled.NetworkComparisonContent>
         <Styled.NetworkComparisonSingleNetworkWrapper>
-          <pre>{leftNetworkAssetConfig}</pre>
+          {layout.clusters.left.shapefile && <SingleNetwork accessor="left" />}
         </Styled.NetworkComparisonSingleNetworkWrapper>
-        <Styled.NetworkComparisonSingleNetworkWrapper>
-          <pre>{rightNetworkAssetConfig}</pre>
-        </Styled.NetworkComparisonSingleNetworkWrapper>
+        {/* <Styled.NetworkComparisonSingleNetworkWrapper>
+          {layout.clusters.right.shapefile && (
+            <SingleNetwork accessor="right" />
+          )}
+        </Styled.NetworkComparisonSingleNetworkWrapper> */}
       </Styled.NetworkComparisonContent>
     </Styled.NetworkComparisonWrapper>
   )
