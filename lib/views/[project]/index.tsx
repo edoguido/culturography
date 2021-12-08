@@ -58,6 +58,11 @@ const ProjectPage = ({ data }) => {
       type: 'SET',
       payload: {
         development: false,
+        appState: {
+          ready: false,
+          fetching: false,
+          error: false,
+        },
         sidebarWidth: globalCSSVarToPixels('--sidebar-width'),
         read: true,
         story: { chapter: null, block: null, data: data },
