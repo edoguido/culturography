@@ -16,15 +16,17 @@ import * as Styled from './styled'
 
 const SERIALIZERS = {
   types: {
-    'story.chart': () => <p>A chart here!</p>,
+    'story.chart': function storyChart() {
+      return <p>A chart here</p>
+    },
   },
 }
 
 const Sidebar = () => {
   const [state, dispatch] = useVizLayout()
   const storyRef = useRef<HTMLDivElement>(null)
-  const [chapterIndex, setChapterIndex] = useState(null)
-  const [blockIndex, setBlockIndex] = useState(null)
+  const [chapterIndex, setChapterIndex] = useState(0)
+  const [blockIndex, setBlockIndex] = useState(0)
 
   const {
     story: { data },
@@ -44,6 +46,9 @@ const Sidebar = () => {
 
     return refs
   }, [])
+
+  //
+  // initializing listeners
 
   const checkChapters = useCallback(
     (scrollTop) => {
@@ -95,71 +100,60 @@ const Sidebar = () => {
     return () => window.cancelAnimationFrame(fid)
   }, [chapterIndex, blockIndex])
 
+  //
+  // update chapter and blocks
+
+  // useEffect(() => {
+  //   if (chapterIndex === null) return
+
+  //   const { left_network_shapefile, right_network_shapefile } =
+  //     data.story_chapters[chapterIndex]
+
+  //   dispatch({
+  //     type: 'UPDATE_STORY_CHAPTER',
+  //     payload: {
+  //       story: { chapter: chapterIndex },
+  //       clusters: {
+  //         left: { shapefile: left_network_shapefile, zoom: null },
+  //         right: { shapefile: right_network_shapefile, zoom: null },
+  //       },
+  //     },
+  //   })
+  // }, [chapterIndex])
+
+  // useEffect(() => {
+  //   if (blockIndex === null) return
+
+  //   const clustersPayload =
+  //     data.story_chapters[chapterIndex].chapter_content[blockIndex]
+
+  //   dispatch({
+  //     type: 'UPDATE_STORY_BLOCK',
+  //     payload: {
+  //       story: { block: blockIndex },
+  //       clusters: clustersPayload,
+  //     },
+  //   })
+  // }, [blockIndex])
+
   useEffect(() => {
-    if (chapterIndex === null) return
+    if (chapterIndex === null || blockIndex === null) return
 
-    // console.log('changing chapter', chapterIndex)
-
-    const { left_network_shapefile, right_network_shapefile } =
-      data.story_chapters[chapterIndex]
+    const clustersPayload = data.story_chapters[chapterIndex]
+    const blockPayload = clustersPayload.chapter_content[blockIndex]
 
     dispatch({
-      type: 'UPDATE_STORY_CHAPTER',
+      type: 'UPDATE_STORY_DATA',
       payload: {
-        story: { chapter: chapterIndex },
-        clusters: {
-          left: { shapefile: left_network_shapefile, zoom: null },
-          right: { shapefile: right_network_shapefile, zoom: null },
-        },
+        story: { chapter: chapterIndex, block: blockIndex },
+        clusters: clustersPayload,
+        block: blockPayload,
       },
     })
-  }, [chapterIndex])
+  }, [chapterIndex, blockIndex])
 
-  useEffect(() => {
-    if (blockIndex === null) return
-
-    // console.log('changing to block', blockIndex)
-
-    let dispatchActionPayload = {
-      story: { block: blockIndex },
-      clusters: {
-        highlight: { type: null, id: null },
-        left: null,
-        right: null,
-      },
-    }
-
-    const { highlight, network_control } =
-      data.story_chapters[chapterIndex].chapter_content[blockIndex]
-
-    // **                      ** //
-    // PLEASE REFACTOR THIS SHIT  //
-    // **                     ** //
-
-    dispatchActionPayload.story = { block: blockIndex }
-
-    if (network_control) {
-      dispatchActionPayload.clusters.left = {
-        zoom: network_control.left_cluster_zoom,
-      }
-
-      dispatchActionPayload.clusters.right = {
-        zoom: network_control.right_cluster_zoom,
-      }
-    }
-
-    if (highlight) {
-      dispatchActionPayload.clusters.highlight = {
-        type: 'cluster',
-        id: highlight,
-      }
-    }
-
-    dispatch({
-      type: 'UPDATE_STORY_BLOCK',
-      payload: dispatchActionPayload,
-    })
-  }, [blockIndex])
+  //
+  // initializing sidebar
 
   return (
     <Styled.SidebarWrapper
