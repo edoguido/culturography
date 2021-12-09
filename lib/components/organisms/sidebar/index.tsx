@@ -12,12 +12,13 @@ import { useVizLayout } from '@/context/vizLayoutContext'
 import { motionOptions } from '@/const/motionProps'
 
 import SidebarChapterSelector from 'components/molecules/sidebarChapterSelector'
+import ChartSerializer from 'components/molecules/chartSerializer'
 import * as Styled from './styled'
 
 const SERIALIZERS = {
   types: {
-    'story.chart': function storyChart() {
-      return <p>A chart here</p>
+    'story.chart': function storyChart(props) {
+      return <ChartSerializer {...props} />
     },
   },
 }
