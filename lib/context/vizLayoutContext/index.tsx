@@ -111,53 +111,6 @@ export const vizLayoutReducer = (state, action) => {
       }
     }
 
-    // case 'UPDATE_STORY_CHAPTER': {
-    //   const {
-    //     story: { chapter },
-    //     clusters: { left, right },
-    //   } = payload
-
-    //   return {
-    //     ...state,
-    //     story: {
-    //       ...state.story,
-    //       chapter,
-    //     },
-    //     clusters: {
-    //       ...state.clusters,
-    //       left,
-    //       right,
-    //     },
-    //   }
-    // }
-
-    // case 'UPDATE_STORY_BLOCK': {
-    //   const {
-    //     story: { block },
-    //     clusters: { network_control, highlight },
-    //   } = payload
-
-    //   return {
-    //     ...state,
-    //     story: {
-    //       ...state.story,
-    //       block,
-    //     },
-    //     clusters: {
-    //       ...state.clusters,
-    //       highlight: highlight || null,
-    //       left: {
-    //         ...state.clusters.left,
-    //         zoom: network_control?.left_cluster_zoom || null,
-    //       },
-    //       right: {
-    //         ...state.clusters.right,
-    //         zoom: network_control?.right_cluster_zoom || null,
-    //       },
-    //     },
-    //   }
-    // }
-
     case 'UPDATE_STORY_DATA': {
       const {
         story: { chapter, block },
