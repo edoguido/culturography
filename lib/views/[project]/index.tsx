@@ -15,26 +15,6 @@ import * as Styled from './styled'
 const ProjectPage = ({ data }) => {
   const [state, dispatch] = useReducer(vizLayoutReducer, null)
 
-  const devKeyPress = useCallback(
-    (e) => {
-      switch (e.code) {
-        case 'KeyD':
-          dispatch({
-            type: 'TOGGLE_DEV',
-          })
-          return
-        case 'KeyS':
-          dispatch({
-            type: 'DEV_TOGGLE_READ_MODE',
-          })
-          return
-        default:
-          return
-      }
-    },
-    [state]
-  )
-
   useEffect(() => {
     dispatch({
       type: 'SET',
