@@ -100,42 +100,6 @@ const Sidebar = () => {
     return () => window.cancelAnimationFrame(fid)
   }, [chapterIndex, blockIndex])
 
-  //
-  // update chapter and blocks
-
-  // useEffect(() => {
-  //   if (chapterIndex === null) return
-
-  //   const { left_network_shapefile, right_network_shapefile } =
-  //     data.story_chapters[chapterIndex]
-
-  //   dispatch({
-  //     type: 'UPDATE_STORY_CHAPTER',
-  //     payload: {
-  //       story: { chapter: chapterIndex },
-  //       clusters: {
-  //         left: { shapefile: left_network_shapefile, zoom: null },
-  //         right: { shapefile: right_network_shapefile, zoom: null },
-  //       },
-  //     },
-  //   })
-  // }, [chapterIndex])
-
-  // useEffect(() => {
-  //   if (blockIndex === null) return
-
-  //   const clustersPayload =
-  //     data.story_chapters[chapterIndex].chapter_content[blockIndex]
-
-  //   dispatch({
-  //     type: 'UPDATE_STORY_BLOCK',
-  //     payload: {
-  //       story: { block: blockIndex },
-  //       clusters: clustersPayload,
-  //     },
-  //   })
-  // }, [blockIndex])
-
   useEffect(() => {
     if (chapterIndex === null || blockIndex === null) return
 
