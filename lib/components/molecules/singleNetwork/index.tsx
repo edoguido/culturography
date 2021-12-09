@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react'
-import Graph from 'graphology'
-import gexf from 'graphology-gexf'
-import Sigma from 'sigma'
+
+// import Graph from 'graphology'
+// import gexf from 'graphology-gexf'
+// import Sigma from 'sigma'
 
 import { useVizLayout } from '@/context/vizLayoutContext'
 
@@ -20,7 +21,7 @@ const SingleNetwork = ({ accessor }) => {
         shapefile: { asset },
       } = clusterData
 
-      const dataset = JSON.parse(layout.story.data.story_chapters[0].dataset)
+      // const dataset = JSON.parse(layout.story.data.story_chapters[0].dataset)
 
       // const rawData = await fetch(
       //   `https://apicdn.sanity.io/${asset.path}`
@@ -28,6 +29,7 @@ const SingleNetwork = ({ accessor }) => {
       // console.log(dataset)
 
       // const graph = gexf.parse(Graph, dataset)
+
       // const gd = new Graph()
       // gd.import(dataset)
 
