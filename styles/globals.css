@@ -24,6 +24,11 @@ a {
 * {
   box-sizing: border-box;
 }
+
+button {
+  font-family: var(--font-family);
+}
+
 @media (max-width: 880px) {
   :root {
     --sidebar-width: '100%';
