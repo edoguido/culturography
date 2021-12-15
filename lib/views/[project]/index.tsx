@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer } from 'react'
+import { useEffect, useReducer } from 'react'
 
 import { VizLayoutContext, vizLayoutReducer } from '@/context/vizLayoutContext'
 import { globalCSSVarToPixels } from 'utils/theme'
@@ -52,6 +52,8 @@ const ProjectPage = ({ data }) => {
     )
   )
 }
+
+//
 
 export async function getStaticPaths() {
   return {
