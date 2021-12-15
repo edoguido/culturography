@@ -35,6 +35,7 @@ const NetworkComparison = () => {
             <SingleNetwork accessor="right" />
           )}
         </Styled.NetworkComparisonSingleNetworkWrapper> */}
+        <ProjectTimeline />
       </Styled.NetworkComparisonContent>
     </Styled.NetworkComparisonWrapper>
   )
