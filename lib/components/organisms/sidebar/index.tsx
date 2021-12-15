@@ -26,6 +26,7 @@ const SERIALIZERS = {
 const Sidebar = () => {
   const [state, dispatch] = useVizLayout()
   const storyRef = useRef<HTMLDivElement>(null)
+  const storyContentRef = useRef<HTMLDivElement>(null)
   const [chapterIndex, setChapterIndex] = useState(0)
   const [blockIndex, setBlockIndex] = useState(0)
 
@@ -33,56 +34,37 @@ const Sidebar = () => {
     story: { data },
   } = state
 
-  const chapterRefs = useMemo(
-    () => state.story.data.story_chapters.map(() => createRef()),
-    []
+  const storyRefs = useMemo(
+    () =>
+      state.story.data.story_chapters.map(({ chapter_content }) => ({
+        chapter: createRef(),
+        blocks: chapter_content.map(() => createRef()),
+      })),
+    [chapterIndex, blockIndex]
   )
-
-  const blockRefs = useMemo(() => {
-    const refs = []
-
-    state.story.data.story_chapters.map(({ chapter_content }) =>
-      chapter_content.map(() => refs.push(createRef()))
-    )
-
-    return refs
-  }, [])
 
   //
   // initializing listeners
 
-  const checkChapters = useCallback(
-    (scrollTop) => {
-      chapterRefs.map((ref, i) => {
+  const check = useCallback(
+    (refs, { trigger, callback, accessor = (d) => d }) => {
+      refs.map(accessor).map((ref, i) => {
         if (!ref.current) return
 
-        const refTop = ref.current.offsetTop
-        const refBottom = refTop + ref.current.offsetHeight
+        const { y, height } = ref.current.getBoundingClientRect()
 
-        if (scrollTop > refTop && scrollTop < refBottom) {
-          setChapterIndex((prev) => (prev === i ? prev : i))
+        if (trigger < y) return
+
+        // console.log(i, ref.current)
+        if (trigger > y && trigger < y + height) {
+          callback((prev) => {
+            return prev === i ? prev : i
+          })
           return
         }
       })
     },
-    [chapterIndex]
-  )
-
-  const checkBlocks = useCallback(
-    (scrollTop) => {
-      blockRefs.map((ref, i) => {
-        if (!ref.current) return
-
-        const refTop = ref.current.offsetTop
-        const refBottom = refTop + ref.current.offsetHeight
-
-        if (scrollTop > refTop && scrollTop < refBottom) {
-          setBlockIndex((prev) => (prev === i ? prev : i))
-          return
-        }
-      })
-    },
-    [blockIndex]
+    [storyRefs]
   )
 
   const onScroll = useCallback(() => {
@@ -90,10 +72,18 @@ const Sidebar = () => {
 
     if (!storyRef.current) return
 
-    const scrollTop = storyRef.current.scrollTop
+    const scrollTrigger = window.innerHeight / 2
 
-    checkChapters(scrollTop)
-    checkBlocks(scrollTop)
+    check(storyRefs, {
+      trigger: scrollTrigger,
+      callback: setChapterIndex,
+      accessor: (d) => d.chapter,
+    })
+
+    check(storyRefs[chapterIndex].blocks, {
+      trigger: scrollTrigger,
+      callback: setBlockIndex,
+    })
   }, [chapterIndex, blockIndex])
 
   useEffect(() => {
@@ -117,68 +107,64 @@ const Sidebar = () => {
     })
   }, [chapterIndex, blockIndex])
 
-  //
-  // initializing sidebar
-
   return (
     <Styled.SidebarWrapper
       ref={storyRef}
       animate={{
-        x: state.read ? 0 : state.sidebarWidth.value,
+        x: state.read ? 0 : '100%',
       }}
       transition={motionOptions}
     >
       <Styled.SidebarContent>
-        <SidebarChapterSelector />
+        <SidebarChapterSelector
+          forwardRef={storyContentRef}
+          storyRefs={storyRefs}
+        />
         {data.story_chapters && (
-          <Styled.SidebarStoryContent>
-            {data.story_chapters.map(
-              ({ chapter_title, chapter_content }, i: number) => {
-                return (
-                  <Styled.SidebarStoryChapterWrapper
-                    key={i}
-                    ref={chapterRefs[i]}
-                  >
-                    <Styled.SidebarStoryChapterTitle>
-                      {chapter_title}
-                    </Styled.SidebarStoryChapterTitle>
-                    {chapter_content.map(
-                      ({ block_title, block_content }, j: number) => {
-                        return (
-                          <Styled.SidebarStoryBlockWrapper
-                            key={j}
-                            ref={blockRefs[j]}
-                          >
-                            <Styled.SidebarStoryBlockTitle>
-                              {block_title}
-                            </Styled.SidebarStoryBlockTitle>
-                            {block_content.map((c, t: number) => (
-                              <Styled.SidebarStoryBlockContent key={t}>
-                                <BlockContent
-                                  blocks={c}
-                                  serializers={SERIALIZERS}
-                                />
-                              </Styled.SidebarStoryBlockContent>
-                            ))}
-                          </Styled.SidebarStoryBlockWrapper>
-                        )
-                      }
-                    )}
-                  </Styled.SidebarStoryChapterWrapper>
-                )
-              }
-            )}
-          </Styled.SidebarStoryContent>
+          <Styled.SidebarStoryWrapper ref={storyContentRef}>
+            <Styled.SidebarStoryContent>
+              {data.story_chapters.map(
+                ({ chapter_title, chapter_content }, i: number) => {
+                  return (
+                    <Styled.SidebarStoryChapterWrapper
+                      key={i}
+                      ref={storyRefs[i].chapter}
+                    >
+                      <Styled.SidebarStoryChapterTitle>
+                        {chapter_title}
+                      </Styled.SidebarStoryChapterTitle>
+                      {chapter_content.map(
+                        ({ block_title, block_content }, j: number) => {
+                          return (
+                            <Styled.SidebarStoryBlockWrapper
+                              key={j}
+                              ref={storyRefs[i].blocks[j]}
+                            >
+                              <Styled.SidebarStoryBlockTitle>
+                                {block_title}
+                              </Styled.SidebarStoryBlockTitle>
+                              {block_content.map((c, t: number) => (
+                                <Styled.SidebarStoryBlockContent key={t}>
+                                  <BlockContent
+                                    blocks={c}
+                                    serializers={SERIALIZERS}
+                                  />
+                                </Styled.SidebarStoryBlockContent>
+                              ))}
+                            </Styled.SidebarStoryBlockWrapper>
+                          )
+                        }
+                      )}
+                    </Styled.SidebarStoryChapterWrapper>
+                  )
+                }
+              )}
+            </Styled.SidebarStoryContent>
+          </Styled.SidebarStoryWrapper>
         )}
       </Styled.SidebarContent>
     </Styled.SidebarWrapper>
   )
-}
-
-const StoryChapter = () => {
-  const chapterRef = useRef()
-
-  return
 }
 
 export default Sidebar
