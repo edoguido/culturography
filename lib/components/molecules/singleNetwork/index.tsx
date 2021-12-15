@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
 
-// import Graph from 'graphology'
+import Graph from 'graphology'
 // import gexf from 'graphology-gexf'
-// import Sigma from 'sigma'
+import Sigma from 'sigma'
 
 import { useVizLayout } from '@/context/vizLayoutContext'
 
@@ -23,25 +23,34 @@ const SingleNetwork = ({ accessor }) => {
 
       // const dataset = JSON.parse(layout.story.data.story_chapters[0].dataset)
 
-      // const rawData = await fetch(
-      //   `https://apicdn.sanity.io/${asset.path}`
-      // ).then((res) => res.text())
-      // console.log(dataset)
+      const rawData = await fetch(
+        `https://apicdn.sanity.io/${asset.path}`
+      ).then((res) => res.json())
 
       // const graph = gexf.parse(Graph, dataset)
 
-      // const gd = new Graph()
-      // gd.import(dataset)
+      const dataset = {
+        nodes: rawData.nodes.map((n) => ({
+          ...n,
+          key: n.id,
+          attributes: {
+            x: n.x,
+            y: n.y,
+          },
+        })),
+        edges: rawData.edges.map((e) => ({
+          ...e,
+          key: e.id,
+        })),
+      }
 
-      // const graph = new Graph()
-      // graph.import(gd)
+      const graph = new Graph()
+      graph.import(dataset)
 
-      // const renderer = new Sigma(graph, ref.current)
+      const renderer = new Sigma(graph, ref.current)
       // renderer.refresh()
       // renderer.setSetting('labelRenderedSizeThreshold', 200)
 
-      // g.import(dataset)
-      // const renderer = new Sigma(dataset, ref.current)
       // const camera = renderer.getCamera()
     }
 
