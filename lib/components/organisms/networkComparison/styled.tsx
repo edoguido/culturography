@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
-import { getBreakpoint } from 'utils/theme'
+import { getBreakpoint, getColor } from 'utils/theme'
 
 export const NetworkComparisonSingleNetworkWrapper = styled.div`
   position: relative;
 
-  background-color: lightblue;
+  background-color: ${getColor('palette:white')};
 
   display: flex;
   flex: 1 0 auto;
@@ -27,9 +27,7 @@ export const NetworkComparisonContent = styled.div`
 
 export const NetworkComparisonWrapper = styled(motion.div)`
   position: fixed;
-  top: 0;
+  top: var(--nav-height);
   bottom: 0;
   left: 0;
-
-  padding-top: var(--nav-height);
 `
