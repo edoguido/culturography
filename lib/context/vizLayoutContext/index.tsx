@@ -115,7 +115,6 @@ export const vizLayoutReducer = (state, action) => {
       const {
         story: { chapter, block },
         clusters: { left_network_shapefile, right_network_shapefile },
-        block: { highlight, network_control },
       } = payload
 
       return {
@@ -127,16 +126,21 @@ export const vizLayoutReducer = (state, action) => {
         },
         clusters: {
           ...state.clusters,
-          highlight: highlight || null,
+          highlight: block?.highlight || state.clusters.highlight,
           left: {
             ...state.clusters.left,
-            shapefile: left_network_shapefile,
-            zoom: network_control?.left_cluster_zoom || null,
+            shapefile: left_network_shapefile || state.clusters.left.shapefile,
+            zoom:
+              block?.network_control?.left_cluster_zoom ||
+              state.clusters.left.zoom,
           },
           right: {
             ...state.clusters.right,
-            shapefile: right_network_shapefile,
-            zoom: network_control?.right_cluster_zoom || null,
+            shapefile:
+              right_network_shapefile || state.clusters.right.shapefile,
+            zoom:
+              block?.network_control?.right_cluster_zoom ||
+              state.clusters.right.zoom,
           },
         },
       }
