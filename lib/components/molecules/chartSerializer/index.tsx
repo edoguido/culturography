@@ -14,8 +14,6 @@ const ChartSerializer = (props) => {
   const { node, children } = props
   const { dataset, chart_type } = node
 
-  if (!CHART_TYPES[chart_type]) return null
-
   const [fetchedDataset, setFetchedDataset] = useState(null)
 
   useEffect(() => {
@@ -31,6 +29,8 @@ const ChartSerializer = (props) => {
 
     fetchDataAndSet()
   }, [])
+
+  if (!CHART_TYPES[chart_type]) return null
 
   return (
     fetchedDataset && (

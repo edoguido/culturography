@@ -45,6 +45,7 @@ const SingleNetwork = ({ accessor }) => {
       }
 
       const graph = new Graph()
+      // @ts-ignore
       graph.import(dataset)
 
       const renderer = new Sigma(graph, ref.current)

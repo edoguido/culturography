@@ -64,8 +64,6 @@ const ProjectTimeline = () => {
                       {networkKeys.map((n) => {
                         const dataFile = chapter[n.key]
 
-                        console.log(dataFile)
-
                         return (
                           <Styled.ProjectTimelineDataSnapshotNetworkDraggableSingleTile
                             key={n.key}
