@@ -187,9 +187,9 @@ const SingleNetwork = ({ accessor }) => {
 
       // const dataset = JSON.parse(layout.story.data.story_chapters[0].dataset)
 
-      const rawData = await fetch(
-        `https://apicdn.sanity.io/${asset.path}`
-      ).then((res) => res.json())
+      const rawData = await fetch(`https://apicdn.sanity.io/${asset.path}`, {
+        headers: { mode: 'no-cors' },
+      }).then((res) => res.json())
 
       setFetching(false)
 
