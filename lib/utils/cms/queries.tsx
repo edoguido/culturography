@@ -1,3 +1,7 @@
+export const ALL_PROJECTS_QUERY = `
+  *[ _type == 'story' ] { slug }
+`
+
 export const PROJECT_QUERY = (project) => `
 *[
     _type == 'story' && slug.current == '${project}'

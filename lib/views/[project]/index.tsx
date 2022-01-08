@@ -3,7 +3,7 @@ import { useEffect, useReducer } from 'react'
 import { VizLayoutContext, vizLayoutReducer } from '@/context/vizLayoutContext'
 import { globalCSSVarToPixels } from 'utils/theme'
 import client from 'utils/cms'
-import PROJECT_QUERY from 'utils/cms/queries'
+import PROJECT_QUERY, { ALL_PROJECTS_QUERY } from 'utils/cms/queries'
 
 import DefaultLayout from 'components/layout/main'
 import Sidebar from 'components/organisms/sidebar'
@@ -56,8 +56,13 @@ const ProjectPage = ({ data }) => {
 //
 
 export async function getStaticPaths() {
+  const query = ALL_PROJECTS_QUERY
+  const data = await client.fetch(query)
+
   return {
-    paths: [{ params: { project: 'test-story' } }],
+    paths: data.map(({ slug }) => ({
+      params: { project: slug.current },
+    })),
     fallback: false,
   }
 }
