@@ -153,7 +153,8 @@ const SingleNetwork = ({ accessor }) => {
 
     d3.select(svgRef.current)
       .transition()
-      .duration(1500)
+      .ease(d3.easeExpOut)
+      .duration(1000)
       .call(
         zoom.current.transform,
         d3.zoomIdentity
@@ -168,6 +169,7 @@ const SingleNetwork = ({ accessor }) => {
 
     d3.select(svgRef.current)
       .transition()
+      .ease(d3.easeExpOut)
       .duration(1000)
       .call(
         zoom.current.transform,
