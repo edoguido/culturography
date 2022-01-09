@@ -3,6 +3,7 @@ import * as d3 from 'd3'
 import * as PIXI from 'pixi.js'
 
 import { useVizLayout } from '@/context/vizLayoutContext'
+import { apiFetch } from 'utils/cms'
 
 const pointSize = 3
 const margin = {
@@ -187,14 +188,12 @@ const SingleNetwork = ({ accessor }) => {
 
       // const dataset = JSON.parse(layout.story.data.story_chapters[0].dataset)
 
-      const rawData = await fetch(`/api/${asset.assetId}`).then((res) =>
-        res.json()
-      )
+      const { nodes } = await apiFetch(asset.assetId)
 
       setFetching(false)
 
       // we only need nodes for now
-      return rawData.nodes
+      return nodes
     }
 
     const initializeRenderContext = (data) => {

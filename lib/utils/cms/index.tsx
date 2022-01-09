@@ -8,4 +8,8 @@ const client = sanityClient({
   useCdn: true, // `false` if you want to ensure fresh data
 })
 
+export const apiFetch = async (assetName) => {
+  return await fetch(`/api/${assetName}`).then((res) => res.json())
+}
+
 export default client
