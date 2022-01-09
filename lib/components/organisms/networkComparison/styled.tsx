@@ -4,6 +4,10 @@ import { getBreakpoint, getColor } from 'utils/theme'
 
 export const NetworkComparisonSingleNetworkWrapper = styled.div`
   position: relative;
+  margin: 0.25rem 0.5rem;
+
+  border-radius: 0.5rem;
+  overflow: hidden;
 
   background-color: ${getColor('palette:white')};
 
@@ -20,9 +24,9 @@ export const NetworkComparisonContent = styled.div`
   display: flex;
   flex-direction: column;
 
-  ${getBreakpoint('xl')} {
+  /* ${getBreakpoint('xl')} {
     flex-direction: row;
-  }
+  } */
 `
 
 export const NetworkComparisonWrapper = styled(motion.div)`
