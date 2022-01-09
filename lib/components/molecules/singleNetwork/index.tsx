@@ -45,21 +45,19 @@ const SingleNetwork = ({ accessor }) => {
 
     // const dataset = JSON.parse(layout.story.data.story_chapters[0].dataset)
 
-    const { nodes } = await apiFetch(asset.assetId)
+    const data = await apiFetch(asset.assetId)
 
     setFetching(false)
 
     // we only need nodes for now
-    return nodes
+    dataset.current = data.nodes
   }
 
   const pointColor = (condition) => {
     return condition ? 0xff0000 : 0x00ff00
   }
 
-  const initializeRenderContext = (data) => {
-    dataset.current = data
-
+  const initializeRenderContext = () => {
     // initiate app
     pixiApp.current = new PIXI.Application({
       antialias: true,
@@ -69,8 +67,6 @@ const SingleNetwork = ({ accessor }) => {
 
     // we make canvas match parent size
     resizeRenderer()
-
-    const { width, height } = wrapperRef.current.getBoundingClientRect()
 
     // initiate particles container
     pointsContainer.current = new PIXI.ParticleContainer(dataset.current, {
