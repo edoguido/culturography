@@ -1,4 +1,5 @@
 import { createElement, useEffect, useState } from 'react'
+import { apiFetch } from 'utils/cms'
 
 import BarChart from '../barChart'
 import SankeyChart from '../sankeyChart'
@@ -17,13 +18,8 @@ const ChartSerializer = (props) => {
   const [fetchedDataset, setFetchedDataset] = useState(null)
 
   useEffect(() => {
-    const { path } = dataset.asset
-
     const fetchDataAndSet = async () => {
-      const d = await fetch(`https://apicdn.sanity.io/${path}`).then((d) =>
-        d.json()
-      )
-
+      const d = await apiFetch(dataset.asset.assetId)
       setFetchedDataset(d)
     }
 
