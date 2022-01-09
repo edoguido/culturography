@@ -253,7 +253,7 @@ const SingleNetwork = ({ accessor }) => {
     fetchNetwork().then(initializeRenderContext)
 
     // reset viz when asset changes
-    return () => pixiApp.current.destroy(true, true)
+    return () => pixiApp.current?.destroy(true, true)
   }, [wrapperRef, assetId])
 
   // update zoom
