@@ -291,11 +291,14 @@ const SingleNetwork = ({ accessor }) => {
     const point = dataset.current[rid]
     const { x, y } = point
 
+    // we first have to update the zoom scales
+    updateZoomScales()
+
+    // then we assign the refreshed values
     const pointX = -xScaleZoom.current(x)
     const pointY = -yScaleZoom.current(y)
     const randomZoom = Math.ceil(Math.random() * 6)
 
-    updateZoomScales()
     highlightSinglePoint(rid)
     zoomTo(pointX, pointY, randomZoom)
   }, [wrapperRef, zoom, layout.story.block])
