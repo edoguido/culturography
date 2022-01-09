@@ -28,7 +28,7 @@ const SingleNetwork = ({ accessor }) => {
   const dataset = useRef(null)
   const pixiApp = useRef(null)
   const pointsContainer = useRef(null)
-  const pixiPoints = useRef([])
+  const pixiPoints = useRef(null)
 
   // d3 properties
   const xScale = useRef(null)
@@ -37,6 +37,73 @@ const SingleNetwork = ({ accessor }) => {
   const yScaleZoom = useRef(null)
   const zoom = useRef(null)
   const scaleFactor = useRef(null)
+
+  const fetchNetwork = async () => {
+    const {
+      shapefile: { asset },
+    } = clusterData
+
+    // const dataset = JSON.parse(layout.story.data.story_chapters[0].dataset)
+
+    const { nodes } = await apiFetch(asset.assetId)
+
+    setFetching(false)
+
+    // we only need nodes for now
+    return nodes
+  }
+
+  const initializeRenderContext = (data) => {
+    dataset.current = data
+
+    // initiate app
+    pixiApp.current = new PIXI.Application({
+      antialias: true,
+      backgroundAlpha: 0,
+      resolution: canvasResolution,
+    })
+
+    // we make canvas match parent size
+    resizeRenderer()
+
+    const { width, height } = wrapperRef.current.getBoundingClientRect()
+
+    // initiate particles container
+    pointsContainer.current = new PIXI.ParticleContainer(dataset.current, {
+      scale: true,
+      position: true,
+      rotation: true,
+      uvs: false,
+      alpha: true,
+    })
+
+    const circle = new PIXI.Graphics()
+    circle.lineStyle(1, 0x000000)
+    circle.beginFill(0xffffff, 0.5)
+    circle.drawCircle(0, 0, pointSize)
+    circle.endFill()
+
+    const pointTexture = pixiApp.current.renderer.generateTexture(circle)
+    pointTexture.mipmap = true
+
+    pixiPoints.current = dataset.current.map((d, id) => {
+      const pt = PIXI.Sprite.from(pointTexture)
+      pt.anchor.x = 0.5
+      pt.anchor.y = 0.5
+      pt.alpha = 1
+      pt.tint = xScale.current(d.x) > width / 2 ? 0xff0000 : 0x00ff00
+      pt.x = xScale.current(d.x)
+      pt.y = yScale.current(d.y)
+      // pt.selected = false
+      // pt.orig_idx = id
+      return pt
+    })
+
+    cleanStage()
+    initZoom()
+
+    wrapperRef.current.appendChild(pixiApp.current.view)
+  }
 
   const resizeRenderer = () => {
     // match
@@ -91,6 +158,8 @@ const SingleNetwork = ({ accessor }) => {
   }
 
   function drawPoints() {
+    if (!pixiPoints.current) return
+
     pixiPoints.current.forEach((pt, i) => {
       pt.position.set(
         xScaleZoom.current(dataset.current[i].x),
@@ -183,77 +252,13 @@ const SingleNetwork = ({ accessor }) => {
   useEffect(() => {
     if (!wrapperRef.current) return
 
-    const fetchNetwork = async () => {
-      const {
-        shapefile: { asset },
-      } = clusterData
-
-      // const dataset = JSON.parse(layout.story.data.story_chapters[0].dataset)
-
-      const { nodes } = await apiFetch(asset.assetId)
-
-      setFetching(false)
-
-      // we only need nodes for now
-      return nodes
-    }
-
-    const initializeRenderContext = (data) => {
-      dataset.current = data
-
-      // initiate app
-      pixiApp.current = new PIXI.Application({
-        antialias: true,
-        backgroundAlpha: 0,
-        resolution: canvasResolution,
-      })
-
-      // we make canvas match parent size
-      resizeRenderer()
-
-      const { width, height } = wrapperRef.current.getBoundingClientRect()
-
-      // initiate particles container
-      pointsContainer.current = new PIXI.ParticleContainer(dataset.current, {
-        scale: true,
-        position: true,
-        rotation: true,
-        uvs: false,
-        alpha: true,
-      })
-
-      const circle = new PIXI.Graphics()
-      circle.lineStyle(1, 0x000000)
-      circle.beginFill(0xffffff, 0.5)
-      circle.drawCircle(0, 0, pointSize)
-      circle.endFill()
-
-      const pointTexture = pixiApp.current.renderer.generateTexture(circle)
-      pointTexture.mipmap = true
-
-      pixiPoints.current = dataset.current.map((d, id) => {
-        const pt = PIXI.Sprite.from(pointTexture)
-        pt.anchor.x = 0.5
-        pt.anchor.y = 0.5
-        pt.alpha = 1
-        pt.tint = xScale.current(d.x) > width / 2 ? 0xff0000 : 0x00ff00
-        pt.x = xScale.current(d.x)
-        pt.y = yScale.current(d.y)
-        // pt.selected = false
-        // pt.orig_idx = id
-        return pt
-      })
-
-      cleanStage()
-      initZoom()
-
-      wrapperRef.current.appendChild(pixiApp.current.view)
-    }
-
     fetchNetwork().then(initializeRenderContext)
 
     // reset viz when asset changes
-    return () => pixiApp.current?.destroy(true, true)
+    return () => {
+      cleanStage()
+      pixiApp.current?.destroy(true, true)
+    }
   }, [wrapperRef, assetId])
 
   // update zoom
