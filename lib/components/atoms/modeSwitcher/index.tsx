@@ -14,9 +14,7 @@ const ModeSwitcher = () => {
       <Styled.ModeSwitcherToggle>
         <Styled.ModeSwitcherToggleRail />
         <Styled.ModeSwitcherToggleThumb
-          initial={{
-            scale: 0.9,
-          }}
+          initial={false}
           animate={{
             left: state.read ? 0 : '100%',
             x: '-50%',
