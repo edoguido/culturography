@@ -53,6 +53,10 @@ const SingleNetwork = ({ accessor }) => {
     return nodes
   }
 
+  const pointColor = (condition) => {
+    return condition ? 0xff0000 : 0x00ff00
+  }
+
   const initializeRenderContext = (data) => {
     dataset.current = data
 
@@ -91,7 +95,7 @@ const SingleNetwork = ({ accessor }) => {
       pt.anchor.x = 0.5
       pt.anchor.y = 0.5
       pt.alpha = 1
-      pt.tint = xScale.current(d.x) > width / 2 ? 0xff0000 : 0x00ff00
+      pt.tint = pointColor(xScale.current(d.x) > xScale.current.range()[1] / 2)
       pt.x = xScale.current(d.x)
       pt.y = yScale.current(d.y)
       // pt.selected = false
@@ -165,10 +169,26 @@ const SingleNetwork = ({ accessor }) => {
         xScaleZoom.current(dataset.current[i].x),
         yScaleZoom.current(dataset.current[i].y)
       )
-      // pt.x = xScaleZoom.current(dataset.current[i].x)
-      // pt.y = yScaleZoom.current(dataset.current[i].y)
       return pt
     })
+  }
+
+  const highlightSinglePoint = (idx) => {
+    pixiPoints.current.forEach((point, i) => {
+      point.tint = pointColor(
+        dataset.current[i].x > xScale.current.range()[1] / 2
+      )
+      // point.alpha = 0.05
+      point.scale.x = 1
+      point.scale.y = 1
+    })
+
+    const currentPoint = pixiPoints.current[idx]
+
+    currentPoint.tint = 0x0000ff
+    // currentPoint.alpha = 1
+    currentPoint.scale.x = 3
+    currentPoint.scale.y = 3
   }
 
   function initZoom() {
@@ -176,15 +196,15 @@ const SingleNetwork = ({ accessor }) => {
 
     zoom.current = d3
       .zoom()
-      .scaleExtent([1, 20])
-      .translateExtent([
-        [0, 0],
-        [width, height],
-      ])
-      .extent([
-        [margin.left, margin.top],
-        [width - margin.right, height - margin.top],
-      ])
+      .scaleExtent([1, 10])
+      // .translateExtent([
+      //   [0, 0],
+      //   [width, height],
+      // ])
+      // .extent([
+      //   [margin.left, margin.top],
+      //   [width - margin.right, height - margin.top],
+      // ])
       .on('zoom', zoomed)
 
     d3.select(svgRef.current).call(zoom.current)
@@ -220,21 +240,11 @@ const SingleNetwork = ({ accessor }) => {
   function zoomTo(x, y, z = 1) {
     const { width, height } = wrapperRef.current.getBoundingClientRect()
 
-    d3.select(svgRef.current)
-      .transition()
-      .ease(d3.easeExpOut)
-      .duration(1000)
-      .call(
-        zoom.current.transform,
-        d3.zoomIdentity
-          .translate(width / 2, height / 2)
-          .scale(z)
-          .translate(-x, -y)
-      )
-  }
+    const middleX = width / 2
+    const middleY = height / 2
 
-  function resetZoom() {
-    const { width, height } = wrapperRef.current.getBoundingClientRect()
+    const pointX = -xScale.current(x)
+    const pointY = -yScale.current(y)
 
     d3.select(svgRef.current)
       .transition()
@@ -242,12 +252,14 @@ const SingleNetwork = ({ accessor }) => {
       .duration(1000)
       .call(
         zoom.current.transform,
-        d3.zoomIdentity
-          .translate(width / 2, height / 2)
-          .scale(1)
-          .translate(-width / 2, -height / 2)
+        d3.zoomIdentity.translate(middleX, middleY).translate(pointX, pointY)
       )
   }
+
+  // function resetZoom() {
+  //   const { width, height } = wrapperRef.current.getBoundingClientRect()
+  //   zoomTo(xScale.current.invert(width / 2), yScale.current.invert(height / 2))
+  // }
 
   useEffect(() => {
     if (!wrapperRef.current) return
@@ -264,12 +276,18 @@ const SingleNetwork = ({ accessor }) => {
   // update zoom
   useEffect(() => {
     if (!wrapperRef.current || !zoom.current) return
+    const rid = Math.floor(Math.random() * dataset.current.length)
+    const point = dataset.current[rid]
+    const { x, y } = point
 
-    zoomTo(Math.random() * 400, Math.random() * 400)
+    highlightSinglePoint(rid)
+    zoomTo(x, y, 1)
   }, [wrapperRef, zoom, layout.story.block])
 
   // update canvas on resize
   useEffect(() => {
+    if (!wrapperRef.current) return
+
     function handleResize() {
       resizeRenderer()
       drawPoints()
@@ -277,7 +295,7 @@ const SingleNetwork = ({ accessor }) => {
 
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [])
+  }, [wrapperRef])
 
   return (
     <div
