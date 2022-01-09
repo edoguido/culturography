@@ -129,8 +129,7 @@ const SingleNetwork = ({ accessor }) => {
         d3.min(dataset.current, (d) => d.y),
       ])
 
-    xScaleZoom.current = xScale.current.copy()
-    yScaleZoom.current = yScale.current.copy()
+    updateZoomScales()
 
     // zoom.current
     //   .translateExtent([
@@ -159,6 +158,11 @@ const SingleNetwork = ({ accessor }) => {
       pointsContainer.current.removeChild(pointsContainer.current.children[0])
     }
     pixiPoints.current.forEach((p) => pointsContainer.current.addChild(p))
+  }
+
+  const updateZoomScales = () => {
+    xScaleZoom.current = xScale.current.copy()
+    yScaleZoom.current = yScale.current.copy()
   }
 
   function drawPoints() {
@@ -237,14 +241,11 @@ const SingleNetwork = ({ accessor }) => {
     drawPoints()
   }
 
-  function zoomTo(x, y, z = 1) {
+  function zoomTo(x, y, z) {
     const { width, height } = wrapperRef.current.getBoundingClientRect()
 
     const middleX = width / 2
     const middleY = height / 2
-
-    const pointX = -xScale.current(x)
-    const pointY = -yScale.current(y)
 
     d3.select(svgRef.current)
       .transition()
@@ -252,7 +253,7 @@ const SingleNetwork = ({ accessor }) => {
       .duration(1000)
       .call(
         zoom.current.transform,
-        d3.zoomIdentity.translate(middleX, middleY).translate(pointX, pointY)
+        d3.zoomIdentity.translate(middleX, middleY).scale(z).translate(x, y)
       )
   }
 
@@ -273,17 +274,6 @@ const SingleNetwork = ({ accessor }) => {
     }
   }, [wrapperRef, assetId])
 
-  // update zoom
-  useEffect(() => {
-    if (!wrapperRef.current || !zoom.current) return
-    const rid = Math.floor(Math.random() * dataset.current.length)
-    const point = dataset.current[rid]
-    const { x, y } = point
-
-    highlightSinglePoint(rid)
-    zoomTo(x, y, 1)
-  }, [wrapperRef, zoom, layout.story.block])
-
   // update canvas on resize
   useEffect(() => {
     if (!wrapperRef.current) return
@@ -296,6 +286,23 @@ const SingleNetwork = ({ accessor }) => {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [wrapperRef])
+
+  // update zoom
+  useEffect(() => {
+    if (!wrapperRef.current || !zoom.current) return
+
+    const rid = Math.floor(Math.random() * dataset.current.length)
+    const point = dataset.current[rid]
+    const { x, y } = point
+
+    const pointX = -xScaleZoom.current(x)
+    const pointY = -yScaleZoom.current(y)
+    const randomZoom = Math.ceil(Math.random() * 6)
+
+    updateZoomScales()
+    highlightSinglePoint(rid)
+    zoomTo(pointX, pointY, randomZoom)
+  }, [wrapperRef, zoom, layout.story.block])
 
   return (
     <div
