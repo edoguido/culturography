@@ -53,10 +53,6 @@ const SingleNetwork = ({ accessor }) => {
     dataset.current = data.nodes
   }
 
-  const pointColor = (condition) => {
-    return condition ? 0xff0000 : 0x00ff00
-  }
-
   const initializeRenderContext = () => {
     // initiate app
     pixiApp.current = new PIXI.Application({
@@ -105,6 +101,19 @@ const SingleNetwork = ({ accessor }) => {
     wrapperRef.current.appendChild(pixiApp.current.view)
   }
 
+  const cleanStage = () => {
+    // clean stage
+    while (pixiApp.current.stage.children[0]) {
+      pixiApp.current.stage.removeChild(pixiApp.current.stage.children[0])
+    }
+    pixiApp.current.stage.addChild(pointsContainer.current)
+
+    while (pointsContainer.current.children[0]) {
+      pointsContainer.current.removeChild(pointsContainer.current.children[0])
+    }
+    pixiPoints.current.forEach((p) => pointsContainer.current.addChild(p))
+  }
+
   const resizeRenderer = () => {
     // match
     const { width, height } = wrapperRef.current.getBoundingClientRect()
@@ -143,22 +152,8 @@ const SingleNetwork = ({ accessor }) => {
     pixiApp.current.renderer.resize(w, h)
   }
 
-  const cleanStage = () => {
-    // clean stage
-    while (pixiApp.current.stage.children[0]) {
-      pixiApp.current.stage.removeChild(pixiApp.current.stage.children[0])
-    }
-    pixiApp.current.stage.addChild(pointsContainer.current)
-
-    while (pointsContainer.current.children[0]) {
-      pointsContainer.current.removeChild(pointsContainer.current.children[0])
-    }
-    pixiPoints.current.forEach((p) => pointsContainer.current.addChild(p))
-  }
-
-  const updateZoomScales = () => {
-    xScaleZoom.current = xScale.current.copy()
-    yScaleZoom.current = yScale.current.copy()
+  const pointColor = (condition) => {
+    return condition ? 0xff0000 : 0x00ff00
   }
 
   function drawPoints() {
@@ -221,20 +216,9 @@ const SingleNetwork = ({ accessor }) => {
     zoom.current.filter(filterEvent)
   }
 
-  // called in every tick transition
-  function zoomed(event, d) {
-    scaleFactor.current = event.transform.k
-
-    const { width, height } = wrapperRef.current.getBoundingClientRect()
-
-    xScaleZoom.current.range(
-      [margin.left, width - margin.right].map((d) => event.transform.applyX(d))
-    )
-    yScaleZoom.current.range(
-      [margin.top, height - margin.bottom].map((d) => event.transform.applyY(d))
-    )
-
-    drawPoints()
+  const updateZoomScales = () => {
+    xScaleZoom.current = xScale.current.copy()
+    yScaleZoom.current = yScale.current.copy()
   }
 
   function zoomTo(x, y, z) {
@@ -254,9 +238,24 @@ const SingleNetwork = ({ accessor }) => {
   }
 
   // function resetZoom() {
-  //   const { width, height } = wrapperRef.current.getBoundingClientRect()
-  //   zoomTo(xScale.current.invert(width / 2), yScale.current.invert(height / 2))
+  //   zoomTo(0, 0, 1)
   // }
+
+  // called in every tick transition
+  function zoomed(event, d) {
+    scaleFactor.current = event.transform.k
+
+    const { width, height } = wrapperRef.current.getBoundingClientRect()
+
+    xScaleZoom.current.range(
+      [margin.left, width - margin.right].map((d) => event.transform.applyX(d))
+    )
+    yScaleZoom.current.range(
+      [margin.top, height - margin.bottom].map((d) => event.transform.applyY(d))
+    )
+
+    drawPoints()
+  }
 
   useEffect(() => {
     if (!wrapperRef.current) return
@@ -309,7 +308,6 @@ const SingleNetwork = ({ accessor }) => {
         position: 'relative',
         width: '100%',
         height: '100%',
-        border: '1px solid red',
       }}
     >
       {fetching && (
