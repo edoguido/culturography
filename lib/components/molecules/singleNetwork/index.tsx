@@ -64,54 +64,11 @@ const SingleNetwork = ({ accessor }) => {
     // we make canvas match parent size
     resizeRenderer()
 
-    // initiate particles container
-    pointsContainer.current = new PIXI.ParticleContainer(dataset.current, {
-      scale: true,
-      position: true,
-      rotation: true,
-      uvs: false,
-      alpha: true,
-    })
-
-    const circle = new PIXI.Graphics()
-    circle.lineStyle(1, 0x000000)
-    circle.beginFill(0xffffff, 0.5)
-    circle.drawCircle(0, 0, pointSize)
-    circle.endFill()
-
-    const pointTexture = pixiApp.current.renderer.generateTexture(circle)
-    pointTexture.mipmap = true
-
-    pixiPoints.current = dataset.current.map((d, id) => {
-      const pt = PIXI.Sprite.from(pointTexture)
-      pt.anchor.x = 0.5
-      pt.anchor.y = 0.5
-      pt.alpha = 1
-      pt.tint = pointColor(xScale.current(d.x) > xScale.current.range()[1] / 2)
-      pt.x = xScale.current(d.x)
-      pt.y = yScale.current(d.y)
-      // pt.selected = false
-      // pt.orig_idx = id
-      return pt
-    })
-
+    makeSprites()
     cleanStage()
     initZoom()
 
     wrapperRef.current.appendChild(pixiApp.current.view)
-  }
-
-  const cleanStage = () => {
-    // clean stage
-    while (pixiApp.current.stage.children[0]) {
-      pixiApp.current.stage.removeChild(pixiApp.current.stage.children[0])
-    }
-    pixiApp.current.stage.addChild(pointsContainer.current)
-
-    while (pointsContainer.current.children[0]) {
-      pointsContainer.current.removeChild(pointsContainer.current.children[0])
-    }
-    pixiPoints.current.forEach((p) => pointsContainer.current.addChild(p))
   }
 
   const resizeRenderer = () => {
@@ -152,6 +109,52 @@ const SingleNetwork = ({ accessor }) => {
     pixiApp.current.renderer.resize(w, h)
   }
 
+  const makeSprites = () => {
+    // initiate particles container
+    pointsContainer.current = new PIXI.ParticleContainer(dataset.current, {
+      scale: true,
+      position: true,
+      rotation: true,
+      uvs: false,
+      alpha: true,
+    })
+
+    const circle = new PIXI.Graphics()
+    circle.lineStyle(1, 0x000000)
+    circle.beginFill(0xffffff, 0.5)
+    circle.drawCircle(0, 0, pointSize)
+    circle.endFill()
+
+    const pointTexture = pixiApp.current.renderer.generateTexture(circle)
+    pointTexture.mipmap = true
+
+    pixiPoints.current = dataset.current.map((d, id) => {
+      const pt = PIXI.Sprite.from(pointTexture)
+      pt.anchor.x = 0.5
+      pt.anchor.y = 0.5
+      pt.alpha = 1
+      pt.tint = pointColor(xScale.current(d.x) > xScale.current.range()[1] / 2)
+      pt.x = xScale.current(d.x)
+      pt.y = yScale.current(d.y)
+      // pt.selected = false
+      // pt.orig_idx = id
+      return pt
+    })
+  }
+
+  const cleanStage = () => {
+    // clean stage
+    while (pixiApp.current.stage.children[0]) {
+      pixiApp.current.stage.removeChild(pixiApp.current.stage.children[0])
+    }
+    pixiApp.current.stage.addChild(pointsContainer.current)
+
+    while (pointsContainer.current.children[0]) {
+      pointsContainer.current.removeChild(pointsContainer.current.children[0])
+    }
+    pixiPoints.current.forEach((p) => pointsContainer.current.addChild(p))
+  }
+
   const pointColor = (condition) => {
     return condition ? 0xff0000 : 0x00ff00
   }
@@ -177,9 +180,7 @@ const SingleNetwork = ({ accessor }) => {
       point.scale.x = 1
       point.scale.y = 1
     })
-
     const currentPoint = pixiPoints.current[idx]
-
     currentPoint.tint = 0x0000ff
     // currentPoint.alpha = 1
     currentPoint.scale.x = 3
@@ -257,17 +258,40 @@ const SingleNetwork = ({ accessor }) => {
     drawPoints()
   }
 
-  useEffect(() => {
-    if (!wrapperRef.current) return
+  // this is for test purposes
+  const focusOnRandomPoint = () => {
+    const rid = Math.floor(Math.random() * dataset.current.length)
+    const point = dataset.current[rid]
 
-    fetchNetwork().then(initializeRenderContext)
+    highlightSinglePoint(rid)
+
+    // we first have to update the zoom scales
+    updateZoomScales()
+
+    // then we assign the refreshed values
+    const { x, y } = point
+    const pointX = -xScaleZoom.current(x)
+    const pointY = -yScaleZoom.current(y)
+    const randomZoom = Math.ceil(Math.random() * 6)
+
+    zoomTo(pointX, pointY, randomZoom)
+  }
+
+  useEffect(() => {
+    // if (!wrapperRef.current) return
+
+    fetchNetwork().then(() => {
+      initializeRenderContext()
+      focusOnRandomPoint()
+    })
 
     // reset viz when asset changes
     return () => {
-      cleanStage()
-      pixiApp.current?.destroy(true, true)
+      pixiPoints.current = null
+      pixiApp.current.destroy(true, true)
+      pixiApp.current = null
     }
-  }, [wrapperRef, assetId])
+  }, [wrapperRef, assetId, layout.story.chapter])
 
   // update canvas on resize
   useEffect(() => {
@@ -284,23 +308,9 @@ const SingleNetwork = ({ accessor }) => {
 
   // update zoom
   useEffect(() => {
-    if (!wrapperRef.current || !zoom.current) return
-
-    const rid = Math.floor(Math.random() * dataset.current.length)
-    const point = dataset.current[rid]
-    const { x, y } = point
-
-    // we first have to update the zoom scales
-    updateZoomScales()
-
-    // then we assign the refreshed values
-    const pointX = -xScaleZoom.current(x)
-    const pointY = -yScaleZoom.current(y)
-    const randomZoom = Math.ceil(Math.random() * 6)
-
-    highlightSinglePoint(rid)
-    zoomTo(pointX, pointY, randomZoom)
-  }, [wrapperRef, zoom, layout.story.block])
+    if (!pixiPoints.current) return
+    focusOnRandomPoint()
+  }, [wrapperRef, pixiPoints, layout.story.block])
 
   return (
     <div
