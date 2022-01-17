@@ -49,8 +49,10 @@ const SingleNetwork = ({ accessor }) => {
 
     setFetching(false)
 
+    const threshold = 100000
+
     // we only need nodes for now
-    dataset.current = data.nodes
+    dataset.current = data.nodes.slice(1, threshold)
   }
 
   const initializeRenderContext = () => {
