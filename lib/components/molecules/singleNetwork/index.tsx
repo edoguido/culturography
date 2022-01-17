@@ -209,6 +209,8 @@ const SingleNetwork = ({ accessor }) => {
 
     // remember to only filter if we're in story mode
     function filterEvent(event) {
+      if (!layout.read) return event
+
       return (
         event.type !== 'mousedown' &&
         event.type !== 'wheel' &&
