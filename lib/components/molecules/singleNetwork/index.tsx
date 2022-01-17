@@ -134,7 +134,7 @@ const SingleNetwork = ({ accessor }) => {
       const pt = PIXI.Sprite.from(pointTexture)
       pt.anchor.x = 0.5
       pt.anchor.y = 0.5
-      pt.alpha = 1
+      pt.alpha = 0.5
       pt.tint = pointColor(xScale.current(d.x) > xScale.current.range()[1] / 2)
       pt.x = xScale.current(d.x)
       pt.y = yScale.current(d.y)
@@ -158,7 +158,8 @@ const SingleNetwork = ({ accessor }) => {
   }
 
   const pointColor = (condition) => {
-    return condition ? 0xff0000 : 0x00ff00
+    return 0x666666
+    // return condition ? 0xff0000 : 0x00ff00
   }
 
   function drawPoints() {
