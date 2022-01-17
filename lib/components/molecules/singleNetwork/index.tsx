@@ -224,11 +224,14 @@ const SingleNetwork = ({ accessor }) => {
     yScaleZoom.current = yScale.current.copy()
   }
 
-  function zoomTo(x, y, z) {
+  function zoomTo(x: number, y: number, z: number) {
     const { width, height } = wrapperRef.current.getBoundingClientRect()
 
     const middleX = width / 2
     const middleY = height / 2
+
+    if (!x) x = -middleX
+    if (!y) y = -middleY
 
     d3.select(svgRef.current)
       .transition()
@@ -240,21 +243,26 @@ const SingleNetwork = ({ accessor }) => {
       )
   }
 
-  // function resetZoom() {
-  //   zoomTo(0, 0, 1)
-  // }
+  function resetZoom() {
+    zoomTo(null, null, 1)
+  }
 
   // called in every tick transition
-  function zoomed(event, d) {
-    scaleFactor.current = event.transform.k
+  function zoomed(event) {
+    scaleFactor.current = event.transform || scaleFactor.current
+    // const k = scaleFactor.current.k
 
     const { width, height } = wrapperRef.current.getBoundingClientRect()
 
     xScaleZoom.current.range(
-      [margin.left, width - margin.right].map((d) => event.transform.applyX(d))
+      [margin.left, width - margin.right].map((d) =>
+        scaleFactor.current.applyX(d)
+      )
     )
     yScaleZoom.current.range(
-      [margin.top, height - margin.bottom].map((d) => event.transform.applyY(d))
+      [margin.top, height - margin.bottom].map((d) =>
+        scaleFactor.current.applyY(d)
+      )
     )
 
     drawPoints()
