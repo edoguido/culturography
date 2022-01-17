@@ -192,8 +192,6 @@ const SingleNetwork = ({ accessor }) => {
   }
 
   function initZoom() {
-    const { width, height } = wrapperRef.current.getBoundingClientRect()
-
     zoom.current = d3
       .zoom()
       .scaleExtent([1, 10])
