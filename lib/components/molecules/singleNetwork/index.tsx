@@ -314,7 +314,8 @@ const SingleNetwork = ({ accessor }) => {
   useEffect(() => {
     if (!wrapperRef.current) return
 
-    function handleResize() {
+    function handleResize(event) {
+      zoomed(event)
       resizeRenderer()
       drawPoints()
     }
