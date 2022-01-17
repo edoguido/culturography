@@ -284,7 +284,7 @@ const SingleNetwork = ({ accessor }) => {
 
     fetchNetwork().then(() => {
       initializeRenderContext()
-      focusOnRandomPoint()
+      // focusOnRandomPoint()
     })
 
     // reset viz when asset changes
