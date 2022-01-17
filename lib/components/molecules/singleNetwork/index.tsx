@@ -305,6 +305,11 @@ const SingleNetwork = ({ accessor }) => {
     }
   }, [wrapperRef, assetId, layout.story.chapter])
 
+  //
+  useEffect(() => {
+    initZoom()
+  }, [layout.read])
+
   // update canvas on resize
   useEffect(() => {
     if (!wrapperRef.current) return
