@@ -94,6 +94,7 @@ const SingleNetwork = ({ accessor }) => {
       ])
 
     updateZoomScales()
+    resetZoom()
 
     // zoom.current
     //   .translateExtent([
