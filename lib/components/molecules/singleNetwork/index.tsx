@@ -290,7 +290,7 @@ const SingleNetwork = ({ accessor }) => {
     // reset viz when asset changes
     return () => {
       pixiPoints.current = null
-      pixiApp.current.destroy(true, true)
+      pixiApp.current?.destroy(true, true)
       pixiApp.current = null
     }
   }, [wrapperRef, assetId, layout.story.chapter])
