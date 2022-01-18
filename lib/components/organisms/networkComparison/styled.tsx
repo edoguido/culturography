@@ -24,9 +24,9 @@ export const NetworkComparisonContent = styled.div`
   display: flex;
   flex-direction: column;
 
-  /* ${getBreakpoint('xl')} {
+  ${getBreakpoint('xl')} {
     flex-direction: row;
-  } */
+  }
 `
 
 export const NetworkComparisonWrapper = styled(motion.div)`
