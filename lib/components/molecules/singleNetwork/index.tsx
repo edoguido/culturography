@@ -45,9 +45,11 @@ const SingleNetwork = ({ accessor }) => {
 
     // const dataset = JSON.parse(layout.story.data.story_chapters[0].dataset)
 
-    const data = await fetch(`https://apicdn.sanity.io/${asset.path}`).then(
-      (r) => r.json()
-    )
+    const data = await fetch(`https://apicdn.sanity.io/${asset.path}`, {
+      headers: {
+        accepts: 'application/json',
+      },
+    }).then((r) => r.json())
 
     setFetching(false)
 
