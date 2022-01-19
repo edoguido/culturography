@@ -5,6 +5,7 @@ export const NavProjectName = styled.h2`
   font-size: 1rem;
 
   background-color: ${getColor('palette:orange')};
+  color: ${getColor('palette:black')};
   padding: 0.3125rem 1rem;
   border-radius: 99rem;
   margin-left: 0.5rem;
