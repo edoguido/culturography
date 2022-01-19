@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
+import { getColor } from 'utils/theme'
 
 export const SidebarStoryBlockContent = styled.div`
   :not(:last-child) {
@@ -17,7 +18,7 @@ export const SidebarStoryChapterWrapper = styled.div``
 
 export const SidebarStoryContent = styled.div`
   padding: 0.85rem;
-  padding-bottom: 4rem;
+  padding-bottom: calc(50vh - var(--nav-height));
 `
 
 export const SidebarStoryWrapper = styled.div`
@@ -26,15 +27,15 @@ export const SidebarStoryWrapper = styled.div`
 
   flex: 1 0 auto;
 
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: auto;
 `
 
 export const SidebarContent = styled.div`
   /* padding-top: var(--nav-height); */
   height: 100%;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-column: 1fr auto;
 `
 
 export const SidebarWrapper = styled(motion.div)`
@@ -48,5 +49,5 @@ export const SidebarWrapper = styled(motion.div)`
   width: var(--sidebar-width);
   max-height: 100vh;
 
-  background-color: white;
+  background-color: ${getColor('lightBackground')};
 `
