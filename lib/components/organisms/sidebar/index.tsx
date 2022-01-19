@@ -36,9 +36,9 @@ const Sidebar = () => {
 
   const storyRefs = useMemo(
     () =>
-      state.story.data.story_chapters.map(({ chapter_content }) => ({
+      state.story.data.story_chapters.map(({ blocks }) => ({
         chapter: createRef(),
-        blocks: chapter_content.map(() => createRef()),
+        blocks: blocks.map(() => createRef()),
       })),
     [chapterIndex, blockIndex]
   )
@@ -55,7 +55,6 @@ const Sidebar = () => {
 
         if (trigger < y) return
 
-        // console.log(i, ref.current)
         if (trigger > y && trigger < y + height) {
           callback((prev) => {
             return prev === i ? prev : i
@@ -94,8 +93,9 @@ const Sidebar = () => {
   useEffect(() => {
     if (chapterIndex === null || blockIndex === null) return
 
-    const clustersPayload = data.story_chapters[chapterIndex]
-    const blockPayload = clustersPayload.chapter_content[blockIndex]
+    const currentChapter = data.story_chapters[chapterIndex]
+    const clustersPayload = currentChapter.networks
+    const blockPayload = currentChapter.blocks[blockIndex]
 
     dispatch({
       type: 'UPDATE_STORY_DATA',
@@ -124,7 +124,7 @@ const Sidebar = () => {
           <Styled.SidebarStoryWrapper ref={storyContentRef}>
             <Styled.SidebarStoryContent>
               {data.story_chapters.map(
-                ({ chapter_title, chapter_content }, i: number) => {
+                ({ chapter_title, blocks }, i: number) => {
                   return (
                     <Styled.SidebarStoryChapterWrapper
                       key={i}
@@ -133,7 +133,7 @@ const Sidebar = () => {
                       <Styled.SidebarStoryChapterTitle>
                         {chapter_title}
                       </Styled.SidebarStoryChapterTitle>
-                      {chapter_content.map(
+                      {blocks.map(
                         ({ block_title, block_content }, j: number) => {
                           return (
                             <Styled.SidebarStoryBlockWrapper
