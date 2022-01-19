@@ -6,7 +6,7 @@ import * as d3annotation from 'd3-svg-annotation'
 import { useVizLayout } from '@/context/vizLayoutContext'
 // import { apiFetch } from 'utils/cms'
 
-const MAX_NODES = 200000
+const MAX_NODES = 60000
 const MIN_SIMILARITY_THRESHOLD = 0.2
 const INITIAL_POINT_ALPHA = 0.5
 
@@ -321,6 +321,8 @@ const SingleNetwork = ({ accessor }) => {
 
     // remember to only filter interactions if we're in story mode
     function filterZoomEvent(event) {
+      return event
+
       if (!layout.read) return event
 
       return (
@@ -377,6 +379,7 @@ const SingleNetwork = ({ accessor }) => {
     )
 
     updatePointsPosition()
+    repositionAnnotations()
   }
 
   // // this is for test purposes
@@ -412,20 +415,33 @@ const SingleNetwork = ({ accessor }) => {
 
         return true
       })
-      .map(({ clusterId, name, shape }) => {
+      .map((d) => {
+        const { clusterId, name, shape } = d
+
         const clusterProps = currentNetworkClusters.cluster_info[clusterId]
+
+        d.x = xScaleZoom.current(shape[0]) + 80
+        d.y = yScaleZoom.current(shape[1]) + 180
+        d.dx = 40
+        d.dy = 40
 
         return {
           note: {
             label: clusterProps?.name || '',
           },
           color: 'white',
-          x: xScaleZoom.current(shape[0]) + 80,
-          y: yScaleZoom.current(shape[1]) + 180,
-          dx: 40,
-          dy: 40,
+          x: d.x,
+          y: d.y,
+          dx: d.dx,
+          dy: d.dy,
           type: d3annotation.annotationCalloutCircle,
           subject: { radius: 50, radiusPadding: 10 },
+          data: {
+            x0: d.x,
+            y0: d.y,
+            dx0: d.dx,
+            dy0: d.dy,
+          },
         }
       })
 
@@ -442,15 +458,19 @@ const SingleNetwork = ({ accessor }) => {
       .call(annotationsMaker.current)
   }
 
-  const updateAnnotations = () => {
+  const refreshAnnotations = () => {
     clearAnnotations()
     if (isHighlightingCluster) showAnnotations()
-    // if (!highlightedClusterSimilarities)
-    //   d3.select('.annotation-group').attr('opacity', 0)
+  }
 
-    // const annotations = clusterAnnotations(clusters.current)
-    // annotationsMaker.current.annotations(annotations)
-    // annotationsMaker.current.update()
+  const repositionAnnotations = () => {
+    annotationsMaker.current.annotations().forEach((d) => {
+      d.x = xScaleZoom.current(d.data.x0)
+      d.y = yScaleZoom.current(d.data.y0)
+      d.dx = d.data.dx0
+      d.dy = d.data.dy0
+    })
+    annotationsMaker.current.update()
   }
 
   const clearAnnotations = () => {
@@ -489,6 +509,7 @@ const SingleNetwork = ({ accessor }) => {
       zoomed(event)
       resizeRenderer()
       updatePointsPosition()
+      repositionAnnotations()
     }
 
     window.addEventListener('resize', handleResize)
@@ -500,7 +521,8 @@ const SingleNetwork = ({ accessor }) => {
     if (!pixiPoints.current) return
     updatePointsColor()
     // focusOnRandomPoint()
-    updateAnnotations()
+    resetZoom()
+    refreshAnnotations()
   }, [wrapperRef, pixiPoints, layout.story.block])
 
   return (
@@ -517,7 +539,8 @@ const SingleNetwork = ({ accessor }) => {
             position: 'absolute',
             inset: 0,
             zIndex: 100000,
-            backgroundColor: 'white',
+            color: 'white',
+            backgroundColor: 'black',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
