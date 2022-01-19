@@ -8,7 +8,7 @@ export const NetworkComparisonSingleNetworkWrapper = styled.div`
   border-radius: 0.5rem;
   overflow: hidden;
 
-  background-color: ${getColor('palette:white')};
+  background-color: ${getColor('palette:black')};
 
   display: flex;
   flex: 1 0 auto;
