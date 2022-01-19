@@ -9,7 +9,7 @@ import DefaultLayout from 'components/layout/main'
 import Sidebar from 'components/organisms/sidebar'
 import NetworkComparison from 'components/organisms/networkComparison'
 import Nav from 'components/molecules/nav'
-import DevArea from 'components/atoms/devArea'
+// import DevArea from 'components/atoms/devArea'
 import * as Styled from './styled'
 
 const ProjectPage = ({ data }) => {
