@@ -6,21 +6,29 @@ export const PROJECT_QUERY = (project) => `
 *[
     _type == 'story' && slug.current == '${project}'
   ]{
-    ...,
-    network_json {
-      ...,
+    slug {
+      current
+    },
+    title,
+    network_metadata {
       asset ->
     },
     story_chapters[] {
-      ...,
-      left_network_shapefile {
-        asset ->
+      chapter_title,
+      snapshot_date,
+      networks {
+        left_network_name,
+        left_network_shapefile {
+          asset ->
+        },
+        right_network_name,
+        right_network_shapefile {
+          asset ->
+        }
       },
-      right_network_shapefile {
-        asset ->
-      },
-      chapter_content[] {
-        ...,
+      blocks[] {
+        network_control,
+        block_title,
         block_content[] {
           ...,
           _type == 'story.chart' => {
@@ -30,7 +38,7 @@ export const PROJECT_QUERY = (project) => `
               asset ->
             }
           }
-        }
+        },
       }
     }
   }
