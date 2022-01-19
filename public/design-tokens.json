@@ -30,12 +30,17 @@
     "background": {
       "description": null,
       "type": "color",
-      "value": "#f2f2f2ff"
+      "value": "#000000"
+    },
+    "lightBackground": {
+      "description": null,
+      "type": "color",
+      "value": "#222222"
     },
     "text": {
       "description": null,
       "type": "color",
-      "value": "#000000ff"
+      "value": "#ffffff"
     },
     "roskildeOrange": {
       "description": null,
@@ -43,6 +48,11 @@
       "value": "#ee7203ff"
     },
     "palette": {
+      "black": {
+        "description": null,
+        "type": "color",
+        "value": "#000000ff"
+      },
       "green": {
         "description": null,
         "type": "color",
