@@ -1,31 +1,87 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import * as d3 from 'd3'
 import * as PIXI from 'pixi.js'
 
 import { useVizLayout } from '@/context/vizLayoutContext'
-import { apiFetch } from 'utils/cms'
+// import { apiFetch } from 'utils/cms'
 
-const pointSize = 3
+const MAX_NODES = 100000
+const MIN_SIMILARITY_THRESHOLD = 0.1
+const INITIAL_POINT_ALPHA = 0.5
+
+const canvasResolution = 2
+const pointSize = 0.75
+
 const margin = {
   top: 10,
   right: 10,
   bottom: 10,
   left: 10,
 }
-const canvasResolution = 1
 
 const SingleNetwork = ({ accessor }) => {
   const [layout] = useVizLayout()
+  const [fetching, setFetching] = useState(true)
+
   const clusterData = layout.clusters[accessor]
   const assetId = clusterData.shapefile.asset.assetId
 
-  const [fetching, setFetching] = useState(true)
+  const isSourceNetwork = accessor === 'left'
+  const chapters = layout.story.data.story_chapters
+  const currentChapter = chapters[layout.story.chapter]
+  const networkName = `${accessor}_network_name`
+  const network = currentChapter.networks[networkName]
+  // const metadata = layout.clusters.metadata.find(({ name }) => name === network)
 
+  const highlightedClusterIndex = layout.clusters.highlight
+
+  const highlightedCluster = useMemo(() => {
+    if (!highlightedClusterIndex) return [null, { similarities: null }]
+    if (highlightedClusterIndex === 'all') return [null, { similarities: null }]
+    return Object.entries(
+      layout.clusters.metadata.find(({ name }) => name !== network).cluster_info
+    )[highlightedClusterIndex - 1]
+  }, [highlightedClusterIndex])
+
+  const highlightedClusterId: any = highlightedCluster[0]
+  const highlightedClusterData: any = highlightedCluster[1]
+  const highlightedClusterSimilarities: object =
+    highlightedClusterData.similarities
+
+  // // means we're focusing on one cluster
+  // const isHighlightingCluster = typeof highlightedClusterId === 'string'
+
+  const allClusters = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          layout.clusters.metadata
+            ?.map(({ cluster_info }) => {
+              return Object.keys(cluster_info)
+            })
+            .flat()
+        )
+      ),
+    [layout.clusters?.metadata]
+  )
+
+  const colorScale = d3
+    .scaleSequentialQuantile(d3.interpolateSinebow)
+    .domain(allClusters)
+
+  const alphaScale = d3
+    .scaleLog()
+    .domain([MIN_SIMILARITY_THRESHOLD, 1])
+    .range([0, 1])
+
+  //
+  // refs
   const wrapperRef = useRef(null)
   const svgRef = useRef(null)
 
   // references to viz elements
   const dataset = useRef(null)
+  const clusters = useRef(null)
   const pixiApp = useRef(null)
   const pointsContainer = useRef(null)
   const pixiPoints = useRef(null)
@@ -37,6 +93,62 @@ const SingleNetwork = ({ accessor }) => {
   const yScaleZoom = useRef(null)
   const zoom = useRef(null)
   const scaleFactor = useRef(null)
+
+  const formatColor = useCallback(
+    (rgbString) =>
+      Number(d3.color(colorScale(rgbString)).formatHex().replace('#', '0x')),
+    []
+  )
+
+  const pointColor = (clusterNumber) => {
+    switch (highlightedClusterIndex) {
+      case null:
+        return 0xffffff
+      case 'all':
+        const belongsToObservedCluster = allClusters.findIndex(
+          (n) => n == clusterNumber
+        )
+        if (!belongsToObservedCluster) return 0xffffff
+
+        return formatColor(clusterNumber)
+      default:
+        if (isSourceNetwork) return formatColor(highlightedClusterId)
+        const output = highlightedClusterSimilarities[clusterNumber]
+        if (!output || output < MIN_SIMILARITY_THRESHOLD) return 0x000000
+
+        return formatColor(highlightedClusterId)
+    }
+  }
+
+  const pointAlpha = (clusterNumber) => {
+    switch (highlightedClusterIndex) {
+      case null:
+        return INITIAL_POINT_ALPHA
+      case 'all':
+        return INITIAL_POINT_ALPHA
+      default:
+        // point belongs to selected cluster
+        if (clusterNumber == highlightedClusterId) return INITIAL_POINT_ALPHA
+        // point is from source network but does not belong to selected cluster
+        if (isSourceNetwork && clusterNumber != highlightedClusterId) return 0
+
+        const output = highlightedClusterSimilarities[clusterNumber]
+
+        // point has no similarity with selected cluster
+        if (!output) return 0
+        // point has too low similarity with selected cluster
+        if (output < MIN_SIMILARITY_THRESHOLD) return 0
+
+        return alphaScale(output)
+    }
+  }
+
+  const updatePointsColor = async () => {
+    pixiPoints.current.forEach((pt) => {
+      pt.tint = pointColor(pt.cluster)
+      pt.alpha = pointAlpha(pt.cluster)
+    })
+  }
 
   const fetchNetwork = async () => {
     const {
@@ -51,20 +163,19 @@ const SingleNetwork = ({ accessor }) => {
       },
     }).then((r) => r.json())
 
+    dataset.current = data.nodes?.slice(0, MAX_NODES) || []
+    clusters.current = data.meta?.clusters
+
     setFetching(false)
-
-    const threshold = 100000
-
-    // we only need nodes for now
-    dataset.current = data.nodes.slice(1, threshold)
   }
 
   const initializeRenderContext = () => {
     // initiate app
     pixiApp.current = new PIXI.Application({
-      antialias: true,
-      backgroundAlpha: 0,
-      resolution: canvasResolution,
+      antialias: false,
+      backgroundAlpha: 1,
+      backgroundColor: 0x000000,
+      resolution: window.devicePixelRatio || canvasResolution,
     })
 
     // we make canvas match parent size
@@ -127,26 +238,26 @@ const SingleNetwork = ({ accessor }) => {
     })
 
     const circle = new PIXI.Graphics()
-    circle.lineStyle(1, 0x000000)
-    circle.beginFill(0xffffff, 0.5)
+    // circle.lineStyle(1, 0x000000)
+    circle.beginFill(0xffffff, 1)
     circle.drawCircle(0, 0, pointSize)
     circle.endFill()
 
     const pointTexture = pixiApp.current.renderer.generateTexture(circle)
     pointTexture.mipmap = true
 
-    pixiPoints.current = dataset.current.map((d, id) => {
+    pixiPoints.current = dataset.current.map((d) => {
       const pt = PIXI.Sprite.from(pointTexture)
       pt.anchor.x = 0.5
       pt.anchor.y = 0.5
       pt.alpha = 0.5
-      pt.tint = pointColor(xScale.current(d.x) > xScale.current.range()[1] / 2)
-      pt.x = xScale.current(d.x)
-      pt.y = yScale.current(d.y)
-      // pt.selected = false
+      // @ts-ignore
+      pt.cluster = d.cluster
       // pt.orig_idx = id
       return pt
     })
+
+    updatePointsColor()
   }
 
   const cleanStage = () => {
@@ -162,12 +273,7 @@ const SingleNetwork = ({ accessor }) => {
     pixiPoints.current.forEach((p) => pointsContainer.current.addChild(p))
   }
 
-  const pointColor = (condition) => {
-    return 0x666666
-    // return condition ? 0xff0000 : 0x00ff00
-  }
-
-  function drawPoints() {
+  const updatePointsPosition = () => {
     if (!pixiPoints.current) return
 
     pixiPoints.current.forEach((pt, i) => {
@@ -179,23 +285,20 @@ const SingleNetwork = ({ accessor }) => {
     })
   }
 
-  const highlightSinglePoint = (idx) => {
-    pixiPoints.current.forEach((point, i) => {
-      point.tint = pointColor(
-        dataset.current[i].x > xScale.current.range()[1] / 2
-      )
-      // point.alpha = 0.05
-      point.scale.x = 1
-      point.scale.y = 1
-    })
-    const currentPoint = pixiPoints.current[idx]
-    currentPoint.tint = 0x0000ff
-    // currentPoint.alpha = 1
-    currentPoint.scale.x = 3
-    currentPoint.scale.y = 3
-  }
+  // const highlightSinglePoint = (idx) => {
+  //   pixiPoints.current.forEach((point, i) => {
+  //     // point.alpha = 0.05
+  //     point.tint = 0xff0000
+  //     point.scale.x = 1
+  //     point.scale.y = 1
+  //   })
+  //   const currentPoint = pixiPoints.current[idx]
+  //   // currentPoint.alpha = 1
+  //   currentPoint.scale.x = 1
+  //   currentPoint.scale.y = 1
+  // }
 
-  function initZoom() {
+  const initZoom = () => {
     zoom.current = d3
       .zoom()
       .scaleExtent([1, 10])
@@ -230,11 +333,14 @@ const SingleNetwork = ({ accessor }) => {
     yScaleZoom.current = yScale.current.copy()
   }
 
-  function zoomTo(x: number, y: number, z: number) {
+  const zoomTo = (x: number, y: number, z: number) => {
     const { width, height } = wrapperRef.current.getBoundingClientRect()
 
-    const middleX = width / 2
-    const middleY = height / 2
+    const w = width / canvasResolution
+    const h = height / canvasResolution
+
+    const middleX = w / 2
+    const middleY = h / 2
 
     if (!x) x = -middleX
     if (!y) y = -middleY
@@ -249,52 +355,51 @@ const SingleNetwork = ({ accessor }) => {
       )
   }
 
-  function resetZoom() {
+  const resetZoom = () => {
     zoomTo(null, null, 1)
   }
 
   // called in every tick transition
-  function zoomed(event) {
+  const zoomed = (event) => {
     scaleFactor.current = event.transform || scaleFactor.current
     // const k = scaleFactor.current.k
 
     const { width, height } = wrapperRef.current.getBoundingClientRect()
 
+    const w = width / canvasResolution
+    const h = height / canvasResolution
+
     xScaleZoom.current.range(
-      [margin.left, width - margin.right].map((d) =>
-        scaleFactor.current.applyX(d)
-      )
+      [margin.left, w - margin.right].map((d) => scaleFactor.current.applyX(d))
     )
     yScaleZoom.current.range(
-      [margin.top, height - margin.bottom].map((d) =>
-        scaleFactor.current.applyY(d)
-      )
+      [margin.top, h - margin.bottom].map((d) => scaleFactor.current.applyY(d))
     )
 
-    drawPoints()
+    updatePointsPosition()
   }
 
-  // this is for test purposes
-  const focusOnRandomPoint = () => {
-    const rid = Math.floor(Math.random() * dataset.current.length)
-    const point = dataset.current[rid]
+  // // this is for test purposes
+  // const focusOnRandomPoint = () => {
+  //   const rid = Math.floor(Math.random() * dataset.current.length)
+  //   const point = dataset.current[rid]
 
-    highlightSinglePoint(rid)
+  //   // highlightSinglePoint(rid)
 
-    // we first have to update the zoom scales
-    updateZoomScales()
+  //   // we first have to update the zoom scales
+  //   updateZoomScales()
 
-    // then we assign the refreshed values
-    const { x, y } = point
-    const pointX = -xScaleZoom.current(x)
-    const pointY = -yScaleZoom.current(y)
-    const randomZoom = Math.ceil(Math.random() * 6)
+  //   // then we assign the refreshed values
+  //   const { x, y } = point
+  //   const pointX = -xScaleZoom.current(x)
+  //   const pointY = -yScaleZoom.current(y)
+  //   const randomZoom = Math.ceil(Math.random() * 6)
 
-    zoomTo(pointX, pointY, randomZoom)
-  }
+  //   zoomTo(pointX, pointY, randomZoom)
+  // }
 
   useEffect(() => {
-    // if (!wrapperRef.current) return
+    if (!wrapperRef.current) return
 
     fetchNetwork().then(() => {
       initializeRenderContext()
@@ -321,7 +426,7 @@ const SingleNetwork = ({ accessor }) => {
     function handleResize(event) {
       zoomed(event)
       resizeRenderer()
-      drawPoints()
+      updatePointsPosition()
     }
 
     window.addEventListener('resize', handleResize)
@@ -331,7 +436,8 @@ const SingleNetwork = ({ accessor }) => {
   // update zoom
   useEffect(() => {
     if (!pixiPoints.current) return
-    focusOnRandomPoint()
+    updatePointsColor()
+    // focusOnRandomPoint()
   }, [wrapperRef, pixiPoints, layout.story.block])
 
   return (
@@ -349,7 +455,6 @@ const SingleNetwork = ({ accessor }) => {
             inset: 0,
             zIndex: 100000,
             backgroundColor: 'white',
-
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
