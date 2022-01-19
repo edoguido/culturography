@@ -1,4 +1,5 @@
 import { createContext, useContext } from 'react'
+import { globalCSSVarToPixels } from 'utils/theme'
 
 // interface VizLayoutContextProperties {
 //   state: [
@@ -48,6 +49,13 @@ export const vizLayoutReducer = (state, action) => {
   switch (type.toUpperCase()) {
     case 'SET': {
       return { ...payload }
+    }
+
+    case 'UPDATE_SIDEBAR_WIDTH': {
+      return {
+        ...state,
+        sidebarWidth: payload,
+      }
     }
 
     case 'TOGGLE_DEV': {
@@ -100,11 +108,9 @@ export const vizLayoutReducer = (state, action) => {
           ...state.clusters,
           highlight,
           left: {
-            ...left,
             zoom: left.zoom,
           },
           right: {
-            ...right,
             zoom: right.zoom,
           },
         },
@@ -113,35 +119,53 @@ export const vizLayoutReducer = (state, action) => {
 
     case 'UPDATE_STORY_DATA': {
       const {
-        story: { chapter, block },
+        story,
         clusters: { left_network_shapefile, right_network_shapefile },
+        block,
       } = payload
 
       return {
         ...state,
         story: {
           ...state.story,
-          chapter,
-          block,
+          chapter: story.chapter,
+          block: story.block,
         },
+        //
         clusters: {
           ...state.clusters,
-          highlight: block?.highlight || state.clusters.highlight,
+          metadata: state.clusters.metadata,
+          //
+          highlight: block?.network_control.highlight || null,
+          //
           left: {
             ...state.clusters.left,
             shapefile: left_network_shapefile || state.clusters.left.shapefile,
             zoom:
-              block?.network_control?.left_cluster_zoom ||
+              block?.network_control.left_cluster_zoom ||
               state.clusters.left.zoom,
           },
+          //
           right: {
             ...state.clusters.right,
             shapefile:
               right_network_shapefile || state.clusters.right.shapefile,
             zoom:
-              block?.network_control?.right_cluster_zoom ||
+              block?.network_control.right_cluster_zoom ||
               state.clusters.right.zoom,
           },
+        },
+      }
+    }
+
+    case 'UPDATE_STORY_METADATA': {
+      const { metadata } = payload
+
+      return {
+        ...state,
+        clusters: {
+          ...state.clusters,
+          metadata: metadata,
         },
       }
     }
