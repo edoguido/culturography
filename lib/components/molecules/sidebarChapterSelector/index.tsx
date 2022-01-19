@@ -4,7 +4,7 @@ import { useState } from 'react'
 import * as Styled from './styled'
 
 const SidebarChapterSelector = ({ forwardRef, storyRefs }) => {
-  const [state, dispatch] = useVizLayout()
+  const [state] = useVizLayout()
   const [open, setOpen] = useState(false)
 
   const {
@@ -32,74 +32,76 @@ const SidebarChapterSelector = ({ forwardRef, storyRefs }) => {
   const activeChtaperLabel = story_chapters[state.story.chapter]?.chapter_title
 
   return (
-    <Styled.SidebarChapterSelectorWrapper>
-      <Styled.SidebarChapterSelectorContent>
-        <Styled.SidebarChapterSelectorCurrentChapterName onClick={close}>
-          {activeChtaperLabel}
-        </Styled.SidebarChapterSelectorCurrentChapterName>
-        <AnimatePresence>
-          {open && (
-            <Styled.SidebarChapterSelectorChapterNameOptionsList
-              initial="initial"
-              animate="animate"
-              exit="exit"
-              variants={{
-                initial: {
-                  opacity: 0,
-                  height: 0,
-                  transformOrigin: 'top center',
-                },
-                animate: {
-                  opacity: 1,
-                  height: 'auto',
-                  transformOrigin: 'top center',
-                },
-                exit: {
-                  opacity: 0,
-                  height: 0,
-                  transformOrigin: 'top center',
-                  pointerEvents: 'none',
-                },
-              }}
-              transition={{
-                staggerChildren: 0.05,
-                default: {
-                  type: 'spring',
-                  stiffness: 1000,
-                  damping: 100,
-                },
-              }}
-            >
-              {story_chapters.map((sc, i) => (
-                <Styled.SidebarChapterSelectorChapterNameOption
-                  key={i}
-                  onClick={() => handleClick(i)}
-                  custom={i}
-                  variants={{
-                    initial: (i) => ({
-                      transformOrigin: 'center left',
-                      y: `${(i + 1) * -40}%`,
-                      rotate: -10,
-                    }),
-                    animate: () => ({
-                      y: `0%`,
-                      rotate: 0,
-                    }),
-                    exit: (i) => ({
-                      transformOrigin: 'center right',
-                      y: `${(i + 1) * -40}%`,
-                      rotate: 6,
-                    }),
-                  }}
-                >
-                  {sc.chapter_title}
-                </Styled.SidebarChapterSelectorChapterNameOption>
-              ))}
-            </Styled.SidebarChapterSelectorChapterNameOptionsList>
-          )}
-        </AnimatePresence>
-      </Styled.SidebarChapterSelectorContent>
-    </Styled.SidebarChapterSelectorWrapper>
+    story_chapters.length > 1 && (
+      <Styled.SidebarChapterSelectorWrapper>
+        <Styled.SidebarChapterSelectorContent>
+          <Styled.SidebarChapterSelectorCurrentChapterName onClick={close}>
+            {activeChtaperLabel}
+          </Styled.SidebarChapterSelectorCurrentChapterName>
+          <AnimatePresence>
+            {open && (
+              <Styled.SidebarChapterSelectorChapterNameOptionsList
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                variants={{
+                  initial: {
+                    opacity: 0,
+                    height: 0,
+                    transformOrigin: 'top center',
+                  },
+                  animate: {
+                    opacity: 1,
+                    height: 'auto',
+                    transformOrigin: 'top center',
+                  },
+                  exit: {
+                    opacity: 0,
+                    height: 0,
+                    transformOrigin: 'top center',
+                    pointerEvents: 'none',
+                  },
+                }}
+                transition={{
+                  staggerChildren: 0.05,
+                  default: {
+                    type: 'spring',
+                    stiffness: 1000,
+                    damping: 100,
+                  },
+                }}
+              >
+                {story_chapters.map((sc, i) => (
+                  <Styled.SidebarChapterSelectorChapterNameOption
+                    key={i}
+                    onClick={() => handleClick(i)}
+                    custom={i}
+                    variants={{
+                      initial: (i) => ({
+                        transformOrigin: 'center left',
+                        y: `${(i + 1) * -40}%`,
+                        rotate: -10,
+                      }),
+                      animate: () => ({
+                        y: `0%`,
+                        rotate: 0,
+                      }),
+                      exit: (i) => ({
+                        transformOrigin: 'center right',
+                        y: `${(i + 1) * -40}%`,
+                        rotate: 6,
+                      }),
+                    }}
+                  >
+                    {sc.chapter_title}
+                  </Styled.SidebarChapterSelectorChapterNameOption>
+                ))}
+              </Styled.SidebarChapterSelectorChapterNameOptionsList>
+            )}
+          </AnimatePresence>
+        </Styled.SidebarChapterSelectorContent>
+      </Styled.SidebarChapterSelectorWrapper>
+    )
   )
 }
 
