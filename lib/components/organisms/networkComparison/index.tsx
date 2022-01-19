@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import dynamic from 'next/dynamic'
 
 const SingleNetwork = dynamic(
@@ -5,18 +6,35 @@ const SingleNetwork = dynamic(
   { ssr: false }
 )
 
-// import SingleNetwork from 'components/molecules/singleNetwork'
-import * as Styled from './styled'
-
-// import { globalCSSVarToPixels } from 'utils/theme'
 import { motionOptions } from '@/const/motionProps'
 import { useVizLayout } from '@/context/vizLayoutContext'
 import ProjectTimeline from 'components/molecules/timeline'
 
+import * as Styled from './styled'
+
 const networks = ['left', 'right']
 
 const NetworkComparison = () => {
-  const [layout] = useVizLayout()
+  const [layout, dispatch] = useVizLayout()
+  const metadata = layout.story.data.network_metadata.asset
+
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      const data = await fetch(`https://api.sanity.io/${metadata.path}`).then(
+        (r) => r.json()
+      )
+      return data
+    }
+
+    const updateMetadata = (metadata) => {
+      dispatch({
+        type: 'UPDATE_STORY_METADATA',
+        payload: { metadata },
+      })
+    }
+
+    fetchMetadata().then(updateMetadata)
+  }, [metadata])
 
   return (
     <Styled.NetworkComparisonWrapper
@@ -29,14 +47,16 @@ const NetworkComparison = () => {
       }}
       transition={motionOptions}
     >
-      <Styled.NetworkComparisonContent>
-        {networks.map((n) => (
-          <Styled.NetworkComparisonSingleNetworkWrapper key={n}>
-            {layout.clusters[n].shapefile && <SingleNetwork accessor={n} />}
-          </Styled.NetworkComparisonSingleNetworkWrapper>
-        ))}
-        <ProjectTimeline />
-      </Styled.NetworkComparisonContent>
+      {layout.clusters.metadata && (
+        <Styled.NetworkComparisonContent>
+          {networks.map((n) => (
+            <Styled.NetworkComparisonSingleNetworkWrapper key={n}>
+              {layout.clusters[n].shapefile && <SingleNetwork accessor={n} />}
+            </Styled.NetworkComparisonSingleNetworkWrapper>
+          ))}
+          <ProjectTimeline />
+        </Styled.NetworkComparisonContent>
+      )}
     </Styled.NetworkComparisonWrapper>
   )
 }
