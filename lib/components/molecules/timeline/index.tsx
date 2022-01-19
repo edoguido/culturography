@@ -32,7 +32,6 @@ const ProjectTimeline = () => {
   const isExploreMode = !state.read
 
   const chapters = state.story.data.story_chapters
-  // console.log(chapters)
 
   return (
     <AnimatePresence>
