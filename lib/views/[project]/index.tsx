@@ -29,7 +29,8 @@ const ProjectPage = ({ data }) => {
         read: true,
         story: { chapter: null, block: null, data: data },
         clusters: {
-          highlight: { type: null, id: null },
+          metadata: null,
+          highlight: null,
           left: { shapefile: null, zoom: null },
           right: { shapefile: null, zoom: null },
         },
@@ -41,7 +42,7 @@ const ProjectPage = ({ data }) => {
     state && (
       <DefaultLayout>
         <VizLayoutContext.Provider value={[state, dispatch]}>
-          <DevArea />
+          {/* <DevArea /> */}
           <Styled.ProjectPageWrapper>
             <Nav />
             <Sidebar />
