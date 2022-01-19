@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import * as d3 from 'd3'
 import * as PIXI from 'pixi.js'
+import * as d3 from 'd3'
+import * as d3annotation from 'd3-svg-annotation'
 
 import { useVizLayout } from '@/context/vizLayoutContext'
 // import { apiFetch } from 'utils/cms'
 
-const MAX_NODES = 100000
-const MIN_SIMILARITY_THRESHOLD = 0.1
+const MAX_NODES = 200000
+const MIN_SIMILARITY_THRESHOLD = 0.2
 const INITIAL_POINT_ALPHA = 0.5
 
-const canvasResolution = 2
+const canvasResolution = 1
 const pointSize = 0.75
 
 const margin = {
@@ -29,10 +30,13 @@ const SingleNetwork = ({ accessor }) => {
   const isSourceNetwork = accessor === 'left'
   const chapters = layout.story.data.story_chapters
   const currentChapter = chapters[layout.story.chapter]
-  const networkName = `${accessor}_network_name`
-  const network = currentChapter.networks[networkName]
-  // const metadata = layout.clusters.metadata.find(({ name }) => name === network)
+  const networkKeyName = `${accessor}_network_name`
+  const network = currentChapter.networks[networkKeyName]
+  const currentNetworkClusters = layout.clusters.metadata.find(
+    ({ name }) => name === network
+  )
 
+  // highlighted cluster information
   const highlightedClusterIndex = layout.clusters.highlight
 
   const highlightedCluster = useMemo(() => {
@@ -49,7 +53,7 @@ const SingleNetwork = ({ accessor }) => {
     highlightedClusterData.similarities
 
   // // means we're focusing on one cluster
-  // const isHighlightingCluster = typeof highlightedClusterId === 'string'
+  const isHighlightingCluster = typeof highlightedClusterId === 'string'
 
   const allClusters = useMemo(
     () =>
@@ -93,6 +97,20 @@ const SingleNetwork = ({ accessor }) => {
   const yScaleZoom = useRef(null)
   const zoom = useRef(null)
   const scaleFactor = useRef(null)
+  const annotationsMaker = useRef(null)
+
+  // const _annotations = [
+  //   {
+  //     note: { label: 'Hi' },
+  //     x: 10,
+  //     y: 10,
+  //     dy: 137,
+  //     dx: 162,
+  //     subject: { radius: 50, radiusPadding: 10 },
+  //   },
+  // ]
+
+  //utils
 
   const formatColor = useCallback(
     (rgbString) =>
@@ -150,6 +168,22 @@ const SingleNetwork = ({ accessor }) => {
     })
   }
 
+  const updatePointsPosition = () => {
+    if (!pixiPoints.current) return
+
+    pixiPoints.current.forEach((pt, i) => {
+      pt.position.set(
+        xScaleZoom.current(dataset.current[i].x),
+        yScaleZoom.current(dataset.current[i].y)
+      )
+      return pt
+    })
+  }
+
+  //
+  // **
+  // runtime
+
   const fetchNetwork = async () => {
     const {
       shapefile: { asset },
@@ -175,7 +209,7 @@ const SingleNetwork = ({ accessor }) => {
       antialias: false,
       backgroundAlpha: 1,
       backgroundColor: 0x000000,
-      resolution: window.devicePixelRatio || canvasResolution,
+      resolution: canvasResolution,
     })
 
     // we make canvas match parent size
@@ -188,12 +222,17 @@ const SingleNetwork = ({ accessor }) => {
     wrapperRef.current.appendChild(pixiApp.current.view)
   }
 
-  const resizeRenderer = () => {
-    // match
-    const { width, height } = wrapperRef.current.getBoundingClientRect()
+  const getCanvasDimensions = () => {
+    const { width: _w, height: _h } = wrapperRef.current.getBoundingClientRect()
 
-    const w = width / canvasResolution
-    const h = height / canvasResolution
+    const w = _w / canvasResolution
+    const h = _h / canvasResolution
+
+    return { width: w, height: h }
+  }
+
+  const resizeRenderer = () => {
+    const { width: w, height: h } = getCanvasDimensions()
 
     xScale.current = d3
       .scaleLinear()
@@ -211,19 +250,6 @@ const SingleNetwork = ({ accessor }) => {
     updateZoomScales()
     resetZoom()
 
-    // zoom.current
-    //   .translateExtent([
-    //     [0, 0],
-    //     [width, height],
-    //   ])
-    //   .extent([
-    //     [margin.left, margin.top],
-    //     [width - margin.right, height - margin.top],
-    //   ])
-
-    // svgRef.current.style.width = '100%'
-    // svgRef.current.style.height = '100%'
-
     pixiApp.current.renderer.resize(w, h)
   }
 
@@ -238,6 +264,7 @@ const SingleNetwork = ({ accessor }) => {
     })
 
     const circle = new PIXI.Graphics()
+    circle.cacheAsBitmap = true
     // circle.lineStyle(1, 0x000000)
     circle.beginFill(0xffffff, 1)
     circle.drawCircle(0, 0, pointSize)
@@ -273,30 +300,8 @@ const SingleNetwork = ({ accessor }) => {
     pixiPoints.current.forEach((p) => pointsContainer.current.addChild(p))
   }
 
-  const updatePointsPosition = () => {
-    if (!pixiPoints.current) return
-
-    pixiPoints.current.forEach((pt, i) => {
-      pt.position.set(
-        xScaleZoom.current(dataset.current[i].x),
-        yScaleZoom.current(dataset.current[i].y)
-      )
-      return pt
-    })
-  }
-
-  // const highlightSinglePoint = (idx) => {
-  //   pixiPoints.current.forEach((point, i) => {
-  //     // point.alpha = 0.05
-  //     point.tint = 0xff0000
-  //     point.scale.x = 1
-  //     point.scale.y = 1
-  //   })
-  //   const currentPoint = pixiPoints.current[idx]
-  //   // currentPoint.alpha = 1
-  //   currentPoint.scale.x = 1
-  //   currentPoint.scale.y = 1
-  // }
+  //
+  // zoom
 
   const initZoom = () => {
     zoom.current = d3
@@ -314,18 +319,19 @@ const SingleNetwork = ({ accessor }) => {
 
     d3.select(svgRef.current).call(zoom.current)
 
-    // remember to only filter if we're in story mode
-    function filterEvent(event) {
+    // remember to only filter interactions if we're in story mode
+    function filterZoomEvent(event) {
       if (!layout.read) return event
 
       return (
         event.type !== 'mousedown' &&
         event.type !== 'wheel' &&
+        event.type !== 'dblclick' &&
         event.type !== 'touchstart'
       )
     }
 
-    zoom.current.filter(filterEvent)
+    zoom.current.filter(filterZoomEvent)
   }
 
   const updateZoomScales = () => {
@@ -334,10 +340,7 @@ const SingleNetwork = ({ accessor }) => {
   }
 
   const zoomTo = (x: number, y: number, z: number) => {
-    const { width, height } = wrapperRef.current.getBoundingClientRect()
-
-    const w = width / canvasResolution
-    const h = height / canvasResolution
+    const { width: w, height: h } = getCanvasDimensions()
 
     const middleX = w / 2
     const middleY = h / 2
@@ -364,10 +367,7 @@ const SingleNetwork = ({ accessor }) => {
     scaleFactor.current = event.transform || scaleFactor.current
     // const k = scaleFactor.current.k
 
-    const { width, height } = wrapperRef.current.getBoundingClientRect()
-
-    const w = width / canvasResolution
-    const h = height / canvasResolution
+    const { width: w, height: h } = getCanvasDimensions()
 
     xScaleZoom.current.range(
       [margin.left, w - margin.right].map((d) => scaleFactor.current.applyX(d))
@@ -398,12 +398,73 @@ const SingleNetwork = ({ accessor }) => {
   //   zoomTo(pointX, pointY, randomZoom)
   // }
 
+  const clusterAnnotations = (clusters) =>
+    clusters
+      .filter(({ clusterId }) => {
+        if (!highlightedClusterSimilarities) return false
+        if (isSourceNetwork && clusterId != highlightedClusterId) return false
+        const similarity = highlightedClusterSimilarities[clusterId]
+        if (
+          !isSourceNetwork &&
+          (!similarity || similarity < MIN_SIMILARITY_THRESHOLD)
+        )
+          return false
+
+        return true
+      })
+      .map(({ clusterId, name, shape }) => {
+        const clusterProps = currentNetworkClusters.cluster_info[clusterId]
+
+        return {
+          note: {
+            label: clusterProps?.name || '',
+          },
+          color: 'white',
+          x: xScaleZoom.current(shape[0]) + 80,
+          y: yScaleZoom.current(shape[1]) + 180,
+          dx: 40,
+          dy: 40,
+          type: d3annotation.annotationCalloutCircle,
+          subject: { radius: 50, radiusPadding: 10 },
+        }
+      })
+
+  const showAnnotations = () => {
+    const annotations = clusterAnnotations(clusters.current)
+
+    annotationsMaker.current = d3annotation
+      .annotation()
+      .annotations(annotations)
+
+    d3.select(svgRef.current)
+      .append('g')
+      .attr('class', `annotation-group-${accessor}`)
+      .call(annotationsMaker.current)
+  }
+
+  const updateAnnotations = () => {
+    clearAnnotations()
+    if (isHighlightingCluster) showAnnotations()
+    // if (!highlightedClusterSimilarities)
+    //   d3.select('.annotation-group').attr('opacity', 0)
+
+    // const annotations = clusterAnnotations(clusters.current)
+    // annotationsMaker.current.annotations(annotations)
+    // annotationsMaker.current.update()
+  }
+
+  const clearAnnotations = () => {
+    d3.select(`.annotation-group-${accessor}`).remove()
+  }
+
+  // initiate app
   useEffect(() => {
     if (!wrapperRef.current) return
 
     fetchNetwork().then(() => {
       initializeRenderContext()
       // focusOnRandomPoint()
+      showAnnotations()
     })
 
     // reset viz when asset changes
@@ -411,10 +472,11 @@ const SingleNetwork = ({ accessor }) => {
       pixiPoints.current = null
       pixiApp.current?.destroy(true, true)
       pixiApp.current = null
+      clearAnnotations()
     }
   }, [wrapperRef, assetId, layout.story.chapter])
 
-  //
+  // initiate zoom
   useEffect(() => {
     initZoom()
   }, [layout.read])
@@ -438,6 +500,7 @@ const SingleNetwork = ({ accessor }) => {
     if (!pixiPoints.current) return
     updatePointsColor()
     // focusOnRandomPoint()
+    updateAnnotations()
   }, [wrapperRef, pixiPoints, layout.story.block])
 
   return (
