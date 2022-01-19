@@ -4,7 +4,6 @@ import { getBreakpoint, getColor } from 'utils/theme'
 
 export const NetworkComparisonSingleNetworkWrapper = styled.div`
   position: relative;
-  margin: 0.25rem 0.5rem;
 
   border-radius: 0.5rem;
   overflow: hidden;
@@ -19,14 +18,17 @@ export const NetworkComparisonSingleNetworkWrapper = styled.div`
 
 export const NetworkComparisonContent = styled.div`
   position: relative;
-  height: 100%;
+  height: calc(100% - 0.5rem);
+  margin: 0 0.5rem;
 
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-row: 1fr;
+  grid-gap: 0.5rem;
 
-  ${getBreakpoint('xl')} {
+  /* ${getBreakpoint('xl')} {
     flex-direction: row;
-  }
+  } */
 `
 
 export const NetworkComparisonWrapper = styled(motion.div)`
