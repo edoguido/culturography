@@ -20,9 +20,9 @@ const NetworkComparison = () => {
 
   useEffect(() => {
     const fetchMetadata = async () => {
-      const data = await fetch(`https://api.sanity.io/${metadata.path}`).then(
-        (r) => r.json()
-      )
+      const data = await fetch(`https://api.sanity.io/${metadata.path}`)
+        .then((r) => r.json())
+        .catch(console.log)
       return data
     }
 
