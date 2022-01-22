@@ -6,12 +6,12 @@ import * as d3annotation from 'd3-svg-annotation'
 import { useVizLayout } from '@/context/vizLayoutContext'
 // import { apiFetch } from 'utils/cms'
 
-const MAX_NODES = 60000
-const MIN_SIMILARITY_THRESHOLD = 0.2
+const MAX_NODES = 100000
+const MIN_SIMILARITY_THRESHOLD = 0.1
 const INITIAL_POINT_ALPHA = 0.5
 
 const canvasResolution = 1
-const pointSize = 0.75
+const pointSize = 1
 
 const margin = {
   top: 10,
@@ -130,9 +130,13 @@ const SingleNetwork = ({ accessor }) => {
 
         return formatColor(clusterNumber)
       default:
-        if (isSourceNetwork) return formatColor(highlightedClusterId)
+        if (isSourceNetwork) {
+          if (clusterNumber != highlightedClusterId) return 0x333333
+
+          return formatColor(highlightedClusterId)
+        }
         const output = highlightedClusterSimilarities[clusterNumber]
-        if (!output || output < MIN_SIMILARITY_THRESHOLD) return 0x000000
+        if (!output || output < MIN_SIMILARITY_THRESHOLD) return 0x333333
 
         return formatColor(highlightedClusterId)
     }
@@ -148,14 +152,15 @@ const SingleNetwork = ({ accessor }) => {
         // point belongs to selected cluster
         if (clusterNumber == highlightedClusterId) return INITIAL_POINT_ALPHA
         // point is from source network but does not belong to selected cluster
-        if (isSourceNetwork && clusterNumber != highlightedClusterId) return 0
+        if (isSourceNetwork && clusterNumber != highlightedClusterId)
+          return 0.01
 
         const output = highlightedClusterSimilarities[clusterNumber]
 
         // point has no similarity with selected cluster
-        if (!output) return 0
+        if (!output) return 1
         // point has too low similarity with selected cluster
-        if (output < MIN_SIMILARITY_THRESHOLD) return 0
+        if (output < MIN_SIMILARITY_THRESHOLD) return 1
 
         return alphaScale(output)
     }
@@ -195,7 +200,9 @@ const SingleNetwork = ({ accessor }) => {
       headers: {
         accepts: 'application/json',
       },
-    }).then((r) => r.json())
+    })
+      .then((r) => r.json())
+      .catch(console.error)
 
     dataset.current = data.nodes?.slice(0, MAX_NODES) || []
     clusters.current = data.meta?.clusters
@@ -382,6 +389,28 @@ const SingleNetwork = ({ accessor }) => {
     repositionAnnotations()
   }
 
+  const updateZoom = () => {
+    if (isHighlightingCluster) {
+      const targetCluster = clusters.current.find(
+        (c) => c.clusterId == highlightedClusterId
+      )
+
+      if (!targetCluster) return
+
+      const { shape } = targetCluster
+
+      updateZoomScales()
+
+      const targetX = -xScaleZoom.current(shape[0])
+      const targetY = -yScaleZoom.current(shape[1])
+
+      zoomTo(targetX, targetY, 1)
+      return
+    }
+
+    resetZoom()
+  }
+
   // // this is for test purposes
   // const focusOnRandomPoint = () => {
   //   const rid = Math.floor(Math.random() * dataset.current.length)
@@ -420,14 +449,16 @@ const SingleNetwork = ({ accessor }) => {
 
         const clusterProps = currentNetworkClusters.cluster_info[clusterId]
 
-        d.x = xScaleZoom.current(shape[0]) + 80
-        d.y = yScaleZoom.current(shape[1]) + 180
+        d.x = xScaleZoom.current(shape[0])
+        d.y = yScaleZoom.current(shape[1])
         d.dx = 40
         d.dy = 40
 
         return {
           note: {
-            label: clusterProps?.name || '',
+            title: clusterProps?.name || '',
+            bgPadding: 20,
+            label: 'Longer text to show text wrapping',
           },
           color: 'white',
           x: d.x,
@@ -435,7 +466,7 @@ const SingleNetwork = ({ accessor }) => {
           dx: d.dx,
           dy: d.dy,
           type: d3annotation.annotationCalloutCircle,
-          subject: { radius: 50, radiusPadding: 10 },
+          subject: { radius: 10, radiusPadding: 10 },
           data: {
             x0: d.x,
             y0: d.y,
@@ -521,7 +552,7 @@ const SingleNetwork = ({ accessor }) => {
     if (!pixiPoints.current) return
     updatePointsColor()
     // focusOnRandomPoint()
-    resetZoom()
+    updateZoom()
     refreshAnnotations()
   }, [wrapperRef, pixiPoints, layout.story.block])
 
