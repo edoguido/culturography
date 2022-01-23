@@ -443,6 +443,7 @@ const Scene = ({ dataset, sourceNetwork, forwardRef }: SceneProps) => {
 interface ClusterProps {
   key: number
   data: {
+    name?: string
     cluster_id?: number
     centroid?: [number, number]
     nodes?: any[]
