@@ -1,17 +1,32 @@
 import { useEffect, useMemo, useRef, useState, MutableRefObject } from 'react'
+
 import { Canvas, OrthographicCameraProps, useFrame } from '@react-three/fiber'
-import { OrthographicCamera, MapControls } from '@react-three/drei'
+
+import {
+  OrthographicCamera,
+  MapControls,
+  useContextBridge,
+} from '@react-three/drei'
+
 import * as d3 from 'd3'
 
-import { useVizLayout } from '@/context/vizLayoutContext'
+//
+
+import {
+  ClusterObjectProps,
+  useVizLayout,
+  VizLayoutContext,
+} from '@/context/vizLayoutContext'
 // import { apiFetch } from 'utils/cms'
 
 import {
   round,
   lerp,
   randomColor,
-  convertDatasetCoordsToPoints,
+  datasetCoordsToArrayOfPoints,
+  polygonCenter,
 } from 'utils/math'
+
 import {
   groupDatapointsByCluster,
   rankedClusters,
