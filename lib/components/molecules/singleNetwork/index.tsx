@@ -218,6 +218,7 @@ const Cluster = ({ data, scales, cameraRef, onClick }: ClusterProps) => {
   const color = useMemo(() => randomColor(), [])
 
   const clusterId = data.cluster_id
+
   const subDataset = data.nodes
   const numPoints = subDataset.length
 
@@ -227,10 +228,16 @@ const Cluster = ({ data, scales, cameraRef, onClick }: ClusterProps) => {
   )
 
   useFrame(({ clock }) => {
-    //pointRef.current.size = lerp(pointRef.current.size, baseSize + cameraRef.current.zoom / 10, 0.1)
-    pointRef.current.size = baseSize + cameraRef.current.zoom / 20
-    // set material color
-    // pointRef.current.color = new Color(Math.sin(clock.getElapsedTime()), Math.sin(clock.getElapsedTime()), Math.cos(clock.getElapsedTime()))
+    //pointRef.current.size = lerp(pointRef.current.size, baseSize + cameraRef.current.zoom / 10, LERP_FACTOR)
+    pointRef.current.size = baseSize + cameraRef.current.zoom / 30
+    // // set material color
+    // if (clusterId === 0) {
+    //   pointRef.current.color = new Color(
+    //     Math.sin(clock.getElapsedTime()),
+    //     Math.sin(clock.getElapsedTime()),
+    //     Math.cos(clock.getElapsedTime())
+    //   )
+    // }
   })
 
   /* function handlePointerEnter() {
