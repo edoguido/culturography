@@ -88,6 +88,8 @@ const SingleNetwork = ({ data, accessor }) => {
   // runtime
 
   const fetchNetwork = async () => {
+    setFetching(true)
+
     const { asset }: { asset: { path: string } } = data.networks[accessorKey]
 
     const options = { headers: { accepts: 'application/json' } }
