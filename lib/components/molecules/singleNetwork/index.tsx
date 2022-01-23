@@ -33,6 +33,7 @@ import {
   lerp,
   datasetCoordsToArrayOfPoints,
   polygonCentroid,
+  randomColor,
 } from 'utils/math'
 
 import {
@@ -238,6 +239,16 @@ const Scene = ({ dataset, sourceNetwork, forwardRef }: SceneProps) => {
         .range(d3.quantize(d3.interpolateTurbo, allClustersID.length)),
     [allClustersID]
   )
+
+  // const randomColors = useMemo(
+  //   () => allClustersID.map((id: number) => [id, randomColor()]),
+  //   []
+  // )
+
+  // colorScale = useMemo(
+  //   () => (tid: number) => Object.fromEntries(randomColors)[tid],
+  //   [allClustersID]
+  // )
 
   const getColor = useCallback(
     (id) => {
