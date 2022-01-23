@@ -9,7 +9,7 @@ const Nav = ({ title }) => {
     <Styled.NavWrapper>
       <Styled.NavContent>
         <Styled.NavProjectHeaderSection>
-          <Link href="/">
+          <Link href="/" passHref>
             <Styled.NavLogo>The Cultural Impact Index</Styled.NavLogo>
           </Link>
           <Styled.NavProjectName>{title}</Styled.NavProjectName>
