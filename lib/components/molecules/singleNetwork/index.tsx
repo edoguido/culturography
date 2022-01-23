@@ -1,11 +1,4 @@
-import {
-  MutableRefObject,
-  Ref,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { useEffect, useMemo, useRef, useState, MutableRefObject } from 'react'
 import { Canvas, OrthographicCameraProps, useFrame } from '@react-three/fiber'
 import { OrthographicCamera, MapControls } from '@react-three/drei'
 import * as d3 from 'd3'
@@ -211,11 +204,11 @@ interface ClusterProps {
     xScale: () => void
     yScale: () => void
   }
-  onClick: (e: any) => void
   cameraRef: MutableRefObject<OrthographicCameraProps>
+  onClick: (e: any) => void
 }
 
-const Cluster = ({ data, scales, onClick, cameraRef }: ClusterProps) => {
+const Cluster = ({ data, scales, cameraRef, onClick }: ClusterProps) => {
   const { xScale, yScale } = scales
 
   const pointRef = useRef(null)
