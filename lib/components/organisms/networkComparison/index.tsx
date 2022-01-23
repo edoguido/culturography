@@ -22,9 +22,20 @@ const NetworkComparison = ({ data }) => {
     const metadata = data.network_metadata.asset
 
     const fetchMetadata = async () => {
-      const data = await fetch(`https://api.sanity.io/${metadata.path}`)
-        .then((r) => r.json())
-        .catch(console.log)
+      let data
+
+      try {
+        data = await fetch(`https://api.sanity.io/${metadata.path}`).then((r) =>
+          r.json()
+        )
+      } catch {
+        const { source_network_id, target_network_id } = networksData.networks
+
+        data = await fetch(
+          `/data/${source_network_id}_${target_network_id}_nodes.json`
+        ).then((r) => r.json())
+      }
+
       return data
     }
 
