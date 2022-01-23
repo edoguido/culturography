@@ -51,6 +51,7 @@ const MIN_SIMILARITY_THRESHOLD = 0
 
 const SCENE_CENTER = [0, 0]
 const INITIAL_ZOOM = 5
+const ZOOMED_IN = 8
 const BASE_POINT_SIZE = 1
 const LERP_FACTOR = 0.1
 
@@ -325,7 +326,7 @@ const Scene = ({ dataset, sourceNetwork, forwardRef }: SceneProps) => {
 
       const screenCoordsCentroid = [xScale(cx), yScale(cy)]
 
-      moveTo({ location: screenCoordsCentroid, zoom: zoomedIn })
+      moveTo({ location: screenCoordsCentroid, zoom: ZOOMED_IN })
       return
     }
 
