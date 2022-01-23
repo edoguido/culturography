@@ -42,15 +42,18 @@ interface SingleNetwork {
   data: object[]
   accessor: 'left' | 'right' | 'source' | 'target'
 }
+
 const SingleNetwork = ({ data, accessor }) => {
   const [layout] = useVizLayout()
-  const [fetching, setFetching] = useState(true)
+  const ContextBridge = useContextBridge(VizLayoutContext)
   //
-  const [dataset, setDataset] = useState(null)
+  const [fetching, setFetching] = useState<boolean>(true)
+  const [dataset, setDataset] = useState<DatasetProps>(null)
   //
-  const wrapperRef = useRef(null)
-  //
-  const accessorKey = `${accessor}_network_shapefile`
+  const accessorKey: string = `${accessor}_network_shapefile`
+  // is this the network on the left? or on the right?
+  // we can find out with its accessor
+  const isSourceNetwork: boolean = accessor === 'source' || accessor === 'left'
   //
   // **
   // runtime
@@ -133,12 +136,17 @@ const SingleNetwork = ({ data, accessor }) => {
           Fetching!
         </div>
       )}
-      <Canvas>{dataset && <Scene dataset={dataset} />}</Canvas>
+      <Canvas>
+        <ContextBridge>
+          {dataset && (
+            <Scene dataset={dataset} sourceNetwork={isSourceNetwork} />
+          )}
+        </ContextBridge>
+      </Canvas>
     </div>
   )
 }
 
-const Scene = ({ dataset }) => {
 // Scene
 
 interface SceneProps {
