@@ -34,6 +34,7 @@ import {
 const MIN_SIMILARITY_THRESHOLD = 0.1
 
 const INITIAL_ZOOM = 6
+const LERP_FACTOR = 0.1
 
 const SingleNetwork = ({ data, accessor }) => {
   const [layout] = useVizLayout()
@@ -135,7 +136,7 @@ const Scene = ({ dataset }) => {
     // const isAtTargetZoom = currentZoom === round(targetZoom)
 
     if (targetZoom) {
-      ref.current.zoom = lerp(z, targetZoom, 0.1)
+      ref.current.zoom = lerp(z, targetZoom, LERP_FACTOR)
       ref.current.updateProjectionMatrix()
     } else {
       setTargetZoom(null)
@@ -145,8 +146,8 @@ const Scene = ({ dataset }) => {
     const isAtTargetPosition =
       round(x) === targetPosition[0] && round(y) === targetPosition[1]
     if (!isAtTargetPosition) {
-      groupRef.current.position.x = lerp(x, targetPosition[0], 0.1)
-      groupRef.current.position.y = lerp(y, targetPosition[1], 0.1)
+      groupRef.current.position.x = lerp(x, targetPosition[0], LERP_FACTOR)
+      groupRef.current.position.y = lerp(y, targetPosition[1], LERP_FACTOR)
     }
   })
 
