@@ -229,7 +229,7 @@ const Cluster = ({ data, scales, cameraRef, onClick }: ClusterProps) => {
 
   useFrame(({ clock }) => {
     //pointRef.current.size = lerp(pointRef.current.size, baseSize + cameraRef.current.zoom / 10, LERP_FACTOR)
-    pointRef.current.size = baseSize + cameraRef.current.zoom / 30
+    pointRef.current.size = baseSize + cameraRef.current.zoom / 20
     // // set material color
     // if (clusterId === 0) {
     //   pointRef.current.color = new Color(
