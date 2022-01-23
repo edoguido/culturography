@@ -31,9 +31,8 @@ const NetworkComparison = ({ data }) => {
       } catch {
         const { source_network_id, target_network_id } = networksData.networks
 
-        data = await fetch(
-          `/data/${source_network_id}_${target_network_id}_nodes.json`
-        ).then((r) => r.json())
+        data =
+          await require(`../../../../public/data/${source_network_id}_${target_network_id}_clusters.json`)
       }
 
       return data
