@@ -34,6 +34,7 @@ export const ModeSwitcherLabel = styled.span``
 export const ModeSwitcherWrapper = styled(motion.button)`
   appearance: none;
   background-color: transparent;
+  color: ${getColor('text')};
   border: none;
 
   display: flex;
