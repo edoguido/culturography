@@ -223,7 +223,7 @@ const Cluster = ({ data, scales, cameraRef, onClick }: ClusterProps) => {
   const numPoints = subDataset.length
 
   const positions = useMemo(
-    () => convertDatasetCoordsToPoints({ dataset: subDataset, xScale, yScale }),
+    () => datasetCoordsToArrayOfPoints({ dataset: subDataset, xScale, yScale }),
     [subDataset, numPoints]
   )
 

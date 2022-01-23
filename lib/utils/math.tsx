@@ -14,7 +14,7 @@ export const randomColor = () =>
     Math.random() * 255
   )},${Math.round(Math.random() * 255)})`
 
-export function convertDatasetCoordsToPoints({ dataset, xScale, yScale }) {
+export function datasetCoordsToArrayOfPoints({ dataset, xScale, yScale }) {
   const out = new Float32Array(dataset.length * 3)
 
   let acc = 0
