@@ -17,6 +17,10 @@ const networks = ['left', 'right']
 const NetworkComparison = ({ data }) => {
   const [layout, dispatch] = useVizLayout()
   const networksData = data.story_chapters[layout.story.chapter]
+  const networksProperties = layout.networks
+
+  const showBothNetworks =
+    networksProperties.source.show && networksProperties.target.show
 
   useEffect(() => {
     const metadata = data.network_metadata.asset
@@ -61,11 +65,34 @@ const NetworkComparison = ({ data }) => {
     >
       {layout.clusters && (
         <Styled.NetworkComparisonContent>
-          {networks.map((n) => (
-            <Styled.NetworkComparisonSingleNetworkWrapper key={n}>
-              <SingleNetwork accessor={n} data={networksData} />
-            </Styled.NetworkComparisonSingleNetworkWrapper>
-          ))}
+          {networks.map((n) => {
+            const isSource = n === 'left' || n === 'source'
+
+            const show = isSource
+              ? networksProperties.source.show
+              : networksProperties.target.show
+
+            return (
+              <Styled.NetworkComparisonSingleNetworkWrapper
+                key={n}
+                layout
+                initial={false}
+                animate={{
+                  opacity: showBothNetworks || show ? 1 : 0.2,
+                  width: show ? '100%' : '20%',
+                  flexBasis: show ? '100%' : '0%',
+                  // backgroundColor: isSource ? 'red' : 'green',
+                }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 800,
+                  damping: 60,
+                }}
+              >
+                <SingleNetwork accessor={n} data={networksData} />
+              </Styled.NetworkComparisonSingleNetworkWrapper>
+            )
+          })}
           {/* <ProjectTimeline /> */}
         </Styled.NetworkComparisonContent>
       )}

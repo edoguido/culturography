@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import styled from 'styled-components'
 import { getBreakpoint, getColor } from 'utils/theme'
 
-export const NetworkComparisonSingleNetworkWrapper = styled.div`
+export const NetworkComparisonSingleNetworkWrapper = styled(motion.div)`
   position: relative;
 
   border-radius: 0.5rem;
@@ -11,7 +11,8 @@ export const NetworkComparisonSingleNetworkWrapper = styled.div`
   background-color: ${getColor('palette:black')};
 
   display: flex;
-  flex: 1 0 auto;
+  flex-grow: 1;
+  flex-shrink: 1;
   justify-content: center;
   align-items: center;
 `
@@ -21,9 +22,10 @@ export const NetworkComparisonContent = styled.div`
   height: calc(100% - 0.5rem);
   margin: 0 0.5rem;
 
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 0.5rem;
+  display: flex;
+  /* grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-gap: 0.5rem; */
 
   /* ${getBreakpoint('xl')} {
     flex-direction: row;
