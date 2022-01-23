@@ -1,17 +1,9 @@
-import { useVizLayout } from '@/context/vizLayoutContext'
 import { AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 import * as Styled from './styled'
 
-const SidebarChapterSelector = ({ forwardRef, storyRefs }) => {
-  const [state] = useVizLayout()
+const SidebarChapterSelector = ({ chapters, forwardRef, storyRefs }) => {
   const [open, setOpen] = useState(false)
-
-  const {
-    story: {
-      data: { story_chapters },
-    },
-  } = state
 
   function close() {
     setOpen((prev) => !prev)
@@ -29,10 +21,10 @@ const SidebarChapterSelector = ({ forwardRef, storyRefs }) => {
     close()
   }
 
-  const activeChtaperLabel = story_chapters[state.story.chapter]?.chapter_title
+  const activeChtaperLabel = 'ciaone'
 
   return (
-    story_chapters.length > 1 && (
+    chapters.length > 1 && (
       <Styled.SidebarChapterSelectorWrapper>
         <Styled.SidebarChapterSelectorContent>
           <Styled.SidebarChapterSelectorCurrentChapterName onClick={close}>
@@ -71,7 +63,7 @@ const SidebarChapterSelector = ({ forwardRef, storyRefs }) => {
                   },
                 }}
               >
-                {story_chapters.map((sc, i) => (
+                {chapters.map((sc, i) => (
                   <Styled.SidebarChapterSelectorChapterNameOption
                     key={i}
                     onClick={() => handleClick(i)}

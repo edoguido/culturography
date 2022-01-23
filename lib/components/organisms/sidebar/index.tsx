@@ -8,7 +8,7 @@ import {
 } from 'react'
 import BlockContent from '@sanity/block-content-to-react'
 
-import { useVizLayout } from '@/context/vizLayoutContext'
+import { makeStoryPayload, useVizLayout } from '@/context/vizLayoutContext'
 import { motionOptions } from '@/const/motionProps'
 
 import SidebarChapterSelector from 'components/molecules/sidebarChapterSelector'
@@ -23,28 +23,23 @@ const SERIALIZERS = {
   },
 }
 
-const Sidebar = () => {
+const Sidebar = ({ data }) => {
   const [state, dispatch] = useVizLayout()
   const storyRef = useRef<HTMLDivElement>(null)
   const storyContentRef = useRef<HTMLDivElement>(null)
-  const [chapterIndex, setChapterIndex] = useState(0)
-  const [blockIndex, setBlockIndex] = useState(0)
-
-  const {
-    story: { data },
-  } = state
+  const [chapterIndex, setChapterIndex] = useState<number>(0)
+  const [blockIndex, setBlockIndex] = useState<number>(0)
 
   const storyRefs = useMemo(
     () =>
-      state.story.data.story_chapters.map(({ blocks }) => ({
+      data.story_chapters.map(({ blocks }) => ({
         chapter: createRef(),
         blocks: blocks.map(() => createRef()),
       })),
-    [chapterIndex, blockIndex]
+    []
   )
 
   //
-  // initializing listeners
 
   const check = useCallback(
     (refs, { trigger, callback, accessor = (d) => d }) => {
@@ -85,6 +80,8 @@ const Sidebar = () => {
     })
   }, [chapterIndex, blockIndex])
 
+  //
+  // check scroll on each frame
   useEffect(() => {
     const fid = window.requestAnimationFrame(onScroll)
     return () => window.cancelAnimationFrame(fid)
@@ -93,17 +90,13 @@ const Sidebar = () => {
   useEffect(() => {
     if (chapterIndex === null || blockIndex === null) return
 
-    const currentChapter = data.story_chapters[chapterIndex]
-    const clustersPayload = currentChapter.networks
-    const blockPayload = currentChapter.blocks[blockIndex]
-
     dispatch({
       type: 'UPDATE_STORY_DATA',
-      payload: {
-        story: { chapter: chapterIndex, block: blockIndex },
-        clusters: clustersPayload,
-        block: blockPayload,
-      },
+      payload: makeStoryPayload({
+        source: data,
+        chapterIndex,
+        blockIndex,
+      }),
     })
   }, [chapterIndex, blockIndex])
 
@@ -112,11 +105,13 @@ const Sidebar = () => {
       ref={storyRef}
       animate={{
         x: state.read ? 0 : '100%',
+        // visibility: 'hidden',
       }}
       transition={motionOptions}
     >
       <Styled.SidebarContent>
         <SidebarChapterSelector
+          chapters={data.story_chapters}
           forwardRef={storyContentRef}
           storyRefs={storyRefs}
         />

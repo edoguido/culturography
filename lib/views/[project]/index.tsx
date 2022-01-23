@@ -1,9 +1,9 @@
 import { useEffect, useReducer } from 'react'
 
 import { VizLayoutContext, vizLayoutReducer } from '@/context/vizLayoutContext'
-import { globalCSSVarToPixels } from 'utils/theme'
 import client from 'utils/cms'
 import PROJECT_QUERY, { ALL_PROJECTS_QUERY } from 'utils/cms/queries'
+import { globalCSSVarToPixels } from 'utils/theme'
 
 import DefaultLayout from 'components/layout/main'
 import Sidebar from 'components/organisms/sidebar'
@@ -13,27 +13,17 @@ import Nav from 'components/molecules/nav'
 import * as Styled from './styled'
 
 const ProjectPage = ({ data }) => {
+  const { title } = data
+
   const [state, dispatch] = useReducer(vizLayoutReducer, null)
 
   useEffect(() => {
     dispatch({
       type: 'SET',
       payload: {
-        development: false,
-        appState: {
-          ready: false,
-          fetching: false,
-          error: false,
-        },
-        sidebarWidth: globalCSSVarToPixels('--sidebar-width'),
+        // read this from localStorage
         read: true,
-        story: { chapter: null, block: null, data: data },
-        clusters: {
-          metadata: null,
-          highlight: null,
-          left: { shapefile: null, zoom: null },
-          right: { shapefile: null, zoom: null },
-        },
+        sidebarWidth: globalCSSVarToPixels('--sidebar-width'),
       },
     })
   }, [])
@@ -44,9 +34,9 @@ const ProjectPage = ({ data }) => {
         <VizLayoutContext.Provider value={[state, dispatch]}>
           {/* <DevArea /> */}
           <Styled.ProjectPageWrapper>
-            <Nav />
-            <Sidebar />
-            <NetworkComparison />
+            <Nav title={title} />
+            <Sidebar data={data} />
+            {state.story && <NetworkComparison data={data} />}
           </Styled.ProjectPageWrapper>
         </VizLayoutContext.Provider>
       </DefaultLayout>

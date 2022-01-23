@@ -8,17 +8,19 @@ const SingleNetwork = dynamic(
 
 import { motionOptions } from '@/const/motionProps'
 import { useVizLayout } from '@/context/vizLayoutContext'
-import ProjectTimeline from 'components/molecules/timeline'
+// import ProjectTimeline from 'components/molecules/timeline'
 
 import * as Styled from './styled'
 
 const networks = ['left', 'right']
 
-const NetworkComparison = () => {
+const NetworkComparison = ({ data }) => {
   const [layout, dispatch] = useVizLayout()
-  const metadata = layout.story.data.network_metadata.asset
+  const networksData = data.story_chapters[layout.story.chapter]
 
   useEffect(() => {
+    const metadata = data.network_metadata.asset
+
     const fetchMetadata = async () => {
       const data = await fetch(`https://api.sanity.io/${metadata.path}`)
         .then((r) => r.json())
@@ -34,7 +36,7 @@ const NetworkComparison = () => {
     }
 
     fetchMetadata().then(updateMetadata)
-  }, [metadata])
+  }, [])
 
   return (
     <Styled.NetworkComparisonWrapper
@@ -47,14 +49,14 @@ const NetworkComparison = () => {
       }}
       transition={motionOptions}
     >
-      {layout.clusters.metadata && (
+      {layout.clusters && (
         <Styled.NetworkComparisonContent>
           {networks.map((n) => (
             <Styled.NetworkComparisonSingleNetworkWrapper key={n}>
-              {layout.clusters[n].shapefile && <SingleNetwork accessor={n} />}
+              <SingleNetwork accessor={n} data={networksData} />
             </Styled.NetworkComparisonSingleNetworkWrapper>
           ))}
-          <ProjectTimeline />
+          {/* <ProjectTimeline /> */}
         </Styled.NetworkComparisonContent>
       )}
     </Styled.NetworkComparisonWrapper>

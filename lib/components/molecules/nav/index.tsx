@@ -2,13 +2,9 @@ import Link from 'next/link'
 
 import ModeSwitcher from 'components/atoms/modeSwitcher'
 
-import { useVizLayout } from '@/context/vizLayoutContext'
 import * as Styled from './styled'
 
-const Nav = () => {
-  const [state] = useVizLayout()
-  const { title } = state.story.data
-
+const Nav = ({ title }) => {
   return (
     <Styled.NavWrapper>
       <Styled.NavContent>
@@ -18,7 +14,9 @@ const Nav = () => {
           </Link>
           <Styled.NavProjectName>{title}</Styled.NavProjectName>
         </Styled.NavProjectHeaderSection>
-        <Styled.NavSection>{/* <ModeSwitcher /> */}</Styled.NavSection>
+        <Styled.NavSection>
+          <ModeSwitcher />
+        </Styled.NavSection>
       </Styled.NavContent>
     </Styled.NavWrapper>
   )
