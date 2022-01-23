@@ -29,6 +29,19 @@ const MIN_SIMILARITY_THRESHOLD = 0.1
 const INITIAL_ZOOM = 6
 const LERP_FACTOR = 0.1
 
+// sub-types
+
+interface DatasetProps {
+  clusters: object[]
+  extent: { x: number[]; y: number[] }
+}
+
+// components
+
+interface SingleNetwork {
+  data: object[]
+  accessor: 'left' | 'right' | 'source' | 'target'
+}
 const SingleNetwork = ({ data, accessor }) => {
   const [layout] = useVizLayout()
   const [fetching, setFetching] = useState(true)
@@ -113,6 +126,13 @@ const SingleNetwork = ({ data, accessor }) => {
 }
 
 const Scene = ({ dataset }) => {
+// Scene
+
+interface SceneProps {
+  dataset: DatasetProps
+  sourceNetwork: boolean
+}
+
   const ref = useRef(null)
   const groupRef = useRef(null)
 
@@ -196,16 +216,17 @@ const Scene = ({ dataset }) => {
 // Cluster
 
 interface ClusterProps {
+  key: number
   data: {
-    cluster_id: number
-    nodes: any[]
+    cluster_id?: number
+    nodes?: any[]
   }
   scales: {
     xScale: () => void
     yScale: () => void
   }
   cameraRef: MutableRefObject<OrthographicCameraProps>
-  onClick: (e: any) => void
+  onClick?: (e: any) => void
 }
 
 const Cluster = ({ data, scales, cameraRef, onClick }: ClusterProps) => {
