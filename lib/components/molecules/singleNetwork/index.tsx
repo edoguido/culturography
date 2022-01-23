@@ -56,12 +56,25 @@ const SingleNetwork = ({ data, accessor }) => {
   // runtime
 
   const fetchNetwork = async () => {
-    const { asset } = data.networks[accessorKey]
+    const { asset }: { asset: { path: string } } = data.networks[accessorKey]
 
     const options = { headers: { accepts: 'application/json' } }
-    const dataset = await fetch(`https://api.sanity.io/${asset.path}`, options)
-      .then((r) => r.json())
-      .catch(console.error)
+
+    let dataset
+
+    try {
+      dataset = await fetch(
+        `https://api.sanity.io/${asset.path}`,
+        options
+      ).then((r) => r.json())
+    } catch {
+      const { source_network_id, target_network_id } = data.networks
+      const localFile = isSourceNetwork
+        ? `${source_network_id}_nodes.json`
+        : `${target_network_id}_nodes.json`
+
+      dataset = fetch(`/data/${localFile}`).then((r) => r.json())
+    }
 
     setFetching(false)
 
