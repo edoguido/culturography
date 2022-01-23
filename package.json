@@ -12,8 +12,11 @@
     "@nivo/bar": "^0.74.0",
     "@nivo/core": "^0.74.0",
     "@nivo/sankey": "^0.74.0",
+    "@react-three/drei": "^8.6.3",
+    "@react-three/fiber": "^7.0.25",
     "@sanity/block-content-to-react": "^3.0.0",
     "@sanity/client": "^2.22.3",
+    "@types/three": "^0.136.1",
     "cors": "^2.8.5",
     "d3": "^7.3.0",
     "d3-svg-annotation": "^2.5.1",
@@ -24,7 +27,8 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-media": "^1.10.0",
-    "styled-components": "^5.3.3"
+    "styled-components": "^5.3.3",
+    "three": "^0.136.0"
   },
   "devDependencies": {
     "@types/react": "^17.0.34",
