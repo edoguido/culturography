@@ -24,7 +24,7 @@ import {
   lerp,
   randomColor,
   datasetCoordsToArrayOfPoints,
-  polygonCenter,
+  polygonCentroid,
 } from 'utils/math'
 
 import {
@@ -230,7 +230,7 @@ const Scene = ({ dataset, sourceNetwork }: SceneProps) => {
       (c: ClusterObjectProps) => c.centroid
     )
 
-    const [x, y] = polygonCenter(matchingClustersCentroids)
+    const [x, y] = polygonCentroid(matchingClustersCentroids)
     const targetCenterRescaled = [xScale(x), yScale(y)]
 
     setTargetPosition(targetCenterRescaled)

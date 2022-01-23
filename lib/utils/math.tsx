@@ -8,6 +8,15 @@ export function lerp(start, end, t) {
   return start * (1 - t) + end * t
 }
 
+// find the centroid of a polygon
+export const polygonCentroid = function (arr) {
+  var x = arr.map((xy) => xy[0])
+  var y = arr.map((xy) => xy[1])
+  var cx = (Math.min(...x) + Math.max(...x)) / 2
+  var cy = (Math.min(...y) + Math.max(...y)) / 2
+  return [cx, cy]
+}
+
 // Generate random color
 export const randomColor = () =>
   `rgb(${Math.round(Math.random() * 255)},${Math.round(
