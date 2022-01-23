@@ -316,8 +316,6 @@ const Scene = ({ dataset, sourceNetwork, forwardRef }: SceneProps) => {
       return
     }
 
-    const zoomedIn = 0
-
     if (sourceNetwork) {
       // if sourceNetwork we move to its cluster centroid...
       const {
@@ -523,7 +521,7 @@ const Cluster = ({ data, scales, color, cameraRef, onClick }: ClusterProps) => {
             // {...groupProps} // All THREE.Group props are valid
             // {...divProps} // All HTMLDivElement props are valid
           >
-            <h2>{data.cluster_id}</h2>
+            <h2>{data.name}</h2>
           </Html>
         </group>
       )}
