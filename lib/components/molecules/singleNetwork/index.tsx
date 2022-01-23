@@ -39,8 +39,9 @@ import {
   }))
 ) */
 
-const MIN_SIMILARITY_THRESHOLD = 0.1
+const MIN_SIMILARITY_THRESHOLD = 0
 
+const SCENE_CENTER = [0, 0]
 const INITIAL_ZOOM = 6
 const LERP_FACTOR = 0.1
 
