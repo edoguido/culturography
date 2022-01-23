@@ -27,8 +27,7 @@ const Sidebar = ({ data }) => {
   const [state, dispatch] = useVizLayout()
   const storyRef = useRef<HTMLDivElement>(null)
   const storyContentRef = useRef<HTMLDivElement>(null)
-  const [chapterIndex, setChapterIndex] = useState<number>(0)
-  const [blockIndex, setBlockIndex] = useState<number>(0)
+  const [storyState, setStoryState] = useState<number[]>([0, 0])
 
   const storyRefs = useMemo(
     () =>
@@ -42,20 +41,42 @@ const Sidebar = ({ data }) => {
   //
 
   const check = useCallback(
-    (refs, { trigger, callback, accessor = (d) => d }) => {
-      refs.map(accessor).map((ref, i) => {
-        if (!ref.current) return
+    (refs, { trigger, callback }) => {
+      refs.forEach((ref, i) => {
+        const chapterRef = ref.chapter.current
 
-        const { y, height } = ref.current.getBoundingClientRect()
+        if (!chapterRef) return
 
-        if (trigger < y) return
+        const blockRefs = ref.blocks
 
-        if (trigger > y && trigger < y + height) {
-          callback((prev) => {
-            return prev === i ? prev : i
-          })
-          return
-        }
+        const { y: cy, height: ch } = chapterRef.getBoundingClientRect()
+
+        blockRefs.forEach((bRef, j) => {
+          const { y: by, height: bh } = bRef.current.getBoundingClientRect()
+
+          // we first check blocks coords
+          if (trigger < by) return
+          // and proceed if we're in a block
+          if (trigger > by && trigger < by + bh) {
+            // we then check chapters coords
+            if (trigger < cy) return
+            // and proceed if we're in a chapter
+            if (trigger > cy && trigger < cy + ch) {
+              // we update state
+              callback((prev) => {
+                const [pc, pb] = prev
+                // if we're in the same chapter and block
+                if (pc === i && pb === j) return prev
+                // if we're in a new chapter but same block
+                if (pc !== i && pb === j) return [i, pb]
+                // if we're in the same chapter but new block
+                if (pc === i && pb !== j) return [pc, j]
+                // if we're in a new chapter and new block
+                if (pc !== i && pb !== j) return [i, j]
+              })
+            }
+          }
+        })
       })
     },
     [storyRefs]
@@ -70,25 +91,21 @@ const Sidebar = ({ data }) => {
 
     check(storyRefs, {
       trigger: scrollTrigger,
-      callback: setChapterIndex,
-      accessor: (d) => d.chapter,
+      callback: setStoryState,
     })
-
-    check(storyRefs[chapterIndex].blocks, {
-      trigger: scrollTrigger,
-      callback: setBlockIndex,
-    })
-  }, [chapterIndex, blockIndex])
+  }, [storyState])
 
   //
   // check scroll on each frame
   useEffect(() => {
     const fid = window.requestAnimationFrame(onScroll)
     return () => window.cancelAnimationFrame(fid)
-  }, [chapterIndex, blockIndex])
+  }, [storyState])
 
   useEffect(() => {
-    if (chapterIndex === null || blockIndex === null) return
+    if (storyState === null) return
+
+    const [chapterIndex, blockIndex] = storyState
 
     dispatch({
       type: 'UPDATE_STORY_DATA',
@@ -98,7 +115,7 @@ const Sidebar = ({ data }) => {
         blockIndex,
       }),
     })
-  }, [chapterIndex, blockIndex])
+  }, [storyState])
 
   return (
     <Styled.SidebarWrapper
