@@ -23,7 +23,6 @@ export const NetworkComparisonContent = styled.div`
 
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-row: 1fr;
   grid-gap: 0.5rem;
 
   /* ${getBreakpoint('xl')} {
