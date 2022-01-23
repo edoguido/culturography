@@ -133,15 +133,74 @@ interface SceneProps {
   sourceNetwork: boolean
 }
 
+const Scene = ({ dataset, sourceNetwork }: SceneProps) => {
+  const [layout] = useVizLayout()
+
+  //
+  const [targetZoom, setTargetZoom] = useState(INITIAL_ZOOM)
+  const [targetPosition, setTargetPosition] = useState(SCENE_CENTER)
+  //
   const ref = useRef(null)
   const groupRef = useRef(null)
-
-  const [targetZoom, setTargetZoom] = useState(INITIAL_ZOOM)
-  const [targetPosition, setTargetPosition] = useState([0, 0])
-
+  //
+  const highlightedClusterIndex = layout.networks.highlight
+  const highlightedCluster = layout?.clusters[layout.networks.highlight] || null
+  //
   // scales
-  const xScale = d3.scaleLinear().domain(dataset.extent.x).range([-50, 50])
-  const yScale = d3.scaleLinear().domain(dataset.extent.y).range([-50, 50])
+  const xScale = useMemo(
+    () => d3.scaleLinear().domain(dataset.extent.x).range([-50, 50]),
+    [dataset]
+  )
+  const yScale = useMemo(
+    () => d3.scaleLinear().domain(dataset.extent.y).range([-50, 50]),
+    [dataset]
+  )
+
+  function resetView() {
+    setTargetPosition(SCENE_CENTER)
+    setTargetZoom(INITIAL_ZOOM)
+  }
+
+  useEffect(() => {
+    if (!highlightedCluster) {
+      resetView()
+      return
+    }
+
+    if (sourceNetwork) {
+      // if sourceNetwork we move to its cluster centroid...
+      const { centroid } = highlightedCluster
+      const screenCoordsCentroid = [xScale(centroid[0]), yScale(centroid[1])]
+
+      setTargetPosition(screenCoordsCentroid)
+      setTargetZoom(15)
+      return
+    }
+
+    // otherwise we zoom to the corresponding clusters centroids
+    // - how the f*ck can I do this?
+    // console.log(highlightedCluster.similarities)
+
+    // has to return an array of centroids
+    const matchingClusters = layout.clusters.filter(
+      ({ cluster_id }: ClusterObjectProps) => {
+        const similarity = highlightedCluster.similarities[cluster_id]
+        return similarity > MIN_SIMILARITY_THRESHOLD
+      }
+    )
+
+    const matchingClustersCentroids = matchingClusters.map(
+      (c: ClusterObjectProps) => c.centroid
+    )
+
+    const [x, y] = polygonCenter(matchingClustersCentroids)
+    const targetCenterRescaled = [xScale(x), yScale(y)]
+
+    setTargetPosition(targetCenterRescaled)
+    setTargetZoom(15)
+
+    // setTargetZoom(centroid)
+  }, [highlightedClusterIndex])
 
   useFrame(() => {
     const z = ref.current.zoom
@@ -202,10 +261,10 @@ interface SceneProps {
           dataset.clusters.map((d, i) => (
             <Cluster
               key={i}
-              cameraRef={ref}
               data={d}
-              onClick={handleClusterClick}
               scales={{ xScale, yScale }}
+              cameraRef={ref}
+              // onClick={handleClusterClick}
             />
           ))}
       </group>
