@@ -300,7 +300,9 @@ const Scene = ({ dataset, sourceNetwork, forwardRef }: SceneProps) => {
   }
 
   function moveTo({ location, zoom }) {
-    const targetLocation = [location[0], location[1]]
+    let targetLocation = [location[0], location[1]]
+
+    if (!location[0] || !location[1]) targetLocation = [0, 0]
 
     setTargetPosition(targetLocation)
     setTargetZoom(zoom)
@@ -343,13 +345,13 @@ const Scene = ({ dataset, sourceNetwork, forwardRef }: SceneProps) => {
       (c: ClusterObjectProps) => c.centroid
     )
 
-    // const [x, y] = polygonCentroid(matchingClustersCentroids)
+    const [x, y] = polygonCentroid(matchingClustersCentroids)
 
-    const [x, y] = matchingClustersCentroids[0]
+    // const [x, y] = matchingClustersCentroids[0]
 
     const targetCenterRescaled = [xScale(x), yScale(y)]
 
-    moveTo({ location: targetCenterRescaled, zoom: zoomedIn })
+    moveTo({ location: targetCenterRescaled, zoom: ZOOMED_IN })
   }, [highlightedClusterIndex])
 
   //
