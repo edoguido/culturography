@@ -1,44 +1,90 @@
 import { createContext, useContext } from 'react'
-import { globalCSSVarToPixels } from 'utils/theme'
+import { rankedClusters } from 'utils/dataManipulations'
 
-// interface VizLayoutContextProperties {
-//   state: [
-//     layout: {
-//       sidebarWidth?: { value: number; unit: string }
-//       read?: boolean
-//     },
-//     setter: () => void
-//   ]
-// }
-
-// actions
+// types
 
 export interface VizLayoutAction {
   type: string
 }
 
-export interface VizLayoutSetAction extends VizLayoutAction {
-  payload: {
-    development: boolean
-    sidebarWidth: object
-    read: true
-    story: { chapter: number | null; block: number | null; data: any }
-    clusters: {
-      highlight: { type: string | null; id: number | null }
-      left: { shapefile: object | null; zoom: string | number | null }
-      right: { shapefile: object | null; zoom: string | number | null }
+export interface VizLayoutState extends VizLayoutAction {
+  development?: boolean
+  sidebarWidth?: { unit: string; value: number }
+  read?: boolean
+  story?: { chapter: number | null; block: number | null }
+  clusters?: object[]
+  networks?: {
+    highlight: string
+    source: {
+      show: boolean
+      zoom: string | null
+    }
+    target: {
+      show: boolean
+      zoom: string | null
     }
   }
 }
 
+export interface VizLayoutContextUpdater {
+  stateSetter: (newState: VizLayoutState) => void
+}
+
+export interface VizLayoutContextInterface {
+  state: VizLayoutState
+  stateSetter: VizLayoutContextUpdater
+}
+
 // utils
+
+export const makeStoryPayload = ({ source, chapterIndex, blockIndex }) => {
+  const { title } = source
+
+  const chapter = source.story_chapters[chapterIndex]
+  const block = chapter.blocks[blockIndex]
+
+  // const {
+  //   left_network_name,
+  //   source_network_id,
+  //   right_network_name,
+  //   target_network_id,
+  // } = chapter.networks
+
+  const {
+    highlight,
+    show_left_network,
+    show_right_network,
+    left_cluster_zoom,
+    right_cluster_zoom,
+  } = block.network_control
+
+  return {
+    story: { title, chapter: chapterIndex, block: blockIndex },
+    networks: {
+      highlight: highlight,
+      source: {
+        // id: source_network_id,
+        // name: left_network_name,
+        show: show_left_network,
+        zoom: left_cluster_zoom,
+      },
+      target: {
+        // id: target_network_id,
+        // name: right_network_name,
+        show: show_right_network,
+        zoom: right_cluster_zoom,
+      },
+    },
+  }
+}
+
+// hook
 
 export const VizLayoutContext = createContext(null)
 
 export const useVizLayout = () => {
-  const vizLayoutState = useContext(VizLayoutContext)
-
-  return vizLayoutState
+  const vizLayout: [a: VizLayoutState, b: any] = useContext(VizLayoutContext)
+  return vizLayout
 }
 
 // reducer
@@ -73,87 +119,30 @@ export const vizLayoutReducer = (state, action) => {
       }
     }
 
-    case 'SET_APP_STATE': {
-      return {
-        ...state,
-        appState: payload.appState,
-      }
-    }
-
     case 'TOGGLE_READ_MODE':
       return {
         ...state,
         read: !state.read,
       }
 
-    case 'UPDATE_VIZ': {
-      const { highlight, left, right } = payload.clusters
-
-      return {
-        ...state,
-        clusters: {
-          ...state.clusters,
-          highlight,
-          left,
-          right,
-        },
-      }
-    }
-    case 'UPDATE_VIZ_FEATURES': {
-      const { highlight, left, right } = payload.clusters
-
-      return {
-        ...state,
-        clusters: {
-          ...state.clusters,
-          highlight,
-          left: {
-            zoom: left.zoom,
-          },
-          right: {
-            zoom: right.zoom,
-          },
-        },
-      }
-    }
-
     case 'UPDATE_STORY_DATA': {
-      const {
-        story,
-        clusters: { left_network_shapefile, right_network_shapefile },
-        block,
-      } = payload
+      const { story, networks } = payload
+
+      const { chapter, block } = story
+      const { highlight, source, target } = networks
 
       return {
         ...state,
         story: {
           ...state.story,
-          chapter: story.chapter,
-          block: story.block,
+          chapter,
+          block,
         },
-        //
-        clusters: {
-          ...state.clusters,
-          metadata: state.clusters.metadata,
-          //
-          highlight: block?.network_control.highlight || null,
-          //
-          left: {
-            ...state.clusters.left,
-            shapefile: left_network_shapefile || state.clusters.left.shapefile,
-            zoom:
-              block?.network_control.left_cluster_zoom ||
-              state.clusters.left.zoom,
-          },
-          //
-          right: {
-            ...state.clusters.right,
-            shapefile:
-              right_network_shapefile || state.clusters.right.shapefile,
-            zoom:
-              block?.network_control.right_cluster_zoom ||
-              state.clusters.right.zoom,
-          },
+        networks: {
+          ...state.networks,
+          highlight,
+          source,
+          target,
         },
       }
     }
@@ -163,10 +152,7 @@ export const vizLayoutReducer = (state, action) => {
 
       return {
         ...state,
-        clusters: {
-          ...state.clusters,
-          metadata: metadata,
-        },
+        clusters: rankedClusters(metadata),
       }
     }
 
