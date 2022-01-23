@@ -255,7 +255,7 @@ const Scene = ({ dataset, sourceNetwork, forwardRef }: SceneProps) => {
         similarityWithHighlightedCluster &&
         similarityWithHighlightedCluster > MIN_SIMILARITY_THRESHOLD
       ) {
-        return colorScale(id)
+        return colorScale(highlightedCluster.cluster_id)
       }
 
       return '#333333'
