@@ -17,7 +17,7 @@ import {
   Html,
 } from '@react-three/drei'
 
-import { Leva, useControls } from 'leva'
+import { useControls } from 'leva'
 
 import * as d3 from 'd3'
 
@@ -35,7 +35,6 @@ import {
   lerp,
   datasetCoordsToArrayOfPoints,
   polygonCentroid,
-  randomColor,
 } from 'utils/math'
 
 import {

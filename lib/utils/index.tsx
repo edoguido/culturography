@@ -1,4 +1,4 @@
-const isDevelopment =
-  process.env.SHOW_CONTROLS || process.env.NODE_ENV !== 'development'
+export const isDevelopment = process.env.NODE_ENV !== 'development'
 
-export default isDevelopment
+export const showUiControls =
+  Boolean(process.env.SHOW_CONTROLS) || isDevelopment
