@@ -21,6 +21,7 @@
     "d3": "^7.3.0",
     "d3-svg-annotation": "^2.5.1",
     "framer-motion": "^4.1.17",
+    "leva": "^0.9.18",
     "module-alias": "^2.2.2",
     "next": "11.1.2",
     "pixi.js": "^6.2.1",
