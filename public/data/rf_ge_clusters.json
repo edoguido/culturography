@@ -3,7 +3,7 @@
       "network": "rf",
       "cluster_original": 0,
       "cluster_id": 0,
-      "name": "",
+      "name": "Camps & makers",
       "shape": [
          -3540,
          2728,
@@ -107,7 +107,7 @@
       "network": "rf",
       "cluster_original": 2,
       "cluster_id": 2,
-      "name": "",
+      "name": "Concert photography",
       "shape": [
          -1320,
          -2302,
@@ -207,7 +207,7 @@
       "network": "rf",
       "cluster_original": 6,
       "cluster_id": 6,
-      "name": "",
+      "name": "Media festival",
       "shape": [
          -2804,
          2855,
@@ -293,7 +293,7 @@
       "network": "rf",
       "cluster_original": 10,
       "cluster_id": 10,
-      "name": "",
+      "name": "Metal & Summer Days",
       "shape": [
          -710,
          2314,
@@ -397,7 +397,7 @@
       "network": "rf",
       "cluster_original": 14,
       "cluster_id": 14,
-      "name": "",
+      "name": "Tessa & DK live",
       "shape": [
          -2588,
          1230,
@@ -469,7 +469,7 @@
       "network": "rf",
       "cluster_original": 16,
       "cluster_id": 16,
-      "name": "",
+      "name": "Graffiti",
       "shape": [
          -2794,
          2672,
@@ -587,7 +587,7 @@
       "network": "rf",
       "cluster_original": 20,
       "cluster_id": 20,
-      "name": "",
+      "name": "DAD & Roskilde nostalgia",
       "shape": [
          -2241,
          2534,
@@ -719,7 +719,7 @@
       "network": "rf",
       "cluster_original": 30,
       "cluster_id": 30,
-      "name": "",
+      "name": "Understanding & Camp life",
       "shape": [
          -1268,
          2643,
@@ -1068,7 +1068,7 @@
       "network": "rf",
       "cluster_original": 41,
       "cluster_id": 39,
-      "name": "",
+      "name": "Ragnarock Roskilde exhibition",
       "shape": [
          -5585,
          2579,
@@ -1141,7 +1141,7 @@
       "network": "rf",
       "cluster_original": 43,
       "cluster_id": 40,
-      "name": "",
+      "name": "About Vintage watches",
       "shape": [
          -1645,
          1718,
@@ -1217,7 +1217,7 @@
       "network": "rf",
       "cluster_original": 45,
       "cluster_id": 42,
-      "name": "",
+      "name": "The Cure",
       "shape": [
          -2070,
          585,
@@ -1415,7 +1415,7 @@
       "network": "rf",
       "cluster_original": 61,
       "cluster_id": 58,
-      "name": "",
+      "name": "Ragnarock & Roskilde Festival Højskole",
       "shape": [
          -4841,
          -308,
@@ -1746,7 +1746,7 @@
       "network": "rf",
       "cluster_original": 91,
       "cluster_id": 83,
-      "name": "",
+      "name": "Heilung & black metal",
       "shape": [
          4377,
          1911,
@@ -1889,7 +1889,7 @@
       "network": "rf",
       "cluster_original": 106,
       "cluster_id": 92,
-      "name": "",
+      "name": "Nina Hagen 1985",
       "shape": [
          -3223,
          2924,
@@ -2127,7 +2127,7 @@
       "network": "rf",
       "cluster_original": 147,
       "cluster_id": 112,
-      "name": "",
+      "name": "'The Cure' for COVID meme",
       "shape": [
          -1274,
          -5738,
@@ -2365,7 +2365,7 @@
       "network": "ge",
       "cluster_original": 2,
       "cluster_id": 130,
-      "name": "",
+      "name": "Solar tech",
       "shape": [
          -1870,
          1184,
@@ -2455,7 +2455,7 @@
       "network": "ge",
       "cluster_original": 8,
       "cluster_id": 134,
-      "name": "",
+      "name": "Circular economy & sustainable consumption",
       "shape": [
          -1941,
          2274,
@@ -2524,7 +2524,7 @@
       "network": "ge",
       "cluster_original": 9,
       "cluster_id": 135,
-      "name": "",
+      "name": "Wind tech",
       "shape": [
          -1874,
          -909,
@@ -2623,7 +2623,7 @@
       "network": "ge",
       "cluster_original": 14,
       "cluster_id": 140,
-      "name": "",
+      "name": "Indonesian green tech",
       "shape": [
          -2928,
          -1186,
@@ -2725,7 +2725,7 @@
       "network": "ge",
       "cluster_original": 16,
       "cluster_id": 142,
-      "name": "",
+      "name": "Pollution & environmental protection",
       "shape": [
          -111,
          309,
@@ -2826,7 +2826,7 @@
       "network": "ge",
       "cluster_original": 21,
       "cluster_id": 147,
-      "name": "",
+      "name": "Tesla & Musk",
       "shape": [
          -1939,
          2368,
@@ -2869,7 +2869,7 @@
       "network": "ge",
       "cluster_original": 22,
       "cluster_id": 148,
-      "name": "",
+      "name": "Electric vehicles",
       "shape": [
          -923,
          2493,
@@ -3053,7 +3053,7 @@
       "network": "ge",
       "cluster_original": 36,
       "cluster_id": 162,
-      "name": "",
+      "name": "Activism & advocacy",
       "shape": [
          -1940,
          899,
@@ -3391,7 +3391,7 @@
       "network": "ge",
       "cluster_original": 66,
       "cluster_id": 192,
-      "name": "",
+      "name": "Natural photography",
       "shape": [
          -3114,
          -604,
@@ -3529,7 +3529,7 @@
       "network": "ge",
       "cluster_original": 74,
       "cluster_id": 200,
-      "name": "",
+      "name": "Plants and flowers",
       "shape": [
          -3144,
          -857,
@@ -3611,7 +3611,7 @@
       "network": "ge",
       "cluster_original": 76,
       "cluster_id": 202,
-      "name": "",
+      "name": "Energy tech photography",
       "shape": [
          -3288,
          -1293,
@@ -3704,7 +3704,7 @@
       "network": "ge",
       "cluster_original": 82,
       "cluster_id": 207,
-      "name": "",
+      "name": "Stock markets",
       "shape": [
          1615,
          500,
@@ -3770,7 +3770,7 @@
       "network": "ge",
       "cluster_original": 84,
       "cluster_id": 209,
-      "name": "",
+      "name": "Indian green finance explainers",
       "shape": [
          -439,
          -2160,
@@ -3926,7 +3926,7 @@
       "network": "ge",
       "cluster_original": 95,
       "cluster_id": 219,
-      "name": "",
+      "name": "Wood & craftsmanship",
       "shape": [
          -1310,
          1383,
@@ -4241,7 +4241,7 @@
       "network": "ge",
       "cluster_original": 125,
       "cluster_id": 248,
-      "name": "",
+      "name": "Energy tech at home & DIY",
       "shape": [
          -3181,
          -1874,
