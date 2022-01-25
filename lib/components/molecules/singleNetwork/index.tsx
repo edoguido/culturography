@@ -17,6 +17,8 @@ import {
   Html,
 } from '@react-three/drei'
 
+import { Leva, useControls } from 'leva'
+
 import * as d3 from 'd3'
 
 //
@@ -48,12 +50,39 @@ import {
   }))
 ) */
 
+// for testing purposes
+
+function Box(props) {
+  // This reference gives us direct access to the THREE.Mesh object
+  const ref = useRef(null)
+  // Hold state for hovered and clicked events
+  const [hovered, hover] = useState(false)
+  const [clicked, click] = useState(false)
+  // Subscribe this component to the render-loop, rotate the mesh every frame
+  // useFrame((state, delta) => (ref.current.rotation.x += 0.01))
+  // Return the view, these are regular Threejs elements expressed in JSX
+  return (
+    <mesh
+      {...props}
+      ref={ref}
+      // onClick={(event) => click(!clicked)}
+      // onPointerOver={(event) => hover(true)}
+      // onPointerOut={(event) => hover(false)}
+    >
+      <sphereGeometry args={[1, 20, 20]} />
+      <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
+    </mesh>
+  )
+}
+
 const MIN_SIMILARITY_THRESHOLD = 0
 
 const SCENE_CENTER = [0, 0]
 const INITIAL_ZOOM = 5
+const MAX_ZOOM = 60
 const ZOOMED_IN = 8
 const BASE_POINT_SIZE = 1
+const BASE_LABEL_SCALE = 4
 const LERP_FACTOR = 0.1
 
 // sub-types
@@ -73,6 +102,7 @@ interface SingleNetwork {
 
 const SingleNetwork = ({ data, accessor }) => {
   const [layout] = useVizLayout()
+
   const ContextBridge = useContextBridge(VizLayoutContext)
   //
   const [fetching, setFetching] = useState<boolean>(true)
@@ -178,7 +208,8 @@ const SingleNetwork = ({ data, accessor }) => {
           {dataset && (
             <Scene
               dataset={dataset}
-              sourceNetwork={isSourceNetwork}
+              networkName={accessor}
+              isSourceNetwork={isSourceNetwork}
               forwardRef={canvasRef}
             />
           )}
@@ -192,17 +223,30 @@ const SingleNetwork = ({ data, accessor }) => {
 
 interface SceneProps {
   dataset: DatasetProps
-  sourceNetwork: boolean
+  networkName: string
+  isSourceNetwork: boolean
   forwardRef: Ref<HTMLCanvasElement>
 }
 
-const Scene = ({ dataset, sourceNetwork, forwardRef }: SceneProps) => {
+const Scene = ({
+  dataset,
+  networkName,
+  isSourceNetwork,
+  forwardRef,
+}: SceneProps) => {
   const [layout] = useVizLayout()
 
-  //
-  const [targetZoom, setTargetZoom] = useState(null)
-  const [targetPosition, setTargetPosition] = useState(SCENE_CENTER)
-  //
+  const [{ cameraPosition, cameraZoom }, set] = useControls(
+    networkName,
+    () => ({
+      cameraPosition: {
+        value: [0, 0],
+        step: 1,
+      },
+      cameraZoom: { value: INITIAL_ZOOM, min: INITIAL_ZOOM, max: MAX_ZOOM },
+    })
+  )
+
   const cameraRef = useRef(null)
   const groupRef = useRef(null)
   //
@@ -293,6 +337,8 @@ const Scene = ({ dataset, sourceNetwork, forwardRef }: SceneProps) => {
   }
 
   // we should set initial zoom here
+  // -- how can we fit to objects bounds?
+  // -- maybe do some calculation with group?
   function setInitialZoom() {
     // const boundingBox = new Box3()
     // boundingBox.setFromObject(groupRef.current)
@@ -305,21 +351,23 @@ const Scene = ({ dataset, sourceNetwork, forwardRef }: SceneProps) => {
 
     // const cameraZ = Math.abs((maxDim / 4) * Math.tan(fov * 2))
 
-    setTargetZoom(INITIAL_ZOOM)
+    set({ cameraZoom: INITIAL_ZOOM })
   }
 
   function resetView() {
-    setTargetPosition(SCENE_CENTER)
+    set({ cameraPosition: SCENE_CENTER })
     setInitialZoom()
   }
 
+  // move to programmatically
   function moveTo({ location, zoom }) {
     let targetLocation = [location[0], location[1]]
 
+    // do not f*cking comment this
     if (!location[0] || !location[1]) targetLocation = [0, 0]
 
-    setTargetPosition(targetLocation)
-    setTargetZoom(zoom)
+    set({ cameraPosition: targetLocation, cameraZoom: zoom })
+    // setTargetZoom(zoom)
   }
 
   // handle change of block and chapter
@@ -329,8 +377,8 @@ const Scene = ({ dataset, sourceNetwork, forwardRef }: SceneProps) => {
       return
     }
 
-    if (sourceNetwork) {
-      // if sourceNetwork we move to its cluster centroid...
+    if (isSourceNetwork) {
+      // if isSourceNetwork we move to its cluster centroid...
       const {
         centroid: [cx, cy],
       } = highlightedCluster
@@ -361,9 +409,9 @@ const Scene = ({ dataset, sourceNetwork, forwardRef }: SceneProps) => {
 
     // const [x, y] = matchingClustersCentroids[0]
 
-    const targetCenterRescaled = [xScale(x), yScale(y)]
+    const screenCoordsCentroids = [xScale(x), yScale(y)]
 
-    moveTo({ location: targetCenterRescaled, zoom: ZOOMED_IN })
+    moveTo({ location: screenCoordsCentroids, zoom: ZOOMED_IN })
   }, [highlightedClusterIndex])
 
   //
@@ -371,22 +419,29 @@ const Scene = ({ dataset, sourceNetwork, forwardRef }: SceneProps) => {
   // runtime operations
 
   useFrame(() => {
-    const z = cameraRef.current.zoom
-    const currentZoom = round(z)
-    const isAtTargetZoom = currentZoom === round(targetZoom)
+    if (cameraRef.current) {
+      const z = cameraRef.current.zoom
+      const currentZoom = round(z)
+      const isAtTargetZoom = currentZoom === round(cameraZoom)
 
-    if (targetZoom) {
-      cameraRef.current.zoom = lerp(z, targetZoom, LERP_FACTOR)
-      cameraRef.current.updateProjectionMatrix()
-    } else if (isAtTargetZoom && targetZoom !== null) {
-      setTargetZoom(null)
+      if (cameraZoom) {
+        cameraRef.current.zoom = lerp(z, cameraZoom, LERP_FACTOR)
+        cameraRef.current.updateProjectionMatrix()
+      } else if (isAtTargetZoom && cameraZoom !== null) {
+        set({ cameraZoom: null })
+      }
     }
-    const [x, y] = [groupRef.current.position.x, groupRef.current.position.y]
-    const isAtTargetPosition =
-      round(x) === targetPosition[0] && round(y) === targetPosition[1]
-    if (!isAtTargetPosition) {
-      groupRef.current.position.x = lerp(x, targetPosition[0], LERP_FACTOR)
-      groupRef.current.position.y = lerp(y, targetPosition[1], LERP_FACTOR)
+
+    if (groupRef.current) {
+      const [x, y] = [groupRef.current.position.x, groupRef.current.position.y]
+      const isAtTargetPosition =
+        round(x) === cameraPosition[0] && round(y) === cameraPosition[1]
+      if (!isAtTargetPosition) {
+        groupRef.current.position.x = lerp(x, -cameraPosition[0], LERP_FACTOR)
+        groupRef.current.position.y = lerp(y, cameraPosition[1], LERP_FACTOR)
+      } else if (isAtTargetPosition && cameraPosition !== null) {
+        set({ cameraPosition: null })
+      }
     }
   })
 
@@ -395,28 +450,28 @@ const Scene = ({ dataset, sourceNetwork, forwardRef }: SceneProps) => {
       <OrthographicCamera
         ref={cameraRef}
         makeDefault
-        position={[0, 0, -10]}
+        // position={[cameraPosition[0], -cameraPosition[1], 10]}
         zoom={INITIAL_ZOOM}
         // up={[0, 0, 1]}
       />
-      <MapControls
+      {/* <MapControls
         enabled={false}
         enablePan
         enableRotate
         enableZoom
         enableDamping
-      />
-      {/* <ambientLight intensity={0.5} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
+      /> */}
+      <ambientLight intensity={0.5} />
+      {/* <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
       <pointLight position={[-10, -10, -10]} /> */}
       <group
         ref={groupRef}
-        position={[0, 0, 10]}
-        rotation={[
-          MathUtils.degToRad(0),
-          MathUtils.degToRad(0),
-          MathUtils.degToRad(90),
-        ]}
+        // position={[0, 0, 0]}
+        // rotation={[
+        //   MathUtils.degToRad(0),
+        //   MathUtils.degToRad(0),
+        //   MathUtils.degToRad(0),
+        // ]}
       >
         {dataset &&
           dataset.clusters.map((d: ClusterObjectProps, i) => {
@@ -457,11 +512,14 @@ interface ClusterProps {
   onClick?: (e: any) => void
 }
 
-const Cluster = ({ data, scales, color, cameraRef, onClick }: ClusterProps) => {
+const Cluster = ({ data, scales, color, onClick }: ClusterProps) => {
   const { xScale, yScale } = scales
 
-  const [labelPosition, setLabelPosition] = useState(null)
+  // const [labelPosition, setLabelPosition] = useState(null)
+  const [cx, cy] = data.centroid
+  const labelPosition = new Vector3(xScale(cx), -yScale(cy), -10)
 
+  const labelRef = useRef(null)
   const pointsRef = useRef(null)
   const pointMaterialRef = useRef(null)
 
@@ -473,25 +531,17 @@ const Cluster = ({ data, scales, color, cameraRef, onClick }: ClusterProps) => {
     [subDataset, numPoints]
   )
 
-  const [cx, cy] = data.centroid
-  const [ax, ay] = [xScale(cx), yScale(cy)]
+  // const [cx, cy] = data.centroid
+  // const [ax, ay] = [xScale(cx), yScale(cy)]
 
-  useEffect(() => {
-    if (!pointsRef.current) return
-
-    const boundingBox = new Box3()
-    boundingBox.setFromObject(pointsRef.current)
-
-    // const size = boundingBox.getSize(new Vector3())
-    const center = boundingBox.getCenter(new Vector3())
-
-    setLabelPosition(center)
-  }, [pointsRef.current])
-
-  useFrame(() => {
-    //pointMaterialRef.current.size = lerp(pointMaterialRef.current.size, BASE_POINT_SIZE + cameraRef.current.zoom / 10, LERP_FACTOR)
-    pointMaterialRef.current.size =
-      BASE_POINT_SIZE + cameraRef.current.zoom / 20
+  useFrame(({ camera }) => {
+    if (labelRef.current) {
+      const z = BASE_LABEL_SCALE - (camera.zoom * 3.5) / MAX_ZOOM
+      labelRef.current.style.transform = `scale3d(${z},${z},${z})`
+    }
+    //pointMaterialRef.current.size = lerp(pointMaterialRef.current.size, BASE_POINT_SIZE + camera.zoom / 10, LERP_FACTOR)
+    // pointMaterialRef.current.size =
+    //   BASE_POINT_SIZE + camera.zoom / 20
     // // set material color
     // if (clusterId === 0) {
     //   pointMaterialRef.current.color = new Color(
@@ -516,16 +566,17 @@ const Cluster = ({ data, scales, color, cameraRef, onClick }: ClusterProps) => {
 
   return (
     <group onClick={onClick}>
-      {labelPosition && (
+      {labelPosition && pointsRef.current && (
         <group position={labelPosition}>
+          <Box position={[0, 0, -20]} scale={1} />
           <Html
             as="div" // Wrapping element (default: 'div')
             // wrapperClass // The className of the wrapping element (default: undefined)
             // prepend // Project content behind the canvas (default: false)
-            center // Adds a -50%/-50% css transform (default: false) [ignored in transform mode]
+            // center // Adds a -50%/-50% css transform (default: false) [ignored in transform mode]
             // fullscreen // Aligns to the upper-left corner, fills the screen (default:false) [ignored in transform mode]
-            distanceFactor={30} // If set (default: undefined), children will be scaled by this factor, and also by distance to a PerspectiveCamera / zoom by a OrthographicCamera.
-            zIndexRange={[100, 0]} // Z-order range (default=[16777271, 0])
+            // distanceFactor={30} // If set (default: undefined), children will be scaled by this factor, and also by distance to a PerspectiveCamera / zoom by a OrthographicCamera.
+            // zIndexRange={[100, 0]} // Z-order range (default=[16777271, 0])
             // portal={domnodeRef} // Reference to target container (default=undefined)
             transform // If true, applies matrix3d transformations (default=false)
             sprite // Renders as sprite, but only in transform mode (default=false)
@@ -535,10 +586,11 @@ const Cluster = ({ data, scales, color, cameraRef, onClick }: ClusterProps) => {
             // {...groupProps} // All THREE.Group props are valid
             // {...divProps} // All HTMLDivElement props are valid
           >
-            <h2>{data.name}</h2>
+            <h2 ref={labelRef}>{data.name}</h2>
           </Html>
         </group>
       )}
+
       <points ref={pointsRef}>
         <bufferGeometry>
           <bufferAttribute
@@ -552,7 +604,9 @@ const Cluster = ({ data, scales, color, cameraRef, onClick }: ClusterProps) => {
           ref={pointMaterialRef}
           color={color}
           size={BASE_POINT_SIZE}
-          /* sizeAttenuation={true} alphaTest={0.5} transparent={true} */
+          sizeAttenuation={true}
+          alphaTest={0.5}
+          transparent={true}
         />
       </points>
     </group>

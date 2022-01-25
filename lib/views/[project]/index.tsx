@@ -10,6 +10,9 @@ import Sidebar from 'components/organisms/sidebar'
 import NetworkComparison from 'components/organisms/networkComparison'
 import Nav from 'components/molecules/nav'
 // import DevArea from 'components/atoms/devArea'
+import { Leva } from 'leva'
+import isDevelopment from 'utils/index'
+
 import * as Styled from './styled'
 
 const ProjectPage = ({ data }) => {
@@ -31,6 +34,7 @@ const ProjectPage = ({ data }) => {
   return (
     state && (
       <DefaultLayout>
+        <Leva hidden={isDevelopment} />
         <VizLayoutContext.Provider value={[state, dispatch]}>
           {/* <DevArea /> */}
           <Styled.ProjectPageWrapper>

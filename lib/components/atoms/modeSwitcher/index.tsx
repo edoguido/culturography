@@ -1,10 +1,21 @@
 import { useVizLayout } from '@/context/vizLayoutContext'
+import { useControls } from 'leva'
+import { useEffect } from 'react'
 import * as Styled from './styled'
 
 const ModeSwitcher = () => {
   const [state, dispatch] = useVizLayout()
 
+  const [sidebar, set] = useControls(() => ({
+    sidebar: state.read,
+  }))
+
+  useEffect(() => {
+    dispatch({ type: 'TOGGLE_READ_MODE' })
+  }, [sidebar])
+
   function handleChangeLayout() {
+    set({ sidebar: !sidebar })
     dispatch({ type: 'TOGGLE_READ_MODE' })
   }
 
