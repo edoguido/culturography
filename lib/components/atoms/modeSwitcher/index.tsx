@@ -1,22 +1,30 @@
 import { useVizLayout } from '@/context/vizLayoutContext'
 import { useControls } from 'leva'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import * as Styled from './styled'
 
 const ModeSwitcher = () => {
   const [state, dispatch] = useVizLayout()
 
-  const [sidebar, set] = useControls(() => ({
+  const [{ sidebar }, set] = useControls(() => ({
     sidebar: state.read,
   }))
 
+  const useControlsRef = useRef(null)
+
   useEffect(() => {
+    // used to skip first render
+    // otherwise we toggle sidebar already
+    if (!useControlsRef.current) {
+      useControlsRef.current = sidebar
+      return
+    }
+
     dispatch({ type: 'TOGGLE_READ_MODE' })
   }, [sidebar])
 
   function handleChangeLayout() {
     set({ sidebar: !sidebar })
-    dispatch({ type: 'TOGGLE_READ_MODE' })
   }
 
   return (
