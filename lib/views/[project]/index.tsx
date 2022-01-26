@@ -34,7 +34,7 @@ const ProjectPage = ({ data }) => {
   return (
     state && (
       <DefaultLayout>
-        <Leva hidden={showUiControls} />
+        <Leva hidden={!showUiControls} />
         <VizLayoutContext.Provider value={[state, dispatch]}>
           {/* <DevArea /> */}
           <Styled.ProjectPageWrapper>
