@@ -585,7 +585,7 @@ const Cluster = ({ data, scales, color, label, onClick }: ClusterProps) => {
     <group onClick={onClick}>
       {labelPosition && pointsRef.current && (
         <group position={labelPosition}>
-          <Box position={[0, 0, -20]} scale={1} />
+          {/* {isDevelopment && <Box position={[0, 0, -20]} scale={1} />} */}
           <Html
             as="div" // Wrapping element (default: 'div')
             // wrapperClass // The className of the wrapping element (default: undefined)
