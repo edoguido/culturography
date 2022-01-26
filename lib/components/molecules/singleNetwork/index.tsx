@@ -532,7 +532,7 @@ const Cluster = ({ data, scales, color, label, onClick }: ClusterProps) => {
   const [mounted, setMounted] = useState(false)
 
   const [cx, cy] = data.centroid
-  const labelPosition = new Vector3(xScale(cx), -yScale(cy), -10)
+  const labelPosition = new Vector3(xScale(cx), -yScale(cy), 0)
 
   const labelRef = useRef(null)
   const pointsRef = useRef(null)
