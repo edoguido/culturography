@@ -482,12 +482,20 @@ const Scene = ({
           dataset.clusters.map((d: ClusterObjectProps, i) => {
             const color = getColor(d.cluster_id)
 
+            const showLabel =
+              !highlightedCluster ||
+              (highlightedCluster &&
+                highlightedCluster.cluster_id === d.cluster_id) ||
+              (highlightedCluster &&
+                highlightedCluster.similarities[d.cluster_id] > 0)
+
             return (
               <Cluster
                 key={i}
                 data={d}
                 scales={{ xScale, yScale }}
                 color={color}
+                label={showLabel}
                 cameraRef={cameraRef}
                 // onClick={handleClusterClick}
               />
@@ -513,14 +521,16 @@ interface ClusterProps {
     yScale: (a: number) => number
   }
   color: string | number
+  label: boolean
   cameraRef: MutableRefObject<OrthographicCameraProps>
   onClick?: (e: any) => void
 }
 
-const Cluster = ({ data, scales, color, onClick }: ClusterProps) => {
+const Cluster = ({ data, scales, color, label, onClick }: ClusterProps) => {
   const { xScale, yScale } = scales
 
-  // const [labelPosition, setLabelPosition] = useState(null)
+  const [mounted, setMounted] = useState(false)
+
   const [cx, cy] = data.centroid
   const labelPosition = new Vector3(xScale(cx), -yScale(cy), -10)
 
@@ -536,25 +546,27 @@ const Cluster = ({ data, scales, color, onClick }: ClusterProps) => {
     [subDataset, numPoints]
   )
 
-  // const [cx, cy] = data.centroid
-  // const [ax, ay] = [xScale(cx), yScale(cy)]
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useFrame(({ camera }) => {
-    if (labelRef.current) {
-      const z = BASE_LABEL_SCALE - (camera.zoom * 3.5) / MAX_ZOOM
-      labelRef.current.style.transform = `scale3d(${z},${z},${z})`
+    pointMaterialRef.current.size = lerp(
+      pointMaterialRef.current.size,
+      BASE_POINT_SIZE + camera.zoom / 10,
+      LERP_FACTOR
+    )
+
+    if (!mounted) return
+    const z = BASE_LABEL_SCALE - (camera.zoom * 3.5) / MAX_ZOOM
+    labelRef.current.style.transform = `scale3d(${z},${z},${z})`
+
+    const o = labelRef.current.style.opacity
+    if (label) {
+      labelRef.current.style.opacity = lerp(o, 1, LERP_FACTOR)
+    } else {
+      labelRef.current.style.opacity = lerp(o, 0, LERP_FACTOR)
     }
-    //pointMaterialRef.current.size = lerp(pointMaterialRef.current.size, BASE_POINT_SIZE + camera.zoom / 10, LERP_FACTOR)
-    // pointMaterialRef.current.size =
-    //   BASE_POINT_SIZE + camera.zoom / 20
-    // // set material color
-    // if (clusterId === 0) {
-    //   pointMaterialRef.current.color = new Color(
-    //     Math.sin(clock.getElapsedTime()),
-    //     Math.sin(clock.getElapsedTime()),
-    //     Math.cos(clock.getElapsedTime())
-    //   )
-    // }
   })
 
   /* function handlePointerEnter() {
@@ -581,10 +593,10 @@ const Cluster = ({ data, scales, color, onClick }: ClusterProps) => {
             // center // Adds a -50%/-50% css transform (default: false) [ignored in transform mode]
             // fullscreen // Aligns to the upper-left corner, fills the screen (default:false) [ignored in transform mode]
             // distanceFactor={30} // If set (default: undefined), children will be scaled by this factor, and also by distance to a PerspectiveCamera / zoom by a OrthographicCamera.
-            // zIndexRange={[100, 0]} // Z-order range (default=[16777271, 0])
+            zIndexRange={[50, 10]} // Z-order range (default=[16777271, 0])
             // portal={domnodeRef} // Reference to target container (default=undefined)
             transform // If true, applies matrix3d transformations (default=false)
-            sprite // Renders as sprite, but only in transform mode (default=false)
+            // sprite // Renders as sprite, but only in transform mode (default=false)
             // calculatePosition={() => [ax, ay]} // Override default positioning function. (default=undefined) [ignored in transform mode]
             // occlude={[ref]} // Can be true or a Ref<Object3D>[], true occludes the entire scene (default: undefined)
             // onOcclude={(visible) => null} // Callback when the visibility changes (default: undefined)
