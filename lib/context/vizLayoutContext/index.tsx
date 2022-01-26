@@ -4,13 +4,13 @@ import { rankedClusters } from 'utils/dataManipulations'
 // types
 
 export interface ClusterObjectProps {
-  network: string
-  cluster_original: number
-  cluster_id: number
-  name: string
-  centroid: [number, number]
-  shape: number[]
-  similarities: object
+  network?: string
+  cluster_original?: number
+  cluster_id?: number
+  name?: string
+  centroid?: [number, number] | null
+  shape?: number[]
+  similarities?: object
 }
 
 export interface VizLayoutAction {
