@@ -111,6 +111,46 @@ const NetworkComparison = ({ data }) => {
     >
       {layout.clusters && (
         <Styled.NetworkComparisonContent>
+          {highlightedCluster && targetNetworkName && (
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                zIndex: 99,
+                padding: '1rem',
+              }}
+            >
+              Observing the{' '}
+              <span
+                style={{
+                  backgroundColor: 'white',
+                  color: 'black',
+                  padding: '.125rem .5rem',
+                  borderRadius: '99rem',
+                }}
+              >
+                {highlightedCluster.name}
+              </span>{' '}
+              cluster{' '}
+              {showBothNetworks && (
+                <>
+                  correspondences in the{' '}
+                  <span
+                    style={{
+                      backgroundColor: 'white',
+                      color: 'black',
+                      padding: '.125rem .5rem',
+                      borderRadius: '99rem',
+                    }}
+                  >
+                    {targetNetworkName}
+                  </span>{' '}
+                  network
+                </>
+              )}
+            </div>
+          )}
+
           {networks.map((n) => {
             const isSource = n === 'left' || n === 'source'
             const { animate } = networkLayoutProperties(isSource)
