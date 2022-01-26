@@ -16,9 +16,25 @@ const networks = ['left', 'right']
 
 const NetworkComparison = ({ data }) => {
   const [layout, dispatch] = useVizLayout()
+  //
+  // story properties
+  const currentBlock = layout.story.block
+  // networks properties
   const networksData = data.story_chapters[layout.story.chapter]
   const networksProperties = layout.networks
+  const targetNetworkName = networksData.networks.right_network_name
+  //
+  // clusters properties
+  const highlightedClusterIndex: number = isNaN(+layout.networks.highlight)
+    ? null
+    : +layout.networks.highlight - 1
+  //
+  const highlightedCluster: ClusterObjectProps =
+    highlightedClusterIndex !== null
+      ? layout?.clusters[highlightedClusterIndex]
+      : null
 
+  // layout properties
   const showBothNetworks =
     networksProperties.source.show && networksProperties.target.show
 
@@ -89,7 +105,11 @@ const NetworkComparison = ({ data }) => {
                   damping: 60,
                 }}
               >
-                <SingleNetwork accessor={n} data={networksData} />
+                <SingleNetwork
+                  data={networksData}
+                  activeCluster={highlightedClusterIndex}
+                  accessor={n}
+                />
               </Styled.NetworkComparisonSingleNetworkWrapper>
             )
           })}

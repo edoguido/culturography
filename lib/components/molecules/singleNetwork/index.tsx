@@ -205,8 +205,9 @@ const SingleNetwork = ({ data, activeCluster, accessor }) => {
             <Scene
               dataset={dataset}
               networkName={accessor}
+              activeCluster={activeCluster}
+              highlightedCluster={highlightedCluster}
               isSourceNetwork={isSourceNetwork}
-              forwardRef={canvasRef}
             />
           )}
         </ContextBridge>
