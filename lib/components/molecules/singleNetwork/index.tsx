@@ -457,14 +457,16 @@ const Scene = ({
         zoom={INITIAL_ZOOM}
         // up={[0, 0, 1]}
       />
-      {/* <MapControls
+      <MapControls
         enabled={false}
         enablePan
         enableRotate
         enableZoom
         enableDamping
-      /> */}
-      <ambientLight intensity={0.5} />
+        // camera={cameraRef.current}
+        // position={new Vector3(cameraPosition[0], cameraPosition[1], 0)}
+      />
+      {/* {isDevelopment && <ambientLight intensity={0.5} />} */}
       {/* <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
       <pointLight position={[-10, -10, -10]} /> */}
       <group
