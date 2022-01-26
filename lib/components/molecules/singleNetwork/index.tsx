@@ -42,6 +42,10 @@ import {
   rankedClusters,
 } from 'utils/dataManipulations'
 
+import { showUiControls } from 'utils/index'
+
+import Spinner from 'components/atoms/spinner'
+
 /* const allClusterIDs = new Set(
   rankedClusters.map((d) => ({
     network: d.network,
@@ -179,34 +183,22 @@ const SingleNetwork = ({ data, activeCluster, accessor }) => {
         height: '100%',
       }}
     >
-      {fetching && (
+      {fetching && <Spinner />}
+      {showUiControls && (
         <div
           style={{
             position: 'absolute',
-            inset: 0,
-            zIndex: 100000,
-            color: 'white',
-            backgroundColor: 'black',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+            zIndex: 20,
+            top: '50%',
+            left: '50%',
+            color: 'red',
+            transform: 'translate(-50%,-50%) scale(3)',
+            fontWeight: '100',
           }}
         >
-          Fetching!
+          +
         </div>
       )}
-      <div
-        style={{
-          position: 'absolute',
-          zIndex: 20,
-          top: '50%',
-          left: '50%',
-          color: 'red',
-          transform: 'scale(2)',
-        }}
-      >
-        +
-      </div>
       <Canvas ref={canvasRef}>
         <ContextBridge>
           {dataset && (
