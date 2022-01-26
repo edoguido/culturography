@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 
 const SingleNetwork = dynamic(
@@ -7,7 +7,7 @@ const SingleNetwork = dynamic(
 )
 
 import { motionOptions } from '@/const/motionProps'
-import { useVizLayout } from '@/context/vizLayoutContext'
+import { ClusterObjectProps, useVizLayout } from '@/context/vizLayoutContext'
 // import ProjectTimeline from 'components/molecules/timeline'
 
 import * as Styled from './styled'
