@@ -520,7 +520,7 @@ interface ClusterProps {
     xScale: (a: number) => number
     yScale: (a: number) => number
   }
-  color: string | number
+  color: Color | string | number
   label: boolean
   cameraRef: MutableRefObject<OrthographicCameraProps>
   onClick?: (e: any) => void
