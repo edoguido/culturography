@@ -87,7 +87,7 @@ const Sidebar = ({ data }) => {
 
     if (!storyRef.current) return
 
-    const scrollTrigger = window.innerHeight / 2
+    const scrollTrigger = window.innerHeight / 2.5
 
     check(storyRefs, {
       trigger: scrollTrigger,
@@ -147,14 +147,20 @@ const Sidebar = ({ data }) => {
                       </Styled.SidebarStoryChapterTitle>
                       {blocks.map(
                         ({ block_title, block_content }, j: number) => {
+                          const isHighlighted = j === storyState[1]
+                          const highlightedClassName = isHighlighted
+                            ? 'current'
+                            : ''
+
                           return (
                             <Styled.SidebarStoryBlockWrapper
                               key={j}
                               ref={storyRefs[i].blocks[j]}
+                              className={highlightedClassName}
                             >
-                              <Styled.SidebarStoryBlockTitle>
+                              {/* <Styled.SidebarStoryBlockTitle>
                                 {block_title}
-                              </Styled.SidebarStoryBlockTitle>
+                              </Styled.SidebarStoryBlockTitle> */}
                               {block_content.map((c, t: number) => (
                                 <Styled.SidebarStoryBlockContent key={t}>
                                   <BlockContent
