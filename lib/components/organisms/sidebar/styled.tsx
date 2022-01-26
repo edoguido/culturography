@@ -15,7 +15,7 @@ export const SidebarStoryBlockContent = styled.div`
 export const SidebarStoryBlockTitle = styled.h3``
 
 export const SidebarStoryBlockWrapper = styled.div`
-  background-color: #2d2d2d;
+  background-color: ${getColor('lightBackground')};
   border-radius: 0.5rem;
 
   padding: 0.5rem;
@@ -23,7 +23,7 @@ export const SidebarStoryBlockWrapper = styled.div`
   transform: scale(0.98);
 
   &.current {
-    background-color: #444;
+    background-color: #333;
     transform: scale(1);
   }
 
@@ -66,6 +66,4 @@ export const SidebarWrapper = styled(motion.div)`
 
   width: var(--sidebar-width);
   max-height: 100vh;
-
-  background-color: ${getColor('lightBackground')};
 `
