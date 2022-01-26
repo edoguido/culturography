@@ -274,7 +274,7 @@ const Scene = ({
       d3
         .scaleQuantize()
         .domain(d3.extent(allClustersID))
-        .range(d3.quantize(d3.interpolateTurbo, allClustersID.length)),
+        .range(d3.quantize(d3.interpolateSinebow, allClustersID.length)),
     [allClustersID]
   )
 
