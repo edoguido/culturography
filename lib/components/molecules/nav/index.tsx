@@ -14,9 +14,7 @@ const Nav = ({ title }) => {
           </Link>
           <Styled.NavProjectName>{title}</Styled.NavProjectName>
         </Styled.NavProjectHeaderSection>
-        <Styled.NavSection>
-          <ModeSwitcher />
-        </Styled.NavSection>
+        <Styled.NavSection>{/* <ModeSwitcher /> */}</Styled.NavSection>
       </Styled.NavContent>
     </Styled.NavWrapper>
   )
