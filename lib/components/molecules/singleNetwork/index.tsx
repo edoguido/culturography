@@ -312,6 +312,12 @@ const Scene = ({
         similarityWithHighlightedCluster > MIN_SIMILARITY_THRESHOLD
       ) {
         return colorScale(highlightedCluster.cluster_id)
+        // return d3
+        //   .scaleLinear()
+        //   .domain([0, 1])
+        //   .range(['#000000', colorScale(highlightedCluster.cluster_id)])(
+        //   similarityWithHighlightedCluster
+        // )
       }
 
       return '#333333'
