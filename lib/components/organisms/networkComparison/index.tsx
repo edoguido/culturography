@@ -68,6 +68,36 @@ const NetworkComparison = ({ data }) => {
     fetchMetadata().then(updateMetadata)
   }, [])
 
+  const networkLayoutProperties = useCallback(
+    (source) => {
+      const show = source
+        ? networksProperties.source.show
+        : networksProperties.target.show
+
+      const width = showBothNetworks ? '50%' : show ? '85%' : '50%'
+      const zIndex = showBothNetworks ? 1 : show ? 2 : 1
+      const scale = show ? 1 : 0.9
+      const opacity = showBothNetworks || show ? 1 : 0.05
+      const transformOrigin = source ? '100% 50% 0px' : '0% 50% 0px'
+      const x = source ? (show ? 0 : -20) : show ? 0 : 40
+
+      return {
+        show: show,
+        animate: {
+          zIndex: zIndex,
+          width: width,
+          left: source ? '0%' : '50%',
+          right: source ? '50%' : '0%',
+          x: x,
+          transformOrigin: transformOrigin,
+          scale: scale,
+          opacity: opacity,
+        },
+      }
+    },
+    [currentBlock]
+  )
+
   return (
     <Styled.NetworkComparisonWrapper
       initial={false}
@@ -83,22 +113,14 @@ const NetworkComparison = ({ data }) => {
         <Styled.NetworkComparisonContent>
           {networks.map((n) => {
             const isSource = n === 'left' || n === 'source'
-
-            const show = isSource
-              ? networksProperties.source.show
-              : networksProperties.target.show
+            const { animate } = networkLayoutProperties(isSource)
 
             return (
               <Styled.NetworkComparisonSingleNetworkWrapper
                 key={n}
                 layout
                 initial={false}
-                animate={{
-                  opacity: showBothNetworks || show ? 1 : 0.2,
-                  width: show ? '100%' : '20%',
-                  flexBasis: show ? '100%' : '0%',
-                  // backgroundColor: isSource ? 'red' : 'green',
-                }}
+                animate={animate}
                 transition={{
                   type: 'spring',
                   stiffness: 800,
