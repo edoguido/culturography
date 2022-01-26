@@ -11,6 +11,7 @@ import { ClusterObjectProps, useVizLayout } from '@/context/vizLayoutContext'
 // import ProjectTimeline from 'components/molecules/timeline'
 
 import * as Styled from './styled'
+import { AnimatePresence, motion } from 'framer-motion'
 
 const networks = ['left', 'right']
 
@@ -79,15 +80,14 @@ const NetworkComparison = ({ data }) => {
       const scale = show ? 1 : 0.9
       const opacity = showBothNetworks || show ? 1 : 0.05
       const transformOrigin = source ? '100% 50% 0px' : '0% 50% 0px'
-      const x = source ? (show ? 0 : -20) : show ? 0 : 40
+      const x = source ? (show ? 0 : -20) : show ? 0 : 0
 
       return {
         show: show,
         animate: {
           zIndex: zIndex,
           width: width,
-          left: source ? '0%' : '50%',
-          right: source ? '50%' : '0%',
+          left: source ? '0%' : showBothNetworks ? '50%' : show ? '20%' : '50%',
           x: x,
           transformOrigin: transformOrigin,
           scale: scale,
@@ -111,45 +111,64 @@ const NetworkComparison = ({ data }) => {
     >
       {layout.clusters && (
         <Styled.NetworkComparisonContent>
-          {highlightedCluster && targetNetworkName && (
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                zIndex: 99,
-                padding: '1rem',
-              }}
-            >
-              Observing the{' '}
-              <span
+          {/*  */}
+          <AnimatePresence>
+            {highlightedCluster && targetNetworkName && (
+              <motion.div
+                initial={{
+                  y: 10,
+                  opacity: 0,
+                }}
+                animate={{
+                  y: 0,
+                  opacity: 1,
+                }}
+                exit={{
+                  y: 20,
+                  opacity: 0,
+                }}
+                transition={{
+                  type: 'ease',
+                  ease: [0, 0, 0, 1],
+                }}
                 style={{
-                  backgroundColor: 'white',
-                  color: 'black',
-                  padding: '.125rem .5rem',
-                  borderRadius: '99rem',
+                  position: 'absolute',
+                  bottom: 0,
+                  zIndex: 99,
+                  padding: '1rem',
                 }}
               >
-                {highlightedCluster.name}
-              </span>{' '}
-              cluster{' '}
-              {showBothNetworks && (
-                <>
-                  correspondences in the{' '}
-                  <span
-                    style={{
-                      backgroundColor: 'white',
-                      color: 'black',
-                      padding: '.125rem .5rem',
-                      borderRadius: '99rem',
-                    }}
-                  >
-                    {targetNetworkName}
-                  </span>{' '}
-                  network
-                </>
-              )}
-            </div>
-          )}
+                Observing the{' '}
+                <span
+                  style={{
+                    backgroundColor: 'white',
+                    color: 'black',
+                    padding: '.125rem .5rem',
+                    borderRadius: '99rem',
+                  }}
+                >
+                  {highlightedCluster.name}
+                </span>{' '}
+                cluster{' '}
+                {showBothNetworks && (
+                  <>
+                    correspondences in the{' '}
+                    <span
+                      style={{
+                        backgroundColor: 'white',
+                        color: 'black',
+                        padding: '.125rem .5rem',
+                        borderRadius: '99rem',
+                      }}
+                    >
+                      {targetNetworkName}
+                    </span>{' '}
+                    network
+                  </>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {networks.map((n) => {
             const isSource = n === 'left' || n === 'source'
