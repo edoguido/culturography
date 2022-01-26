@@ -3,7 +3,9 @@ import styled from 'styled-components'
 import { getBreakpoint, getColor } from 'utils/theme'
 
 export const NetworkComparisonSingleNetworkWrapper = styled(motion.div)`
-  position: relative;
+  position: absolute;
+  inset: 0;
+  width: 50%;
 
   border-radius: 0.5rem;
   overflow: hidden;
