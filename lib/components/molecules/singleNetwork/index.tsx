@@ -8,7 +8,7 @@ import {
   Ref,
 } from 'react'
 
-import { Box3, MathUtils, Vector3 } from 'three'
+import { Box3, Color, MathUtils, Vector3 } from 'three'
 import { Canvas, OrthographicCameraProps, useFrame } from '@react-three/fiber'
 import {
   OrthographicCamera,
@@ -96,10 +96,11 @@ interface DatasetProps {
 
 interface SingleNetwork {
   data: object[]
+  activeCluster: number | null
   accessor: 'left' | 'right' | 'source' | 'target'
 }
 
-const SingleNetwork = ({ data, accessor }) => {
+const SingleNetwork = ({ data, activeCluster, accessor }) => {
   const [layout] = useVizLayout()
 
   const ContextBridge = useContextBridge(VizLayoutContext)
@@ -113,6 +114,10 @@ const SingleNetwork = ({ data, accessor }) => {
   // is this the network on the left? or on the right?
   // we can find out with its accessor
   const isSourceNetwork: boolean = accessor === 'source' || accessor === 'left'
+
+  const highlightedCluster: ClusterObjectProps =
+    layout?.clusters[activeCluster] || null
+
   //
   // **
   // runtime
@@ -223,15 +228,18 @@ const SingleNetwork = ({ data, accessor }) => {
 interface SceneProps {
   dataset: DatasetProps
   networkName: string
+  activeCluster: number
+  highlightedCluster: ClusterObjectProps
   isSourceNetwork: boolean
-  forwardRef: Ref<HTMLCanvasElement>
+  forwardRef?: Ref<HTMLCanvasElement>
 }
 
 const Scene = ({
   dataset,
   networkName,
+  activeCluster,
+  highlightedCluster,
   isSourceNetwork,
-  forwardRef,
 }: SceneProps) => {
   const [layout] = useVizLayout()
 
@@ -249,8 +257,6 @@ const Scene = ({
   const cameraRef = useRef(null)
   const groupRef = useRef(null)
   //
-  const highlightedClusterIndex = layout.networks.highlight
-  const highlightedCluster = layout?.clusters[layout.networks.highlight] || null
 
   // const canvasWidth = forwardRef.current.clientWidth
   // const canvasHeight = forwardRef.current.clientHeight
@@ -265,10 +271,6 @@ const Scene = ({
     () => d3.scaleLinear().domain(dataset.extent.y).range([-55, 55]),
     [dataset]
   )
-
-  // const colorScale = useMemo(() => {
-  //   () => d3.scale
-  // }, [dataset])
 
   const allClustersID = dataset.allClusters.map(
     (d: ClusterObjectProps) => d.cluster_id
@@ -296,14 +298,16 @@ const Scene = ({
   const getColor = useCallback(
     (id) => {
       // we're not highlighting any cluster at the moment
-      if (!highlightedClusterIndex) return colorScale(id)
+      if (!activeCluster) return colorScale(id)
 
       // otherwise we're highlighting a cluster
-      if (id === highlightedCluster.cluster_id) return colorScale(id)
-
+      // --
+      // if we're in the source network...
+      if (id === highlightedCluster.cluster_id) {
+        return colorScale(id)
+      }
       // but if we're not in the source network, we must find
-      // source network highlighted cluster similarities
-
+      // source network similarities in target network
       const similarityWithHighlightedCluster =
         highlightedCluster.similarities[id]
 
@@ -366,7 +370,7 @@ const Scene = ({
 
   // move to programmatically
   function moveTo({ location, zoom }) {
-    let targetLocation = [location[0], location[1]]
+    let targetLocation = location
 
     // do not f*cking comment this
     if (!location[0] || !location[1]) targetLocation = [0, 0]
@@ -382,8 +386,9 @@ const Scene = ({
       return
     }
 
+    // if we're in source network...
     if (isSourceNetwork) {
-      // if isSourceNetwork we move to its cluster centroid...
+      // we move to its cluster centroid...
       const {
         centroid: [cx, cy],
       } = highlightedCluster
@@ -393,12 +398,11 @@ const Scene = ({
       moveTo({ location: screenCoordsCentroid, zoom: ZOOMED_IN })
       return
     }
-
     // otherwise we zoom to the corresponding clusters centroids
     // - how the f*ck can I do this?
     // console.log(highlightedCluster.similarities)
 
-    // has to return an array of centroids
+    // - this has to return an array of centroids
     const matchingClusters = layout.clusters.filter(
       ({ cluster_id }: ClusterObjectProps) => {
         const similarity = highlightedCluster.similarities[cluster_id]
@@ -417,13 +421,13 @@ const Scene = ({
     const screenCoordsCentroids = [xScale(x), yScale(y)]
 
     moveTo({ location: screenCoordsCentroids, zoom: ZOOMED_IN })
-  }, [highlightedClusterIndex])
+  }, [activeCluster])
 
   //
   // **
   // runtime operations
-
   useFrame(() => {
+    // updating zoom
     if (cameraRef.current) {
       const z = cameraRef.current.zoom
       const currentZoom = round(z)
@@ -437,6 +441,7 @@ const Scene = ({
       }
     }
 
+    // updating position
     if (groupRef.current) {
       const [x, y] = [groupRef.current.position.x, groupRef.current.position.y]
       const isAtTargetPosition =
