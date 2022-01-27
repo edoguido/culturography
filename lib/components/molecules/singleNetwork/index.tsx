@@ -173,7 +173,7 @@ const SingleNetwork = ({ data, activeCluster, accessor }) => {
       }}
     >
       {fetching && <Spinner />}
-      {isDevelopment && (
+      {!hideUiControls && (
         <div
           style={{
             position: 'absolute',

@@ -13,6 +13,8 @@ import { ClusterObjectProps, useVizLayout } from '@/context/vizLayoutContext'
 import * as Styled from './styled'
 import { AnimatePresence, motion } from 'framer-motion'
 
+import { isDevelopment } from 'utils/index'
+
 const networks = ['left', 'right']
 
 const NetworkComparison = ({ data }) => {
