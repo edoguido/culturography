@@ -42,7 +42,7 @@ import {
   rankedClusters,
 } from 'utils/dataManipulations'
 
-import { showUiControls } from 'utils/index'
+import { isDevelopment, hideUiControls } from 'utils/index'
 
 import Spinner from 'components/atoms/spinner'
 
@@ -184,7 +184,7 @@ const SingleNetwork = ({ data, activeCluster, accessor }) => {
       }}
     >
       {fetching && <Spinner />}
-      {showUiControls && (
+      {isDevelopment && (
         <div
           style={{
             position: 'absolute',
