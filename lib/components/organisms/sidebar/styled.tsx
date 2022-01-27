@@ -1,14 +1,28 @@
-import { motion } from 'framer-motion'
 import styled from 'styled-components'
+import { motion } from 'framer-motion'
+
 import { getColor } from 'utils/theme'
 
 export const SidebarStoryBlockContent = styled.div`
-  p {
-    margin: 0;
+  font-family: var(--font-text);
+  font-size: 1.125rem;
+
+  > * {
+    opacity: 0.35;
   }
 
-  li {
-    padding: 0.5rem 0;
+  p {
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  ul {
+    margin: inherit 0;
+    padding-inline-start: 1.85rem;
+
+    li {
+      padding: 0.3125rem 0;
+    }
   }
 `
 
@@ -19,15 +33,19 @@ export const SidebarStoryBlockWrapper = styled.div`
   border-radius: 0.5rem;
 
   padding: 0.5rem;
-  margin: 1rem 0;
-  transform: scale(0.98);
+  margin: 0.5rem 0;
+  transform: scale(0.95);
+  transform-origin: center right;
+  transition: transform 0.3s cubic-bezier(0, 0, 0, 1);
 
   &.current {
     background-color: #333;
     transform: scale(1);
-  }
 
-  transition: transform 0.2s cubic-bezier(0, 0, 0, 1);
+    ${SidebarStoryBlockContent} > * {
+      opacity: 1;
+    }
+  }
 `
 
 export const SidebarStoryChapterTitle = styled.h2``
