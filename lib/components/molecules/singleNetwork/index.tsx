@@ -42,41 +42,30 @@ import {
   rankedClusters,
 } from 'utils/dataManipulations'
 
-import { isDevelopment, hideUiControls } from 'utils/index'
+import { hideUiControls } from 'utils/index'
 
 import Spinner from 'components/atoms/spinner'
 
-/* const allClusterIDs = new Set(
-  rankedClusters.map((d) => ({
-    network: d.network,
-    cluster_id: d.cluster_id
-  }))
-) */
-
 // for testing purposes
-
-function Box(props) {
-  // This reference gives us direct access to the THREE.Mesh object
-  const ref = useRef(null)
-  // Hold state for hovered and clicked events
-  const [hovered, hover] = useState(false)
-  const [clicked, click] = useState(false)
-  // Subscribe this component to the render-loop, rotate the mesh every frame
-  // useFrame((state, delta) => (ref.current.rotation.x += 0.01))
-  // Return the view, these are regular Threejs elements expressed in JSX
-  return (
-    <mesh
-      {...props}
-      ref={ref}
-      // onClick={(event) => click(!clicked)}
-      // onPointerOver={(event) => hover(true)}
-      // onPointerOut={(event) => hover(false)}
-    >
-      <sphereGeometry args={[1, 20, 20]} />
-      <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
-    </mesh>
-  )
-}
+// function Box(props) {
+//   // This reference gives us direct access to the THREE.Mesh object
+//   const ref = useRef(null)
+//   // Subscribe this component to the render-loop, rotate the mesh every frame
+//   // useFrame((state, delta) => (ref.current.rotation.x += 0.01))
+//   // Return the view, these are regular Threejs elements expressed in JSX
+//   return (
+//     <mesh
+//       {...props}
+//       ref={ref}
+//       // onClick={(event) => click(!clicked)}
+//       // onPointerOver={(event) => hover(true)}
+//       // onPointerOut={(event) => hover(false)}
+//     >
+//       <sphereGeometry args={[1, 20, 20]} />
+//       <meshStandardMaterial color={'orange'} />
+//     </mesh>
+//   )
+// }
 
 const MIN_SIMILARITY_THRESHOLD = 0.0001
 
