@@ -8,7 +8,7 @@ import {
   Ref,
 } from 'react'
 
-import { Box3, Color, MathUtils, Vector3 } from 'three'
+import { Color, Vector3 } from 'three'
 import { Canvas, OrthographicCameraProps, useFrame } from '@react-three/fiber'
 import {
   OrthographicCamera,
