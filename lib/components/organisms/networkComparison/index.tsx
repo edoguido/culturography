@@ -116,7 +116,6 @@ const NetworkComparison = ({ data }) => {
           {/*  */}
           {highlightedCluster && targetNetworkName && (
             <motion.div
-              layout
               initial={{
                 y: 10,
                 opacity: 0,
@@ -150,7 +149,7 @@ const NetworkComparison = ({ data }) => {
                   marginRight: '.125rem',
                 }}
               >
-                <span>Observing the</span>
+                <motion.span>Observing the</motion.span>
                 <AnimatePresence key={highlightedCluster.name} exitBeforeEnter>
                   {layout.clusters.map((c: ClusterObjectProps) => {
                     return (
@@ -181,21 +180,15 @@ const NetworkComparison = ({ data }) => {
                     )
                   })}
                 </AnimatePresence>
-                <span>cluster</span>
+                <motion.span>cluster</motion.span>
               </motion.div>
               {showBothNetworks && (
                 <AnimatePresence key={targetNetworkName}>
                   <motion.div
-                    layout
                     key={targetNetworkName}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 1 }}
-                    transition={{
-                      type: 'ease',
-                      ease: [0, 0, 0, 1],
-                      duration: 0.35,
-                    }}
                     style={{
                       display: 'flex',
                       alignItems: 'baseline',
