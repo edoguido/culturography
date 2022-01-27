@@ -112,46 +112,90 @@ const NetworkComparison = ({ data }) => {
       {layout.clusters && (
         <Styled.NetworkComparisonContent>
           {/*  */}
-          <AnimatePresence>
-            {highlightedCluster && targetNetworkName && (
-              <motion.div
-                initial={{
-                  y: 10,
-                  opacity: 0,
-                }}
-                animate={{
-                  y: 0,
-                  opacity: 1,
-                }}
-                exit={{
-                  y: 20,
-                  opacity: 0,
-                }}
-                transition={{
-                  type: 'ease',
-                  ease: [0, 0, 0, 1],
-                }}
+          {highlightedCluster && targetNetworkName && (
+            <motion.div
+              layout
+              initial={{
+                y: 10,
+                opacity: 0,
+              }}
+              animate={{
+                y: 0,
+                opacity: 1,
+              }}
+              exit={{
+                y: 20,
+                opacity: 0,
+              }}
+              transition={{
+                type: 'ease',
+                ease: [0, 0, 0, 1],
+                duration: 0.35,
+              }}
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                zIndex: 99,
+                padding: '1rem',
+                display: 'flex',
+              }}
+            >
+              <div
                 style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  zIndex: 99,
-                  padding: '1rem',
+                  display: 'flex',
+                  alignItems: 'baseline',
                 }}
               >
                 Observing the{' '}
-                <span
-                  style={{
-                    backgroundColor: 'white',
-                    color: 'black',
-                    padding: '.125rem .5rem',
-                    borderRadius: '99rem',
-                  }}
-                >
-                  {highlightedCluster.name}
-                </span>{' '}
+                <AnimatePresence key={highlightedCluster.name} exitBeforeEnter>
+                  {layout.clusters.map((c: ClusterObjectProps) => {
+                    return (
+                      c.name === highlightedCluster.name && (
+                        <motion.div
+                          id={c.name}
+                          key={c.name}
+                          layout
+                          initial={{ y: 30, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          exit={{ y: -30, opacity: 0 }}
+                          transition={{
+                            type: 'ease',
+                            ease: [0, 0, 0, 1],
+                            duration: 0.35,
+                          }}
+                          style={{
+                            backgroundColor: 'white',
+                            color: 'black',
+                            padding: '.125rem .5rem',
+                            margin: '0 .5rem',
+                            borderRadius: '99rem',
+                          }}
+                        >
+                          {highlightedCluster.name}
+                        </motion.div>
+                      )
+                    )
+                  })}
+                </AnimatePresence>
                 cluster{' '}
-                {showBothNetworks && (
-                  <>
+              </div>
+              {showBothNetworks && (
+                <AnimatePresence key={targetNetworkName}>
+                  <motion.span
+                    layout
+                    key={targetNetworkName}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 1 }}
+                    transition={{
+                      type: 'ease',
+                      ease: [0, 0, 0, 1],
+                      duration: 0.35,
+                    }}
+                    style={{
+                      margin: '0 .3125rem',
+                    }}
+                  >
                     correspondences in the{' '}
                     <span
                       style={{
@@ -164,11 +208,11 @@ const NetworkComparison = ({ data }) => {
                       {targetNetworkName}
                     </span>{' '}
                     network
-                  </>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  </motion.span>
+                </AnimatePresence>
+              )}
+            </motion.div>
+          )}
 
           {networks.map((n) => {
             const isSource = n === 'left' || n === 'source'
