@@ -138,6 +138,7 @@ const NetworkComparison = ({ data }) => {
                 zIndex: 99,
                 padding: '1rem',
                 display: 'flex',
+                alignItems: 'center',
               }}
             >
               <div
@@ -146,7 +147,7 @@ const NetworkComparison = ({ data }) => {
                   alignItems: 'baseline',
                 }}
               >
-                Observing the{' '}
+                <span>Observing the</span>
                 <AnimatePresence key={highlightedCluster.name} exitBeforeEnter>
                   {layout.clusters.map((c: ClusterObjectProps) => {
                     return (
@@ -177,11 +178,11 @@ const NetworkComparison = ({ data }) => {
                     )
                   })}
                 </AnimatePresence>
-                cluster{' '}
+                <span>cluster</span>
               </div>
               {showBothNetworks && (
                 <AnimatePresence key={targetNetworkName}>
-                  <motion.span
+                  <motion.div
                     layout
                     key={targetNetworkName}
                     initial={{ opacity: 0 }}
@@ -193,22 +194,25 @@ const NetworkComparison = ({ data }) => {
                       duration: 0.35,
                     }}
                     style={{
+                      display: 'flex',
+                      alignItems: 'baseline',
                       margin: '0 .3125rem',
                     }}
                   >
-                    correspondences in the{' '}
+                    <span>correspondences in the</span>
                     <span
                       style={{
                         backgroundColor: 'white',
                         color: 'black',
                         padding: '.125rem .5rem',
                         borderRadius: '99rem',
+                        margin: '0 0.3125rem',
                       }}
                     >
                       {targetNetworkName}
-                    </span>{' '}
-                    network
-                  </motion.span>
+                    </span>
+                    <span>network</span>
+                  </motion.div>
                 </AnimatePresence>
               )}
             </motion.div>
