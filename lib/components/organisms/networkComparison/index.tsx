@@ -141,10 +141,11 @@ const NetworkComparison = ({ data }) => {
                 alignItems: 'center',
               }}
             >
-              <div
+              <motion.div
                 style={{
                   display: 'flex',
                   alignItems: 'baseline',
+                  marginRight: '.125rem',
                 }}
               >
                 <span>Observing the</span>
@@ -165,8 +166,8 @@ const NetworkComparison = ({ data }) => {
                             duration: 0.35,
                           }}
                           style={{
-                            backgroundColor: 'white',
-                            color: 'black',
+                            color: 'white',
+                            backgroundColor: '#333',
                             padding: '.125rem .5rem',
                             margin: '0 .5rem',
                             borderRadius: '99rem',
@@ -179,7 +180,7 @@ const NetworkComparison = ({ data }) => {
                   })}
                 </AnimatePresence>
                 <span>cluster</span>
-              </div>
+              </motion.div>
               {showBothNetworks && (
                 <AnimatePresence key={targetNetworkName}>
                   <motion.div
@@ -202,8 +203,8 @@ const NetworkComparison = ({ data }) => {
                     <span>correspondences in the</span>
                     <span
                       style={{
-                        backgroundColor: 'white',
-                        color: 'black',
+                        color: 'white',
+                        backgroundColor: '#333',
                         padding: '.125rem .5rem',
                         borderRadius: '99rem',
                         margin: '0 0.3125rem',
