@@ -78,7 +78,7 @@ function Box(props) {
   )
 }
 
-const MIN_SIMILARITY_THRESHOLD = 0
+const MIN_SIMILARITY_THRESHOLD = 0.0001
 
 const SCENE_CENTER = [0, 0]
 const INITIAL_ZOOM = 5
