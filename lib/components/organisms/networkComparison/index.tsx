@@ -5,6 +5,10 @@ const SingleNetwork = dynamic(
   () => import('components/molecules/singleNetwork'),
   { ssr: false }
 )
+const NetworkComparisonAnnouncer = dynamic(
+  () => import('components/molecules/networkComparisonAnnouncer'),
+  { ssr: false }
+)
 
 import { motionOptions } from '@/const/motionProps'
 import { ClusterObjectProps, useVizLayout } from '@/context/vizLayoutContext'
