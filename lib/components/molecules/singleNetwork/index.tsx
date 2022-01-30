@@ -42,9 +42,10 @@ import {
   rankedClusters,
 } from 'utils/dataManipulations'
 
-import { hideUiControls } from 'utils/index'
+import { hideUiControls, isDevelopment } from 'utils/index'
 
 import Spinner from 'components/atoms/spinner'
+import { motion } from 'framer-motion'
 
 // for testing purposes
 // function Box(props) {
@@ -67,14 +68,17 @@ import Spinner from 'components/atoms/spinner'
 //   )
 // }
 
-const MIN_SIMILARITY_THRESHOLD = 0.0001
-
+const MIN_SIMILARITY_THRESHOLD = 0
+// camera
 const SCENE_CENTER = [0, 0]
 const INITIAL_ZOOM = 5
 const MAX_ZOOM = 60
 const ZOOMED_IN = 6
+// appearance
 const BASE_POINT_SIZE = 1
 const BASE_LABEL_SCALE = 4
+const COLOR_LEVELS = 4
+// motion
 const LERP_FACTOR = 0.1
 
 // sub-types
@@ -162,6 +166,7 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
   // initiate app
   useEffect(() => {
     fetchNetwork().then(prepareNetwork).catch(console.error)
+    // return () => setDataset(null)
   }, [layout.story.chapter])
 
   return (
@@ -235,8 +240,6 @@ const Scene = ({
   activeCluster,
   isSourceNetwork,
 }: SceneProps) => {
-  const [layout] = useVizLayout()
-
   const [{ cameraPosition, cameraZoom }, set] = useControls(
     networkName,
     () => ({
@@ -270,7 +273,7 @@ const Scene = ({
     (d: ClusterObjectProps) => d.cluster_id
   )
 
-  const colorScale = useMemo(
+  const hueScale = useMemo(
     () =>
       d3
         .scaleQuantize()
@@ -284,24 +287,24 @@ const Scene = ({
   //   []
   // )
 
-  // colorScale = useMemo(
+  // hueScale = useMemo(
   //   () => (tid: number) => Object.fromEntries(randomColors)[tid],
   //   [allClustersID]
   // )
 
-  const makeQuantizedColorRange = (targetColor) =>
-    d3.quantize(d3.scaleLinear().range(['white', targetColor]), 4)
+  const intensityColorScaleQuantized = (targetColor) =>
+    d3.quantize(d3.scaleLinear().range(['white', targetColor]), COLOR_LEVELS)
 
   const getColor = useCallback(
     (id) => {
       // we're not highlighting any cluster at the moment
-      if (!activeClusterId) return colorScale(id)
+      if (!activeClusterId) return hueScale(id)
 
       // otherwise we're highlighting a cluster
       // --
       // if we're in the source network...
       if (id === activeCluster.cluster_id) {
-        return colorScale(id)
+        return hueScale(id)
       }
       // but if we're not in the source network, we must find
       // source network similarities in target network
@@ -312,14 +315,15 @@ const Scene = ({
         similarityWithHighlightedCluster &&
         similarityWithHighlightedCluster > MIN_SIMILARITY_THRESHOLD
       ) {
-        const color = colorScale(activeCluster.cluster_id)
-        const quantizedColorRange = makeQuantizedColorRange(color)
+        const color = hueScale(activeCluster.cluster_id)
+        const quantizedColorRange = intensityColorScaleQuantized(color)
 
         const similarityScaleValue = d3
           .scaleQuantize()
           .domain([0, 1])
           .range(quantizedColorRange)(similarityWithHighlightedCluster)
 
+        // log cluster and color info
         if (isDevelopment) {
           const { name: matchingClusterName }: ClusterObjectProps =
             dataset.allClusters.find(
@@ -348,17 +352,11 @@ const Scene = ({
         }
 
         return similarityScaleValue
-        // return d3
-        //   .scaleLinear()
-        //   .domain([0, 1])
-        //   .range(['#000000', colorScale(activeCluster.cluster_id)])(
-        //   similarityWithHighlightedCluster
-        // )
       }
 
       return '#222222'
     },
-    [colorScale]
+    [hueScale]
   )
 
   // here we'll highlight cluster in explore mode
@@ -489,7 +487,7 @@ const Scene = ({
         zoom={INITIAL_ZOOM}
         // up={[0, 0, 1]}
       />
-      <MapControls
+      {/* <MapControls
         enabled={false}
         enablePan
         enableRotate
@@ -497,7 +495,7 @@ const Scene = ({
         enableDamping
         // camera={cameraRef.current}
         // position={new Vector3(cameraPosition[0], cameraPosition[1], 0)}
-      />
+      /> */}
       {/* {isDevelopment && <ambientLight intensity={0.5} />} */}
       {/* <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
       <pointLight position={[-10, -10, -10]} /> */}
