@@ -289,36 +289,74 @@ const Scene = ({
   //   [allClustersID]
   // )
 
+  const makeQuantizedColorRange = (targetColor) =>
+    d3.quantize(d3.scaleLinear().range(['white', targetColor]), 4)
+
   const getColor = useCallback(
     (id) => {
       // we're not highlighting any cluster at the moment
-      if (!activeCluster) return colorScale(id)
+      if (!activeClusterId) return colorScale(id)
 
       // otherwise we're highlighting a cluster
       // --
       // if we're in the source network...
-      if (id === highlightedCluster.cluster_id) {
+      if (id === activeCluster.cluster_id) {
         return colorScale(id)
       }
       // but if we're not in the source network, we must find
       // source network similarities in target network
       const similarityWithHighlightedCluster =
-        highlightedCluster.similarities[id]
+        activeCluster.similarities[id] * 1000
 
       if (
         similarityWithHighlightedCluster &&
         similarityWithHighlightedCluster > MIN_SIMILARITY_THRESHOLD
       ) {
-        return colorScale(highlightedCluster.cluster_id)
+        const color = colorScale(activeCluster.cluster_id)
+        const quantizedColorRange = makeQuantizedColorRange(color)
+
+        const similarityScaleValue = d3
+          .scaleQuantize()
+          .domain([0, 1])
+          .range(quantizedColorRange)(similarityWithHighlightedCluster)
+
+        if (isDevelopment) {
+          const { name: matchingClusterName }: ClusterObjectProps =
+            dataset.allClusters.find(
+              (c: ClusterObjectProps) => c.cluster_id === id
+            )
+
+          console.groupCollapsed(
+            `%c${matchingClusterName}`,
+            `background-color: ${similarityScaleValue}; color: black`
+          )
+          console.log(
+            `Target color: %c${color}`,
+            `background-color: ${color}; color: black`
+          )
+          console.log(
+            `Current color: %c${similarityScaleValue}`,
+            `background-color: ${similarityScaleValue}; color: black`
+          )
+          console.log(
+            'Similarity:',
+            similarityWithHighlightedCluster,
+            'Color scale:',
+            quantizedColorRange
+          )
+          console.groupEnd()
+        }
+
+        return similarityScaleValue
         // return d3
         //   .scaleLinear()
         //   .domain([0, 1])
-        //   .range(['#000000', colorScale(highlightedCluster.cluster_id)])(
+        //   .range(['#000000', colorScale(activeCluster.cluster_id)])(
         //   similarityWithHighlightedCluster
         // )
       }
 
-      return '#333333'
+      return '#222222'
     },
     [colorScale]
   )
