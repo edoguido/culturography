@@ -77,7 +77,7 @@ const NetworkComparison = ({ data }) => {
         ? networksProperties.source.show
         : networksProperties.target.show
 
-      const width = showBothNetworks ? '50%' : show ? '85%' : '50%'
+      const width = showBothNetworks ? '49.5%' : show ? '85%' : '49.5%'
       const zIndex = showBothNetworks ? 1 : show ? 2 : 1
       const scale = show ? 1 : 0.9
       const opacity = showBothNetworks || show ? 1 : 0.05
@@ -91,9 +91,11 @@ const NetworkComparison = ({ data }) => {
           width: width,
           left: source ? '0%' : showBothNetworks ? '50%' : show ? '20%' : '50%',
           x: x,
-          transformOrigin: transformOrigin,
           scale: scale,
           opacity: opacity,
+        },
+        style: {
+          transformOrigin: transformOrigin,
         },
       }
     },
@@ -122,8 +124,8 @@ const NetworkComparison = ({ data }) => {
             />
           )}
           {networks.map((n) => {
-            const isSource = n === 'left' || n === 'source'
-            const { animate } = networkLayoutProperties(isSource)
+            const isSource = n === 'source'
+            const { animate, style } = networkLayoutProperties(isSource)
 
             return (
               <Styled.NetworkComparisonSingleNetworkWrapper
