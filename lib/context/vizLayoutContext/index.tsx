@@ -25,6 +25,7 @@ export interface VizLayoutState extends VizLayoutAction {
   clusters?: object[]
   networks?: {
     highlight: string
+    nameHighlight: string
     source: {
       show: boolean
       zoom: string | null
@@ -54,7 +55,7 @@ export const makeStoryPayload = ({ source, chapterIndex, blockIndex }) => {
   const block = chapter.blocks[blockIndex]
 
   // const {
-  //   left_network_name,
+  //   source_network_name,
   //   source_network_id,
   //   right_network_name,
   //   target_network_id,
@@ -62,27 +63,29 @@ export const makeStoryPayload = ({ source, chapterIndex, blockIndex }) => {
 
   const {
     highlight,
-    show_left_network,
-    show_right_network,
-    left_cluster_zoom,
-    right_cluster_zoom,
+    network_cluster_highlight,
+    show_source_network,
+    show_target_network,
+    // source_cluster_zoom,
+    // target_cluster_zoom,
   } = block.network_control
 
   return {
     story: { title, chapter: chapterIndex, block: blockIndex },
     networks: {
       highlight: highlight,
+      nameHighlight: network_cluster_highlight,
       source: {
         // id: source_network_id,
-        // name: left_network_name,
-        show: show_left_network,
-        zoom: left_cluster_zoom,
+        // name: source_network_name,
+        show: show_source_network,
+        // zoom: source_cluster_zoom,
       },
       target: {
         // id: target_network_id,
         // name: right_network_name,
-        show: show_right_network,
-        zoom: right_cluster_zoom,
+        show: show_target_network,
+        // zoom: target_cluster_zoom,
       },
     },
   }
@@ -139,7 +142,7 @@ export const vizLayoutReducer = (state, action) => {
       const { story, networks } = payload
 
       const { chapter, block } = story
-      const { highlight, source, target } = networks
+      const { highlight, nameHighlight, source, target } = networks
 
       return {
         ...state,
@@ -151,6 +154,7 @@ export const vizLayoutReducer = (state, action) => {
         networks: {
           ...state.networks,
           highlight,
+          nameHighlight,
           source,
           target,
         },

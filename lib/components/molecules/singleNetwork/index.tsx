@@ -89,11 +89,12 @@ interface DatasetProps {
 
 interface SingleNetwork {
   data: object[]
-  activeCluster: number | null
-  accessor: 'left' | 'right' | 'source' | 'target'
+  activeCluster: ClusterObjectProps
+  activeClusterId: number | null
+  accessor: 'source' | 'target'
 }
 
-const SingleNetwork = ({ data, activeCluster, accessor }) => {
+const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
   const [layout] = useVizLayout()
 
   const ContextBridge = useContextBridge(VizLayoutContext)
@@ -104,12 +105,11 @@ const SingleNetwork = ({ data, activeCluster, accessor }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   //
   const accessorKey: string = `${accessor}_network_shapefile`
+  const networkName: string = data.networks[`${accessor}_network_name`]
+  //
   // is this the network on the left? or on the right?
   // we can find out with its accessor
-  const isSourceNetwork: boolean = accessor === 'source' || accessor === 'left'
-
-  const highlightedCluster: ClusterObjectProps =
-    layout?.clusters[activeCluster] || null
+  const isSourceNetwork: boolean = accessor === 'source'
 
   //
   // **
@@ -190,12 +190,12 @@ const SingleNetwork = ({ data, activeCluster, accessor }) => {
       )}
       <Canvas ref={canvasRef}>
         <ContextBridge>
-          {dataset && (
+          {!fetching && dataset && (
             <Scene
               dataset={dataset}
               networkName={accessor}
+              activeClusterId={activeClusterId}
               activeCluster={activeCluster}
-              highlightedCluster={highlightedCluster}
               isSourceNetwork={isSourceNetwork}
             />
           )}
@@ -210,8 +210,8 @@ const SingleNetwork = ({ data, activeCluster, accessor }) => {
 interface SceneProps {
   dataset: DatasetProps
   networkName: string
-  activeCluster: number
-  highlightedCluster: ClusterObjectProps
+  activeClusterId: number
+  activeCluster: ClusterObjectProps
   isSourceNetwork: boolean
   forwardRef?: Ref<HTMLCanvasElement>
 }
@@ -219,8 +219,8 @@ interface SceneProps {
 const Scene = ({
   dataset,
   networkName,
+  activeClusterId,
   activeCluster,
-  highlightedCluster,
   isSourceNetwork,
 }: SceneProps) => {
   const [layout] = useVizLayout()
@@ -247,11 +247,11 @@ const Scene = ({
   // scales
   const xScale = useMemo(
     () => d3.scaleLinear().domain(dataset.extent.x).range([-55, 55]),
-    [dataset]
+    [networkName]
   )
   const yScale = useMemo(
     () => d3.scaleLinear().domain(dataset.extent.y).range([-55, 55]),
-    [dataset]
+    [networkName]
   )
 
   const allClustersID = dataset.allClusters.map(
@@ -363,7 +363,7 @@ const Scene = ({
 
   // handle change of block and chapter
   useEffect(() => {
-    if (!highlightedCluster) {
+    if (!activeCluster) {
       resetView()
       return
     }
@@ -373,37 +373,30 @@ const Scene = ({
       // we move to its cluster centroid...
       const {
         centroid: [cx, cy],
-      } = highlightedCluster
+      } = activeCluster
 
       const screenCoordsCentroid = [xScale(cx), yScale(cy)]
 
       moveTo({ location: screenCoordsCentroid, zoom: ZOOMED_IN })
       return
     }
-    // otherwise we zoom to the corresponding clusters centroids
-    // - how the f*ck can I do this?
-    // console.log(highlightedCluster.similarities)
-
-    // - this has to return an array of centroids
-    const matchingClusters = layout.clusters.filter(
+    // otherwise we have to find
+    // the matching clusters
+    const matchingClusters = dataset.allClusters.filter(
       ({ cluster_id }: ClusterObjectProps) => {
-        const similarity = highlightedCluster.similarities[cluster_id]
+        const similarity = activeCluster.similarities[cluster_id]
         return similarity > MIN_SIMILARITY_THRESHOLD
       }
     )
-
     const matchingClustersCentroids = matchingClusters.map(
       (c: ClusterObjectProps) => c.centroid
     )
-
+    // we compute the centroid of all the matching polygons
     const [x, y] = polygonCentroid(matchingClustersCentroids)
+    const rescaledCentroidCoords = [xScale(x), yScale(y)]
 
-    // const [x, y] = matchingClustersCentroids[0]
-
-    const screenCoordsCentroids = [xScale(x), yScale(y)]
-
-    moveTo({ location: screenCoordsCentroids, zoom: ZOOMED_IN })
-  }, [activeCluster])
+    moveTo({ location: rescaledCentroidCoords, zoom: ZOOMED_IN })
+  }, [activeClusterId])
 
   //
   // **
@@ -472,11 +465,9 @@ const Scene = ({
             const color = getColor(d.cluster_id)
 
             const showLabel =
-              !highlightedCluster ||
-              (highlightedCluster &&
-                highlightedCluster.cluster_id === d.cluster_id) ||
-              (highlightedCluster &&
-                highlightedCluster.similarities[d.cluster_id] > 0)
+              !activeCluster ||
+              (activeCluster && activeCluster.cluster_id === d.cluster_id) ||
+              (activeCluster && activeCluster.similarities[d.cluster_id] > 0)
 
             return (
               <Cluster

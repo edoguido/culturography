@@ -24,11 +24,12 @@ const SERIALIZERS = {
 }
 
 const Sidebar = ({ data }) => {
-  const [state, dispatch] = useVizLayout()
+  const [layout, dispatch] = useVizLayout()
+  //
+  const [storyState, setStoryState] = useState<number[]>([0, 0])
+  //
   const storyRef = useRef<HTMLDivElement>(null)
   const storyContentRef = useRef<HTMLDivElement>(null)
-  const [storyState, setStoryState] = useState<number[]>([0, 0])
-
   const storyRefs = useMemo(
     () =>
       data.story_chapters.map(({ blocks }) => ({
@@ -62,7 +63,7 @@ const Sidebar = ({ data }) => {
             if (trigger < cy) return
             // and proceed if we're in a chapter
             if (trigger > cy && trigger < cy + ch) {
-              // we update state
+              // we update layout
               callback((prev) => {
                 const [pc, pb] = prev
                 // if we're in the same chapter and block
@@ -121,17 +122,19 @@ const Sidebar = ({ data }) => {
     <Styled.SidebarWrapper
       ref={storyRef}
       animate={{
-        x: state.read ? 0 : '100%',
+        x: layout.read ? 0 : '100%',
         // visibility: 'hidden',
       }}
       transition={motionOptions}
     >
       <Styled.SidebarContent>
-        <SidebarChapterSelector
-          chapters={data.story_chapters}
-          forwardRef={storyContentRef}
-          storyRefs={storyRefs}
-        />
+        {layout.story && (
+          <SidebarChapterSelector
+            chapters={data.story_chapters}
+            forwardRef={storyContentRef}
+            storyRefs={storyRefs}
+          />
+        )}
         {data.story_chapters && (
           <Styled.SidebarStoryWrapper ref={storyContentRef}>
             <Styled.SidebarStoryContent>

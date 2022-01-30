@@ -10,16 +10,13 @@ const NetworkComparisonAnnouncer = dynamic(
   { ssr: false }
 )
 
+//
 import { motionOptions } from '@/const/motionProps'
 import { ClusterObjectProps, useVizLayout } from '@/context/vizLayoutContext'
-// import ProjectTimeline from 'components/molecules/timeline'
 
 import * as Styled from './styled'
-import { AnimatePresence, motion } from 'framer-motion'
 
-import { isDevelopment } from 'utils/index'
-
-const networks = ['left', 'right']
+const networks = ['source', 'target']
 
 const NetworkComparison = ({ data }) => {
   const [layout, dispatch] = useVizLayout()
@@ -29,17 +26,18 @@ const NetworkComparison = ({ data }) => {
   // networks properties
   const networksData = data.story_chapters[layout.story.chapter]
   const networksProperties = layout.networks
-  const targetNetworkName = networksData.networks.right_network_name
+  const targetNetworkName = networksData.networks.target_network_name
   //
   // clusters properties
-  const highlightedClusterIndex: number = isNaN(+layout.networks.highlight)
-    ? null
-    : +layout.networks.highlight - 1
+  const rawClusterId = +layout.networks.nameHighlight
+  const activeClusterId: number = isNaN(rawClusterId) ? null : rawClusterId
   //
-  const highlightedCluster: ClusterObjectProps =
-    highlightedClusterIndex !== null
-      ? layout?.clusters[highlightedClusterIndex]
-      : null
+  const clusterIdMatch = (c: ClusterObjectProps) =>
+    c.cluster_id == activeClusterId
+
+  const activeCluster: ClusterObjectProps = activeClusterId
+    ? layout?.clusters.find(clusterIdMatch)
+    : null
 
   // layout properties
   const showBothNetworks =
@@ -73,7 +71,7 @@ const NetworkComparison = ({ data }) => {
     }
 
     fetchMetadata().then(updateMetadata)
-  }, [])
+  }, [data.network_metadata.asset])
 
   const networkLayoutProperties = useCallback(
     (source) => {
@@ -142,16 +140,17 @@ const NetworkComparison = ({ data }) => {
                   stiffness: 800,
                   damping: 60,
                 }}
+                style={style}
               >
                 <SingleNetwork
                   data={networksData}
-                  activeCluster={highlightedClusterIndex}
+                  activeCluster={activeCluster}
+                  activeClusterId={activeClusterId}
                   accessor={n}
                 />
               </Styled.NetworkComparisonSingleNetworkWrapper>
             )
           })}
-          {/* <ProjectTimeline /> */}
         </Styled.NetworkComparisonContent>
       )}
     </Styled.NetworkComparisonWrapper>

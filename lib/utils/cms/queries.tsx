@@ -18,13 +18,13 @@ export const PROJECT_QUERY = (project) => `
       snapshot_date,
       networks {
         source_network_id,
-        left_network_name,
-        left_network_shapefile {
+        source_network_name,
+        source_network_shapefile {
           asset ->
         },
         target_network_id,
-        right_network_name,
-        right_network_shapefile {
+        target_network_name,
+        target_network_shapefile {
           asset ->
         }
       },
