@@ -124,7 +124,15 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
 
     const { asset }: { asset: { path: string } } = data.networks[accessorKey]
 
-    const options = { headers: { accepts: 'application/json' } }
+    const options = {
+      method: 'GET',
+      mode: 'no-cors' as RequestMode,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+        accepts: 'application/json',
+      },
+    }
 
     let dataset
 
