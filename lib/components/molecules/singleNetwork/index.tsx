@@ -173,6 +173,18 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
       }}
     >
       {fetching && <Spinner />}
+      <motion.div
+        style={{
+          position: 'absolute',
+          zIndex: 30,
+          backgroundColor: '#ffffff30',
+          color: 'white',
+          padding: '0.125rem 0.85rem 0.125rem 0.5rem',
+          borderRadius: '0 0 1rem 0',
+        }}
+      >
+        {networkName}
+      </motion.div>
       {!hideUiControls && (
         <div
           style={{
