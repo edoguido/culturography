@@ -8,9 +8,9 @@ export const SidebarChapterSelectorChapterNameOption = styled(motion.div)`
 
 export const SidebarChapterSelectorChapterNameOptionsList = styled(motion.div)`
   position: absolute;
-  z-index: 0;
+  z-index: 100;
   overflow: hidden;
-  background-color: white;
+  background-color: ${getColor('palette:black')};
 
   left: 0;
   top: 0;
@@ -21,8 +21,11 @@ export const SidebarChapterSelectorCurrentChapterName = styled(motion.div)`
   /* border: none; */
   height: var(--nav-height);
   padding: 1rem;
-  width: 100%;
-  z-index: 10;
+  /* width: 100%; */
+  z-index: 101;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 
   background-color: ${getColor('palette:orange')};
 `
@@ -31,9 +34,10 @@ export const SidebarChapterSelectorContent = styled.div`
   position: relative;
   width: 100%;
 
-  ${SidebarChapterSelectorCurrentChapterName}, ${SidebarChapterSelectorChapterNameOption} {
-    display: flex;
-    align-items: center;
+  ${SidebarChapterSelectorChapterNameOption}, ${SidebarChapterSelectorCurrentChapterName} {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 `
 
