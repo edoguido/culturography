@@ -428,7 +428,7 @@ const Scene = ({
     if (isSourceNetwork) {
       // we move to its cluster centroid...
       const {
-        centroid: [cx, cy],
+        pca_centroid: [cx, cy],
       } = activeCluster
 
       const screenCoordsCentroid = [xScale(cx), yScale(cy)]
@@ -445,7 +445,7 @@ const Scene = ({
       }
     )
     const matchingClustersCentroids = matchingClusters.map(
-      (c: ClusterObjectProps) => c.centroid
+      (c: ClusterObjectProps) => c.pca_centroid
     )
     // we compute the centroid of all the matching polygons
     const [x, y] = polygonCentroid(matchingClustersCentroids)
@@ -550,6 +550,7 @@ interface ClusterProps {
     name?: string
     cluster_id?: number
     centroid?: [number, number]
+    pca_centroid?: [number, number]
     nodes?: any[]
   }
   scales: {
