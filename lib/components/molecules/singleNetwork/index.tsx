@@ -198,7 +198,7 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
       >
         {networkName}
       </motion.div>
-      {!hideUiControls && (
+      {hideUiControls && (
         <div
           style={{
             position: 'absolute',
