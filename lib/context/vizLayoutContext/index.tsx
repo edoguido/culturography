@@ -8,7 +8,8 @@ export interface ClusterObjectProps {
   cluster_original?: number
   cluster_id?: number
   name?: string
-  centroid?: [number, number] | null
+  centroid?: [number, number]
+  pca_centroid?: [number, number]
   shape?: number[]
   similarities?: object
 }
