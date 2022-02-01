@@ -44,12 +44,12 @@ const NetworkComparison = ({ data }) => {
     networksProperties.source.show && networksProperties.target.show
 
   useEffect(() => {
-    const metadata = data.network_metadata.asset
-
     const fetchMetadata = async () => {
       let data
 
       try {
+        const metadata = data.network_metadata.asset
+
         data = await fetch(`https://api.sanity.io/${metadata.path}`).then((r) =>
           r.json()
         )
