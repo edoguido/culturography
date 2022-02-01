@@ -174,7 +174,7 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
   // initiate app
   useEffect(() => {
     fetchNetwork().then(prepareNetwork).catch(console.error)
-    // return () => setDataset(null)
+    return () => setDataset(null)
   }, [layout.story.chapter])
 
   return (
