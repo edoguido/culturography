@@ -431,7 +431,7 @@ const Scene = ({
         pca_centroid: [cx, cy],
       } = activeCluster
 
-      const screenCoordsCentroid = [xScale(cx), yScale(cy)]
+      const screenCoordsCentroid = [xScale(cx), -yScale(cy)]
 
       moveTo({ location: screenCoordsCentroid, zoom: ZOOMED_IN })
       return
@@ -449,7 +449,7 @@ const Scene = ({
     )
     // we compute the centroid of all the matching polygons
     const [x, y] = polygonCentroid(matchingClustersCentroids)
-    const rescaledCentroidCoords = [xScale(x), yScale(y)]
+    const rescaledCentroidCoords = [xScale(x), -yScale(y)]
 
     moveTo({ location: rescaledCentroidCoords, zoom: ZOOMED_IN })
   }, [activeClusterId])
@@ -568,8 +568,8 @@ const Cluster = ({ data, scales, color, label, onClick }: ClusterProps) => {
 
   const [mounted, setMounted] = useState(false)
 
-  const [cx, cy] = data.centroid
-  const labelPosition = new Vector3(xScale(cx), -yScale(cy), 0)
+  const [cx, cy] = data.pca_centroid
+  const labelPosition = new Vector3(xScale(cx), yScale(cy), 0)
 
   const labelRef = useRef(null)
   const pointsRef = useRef(null)
