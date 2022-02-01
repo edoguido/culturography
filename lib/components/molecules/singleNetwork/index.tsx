@@ -290,16 +290,6 @@ const Scene = ({
     [allClustersID]
   )
 
-  // const randomColors = useMemo(
-  //   () => allClustersID.map((id: number) => [id, randomColor()]),
-  //   []
-  // )
-
-  // hueScale = useMemo(
-  //   () => (tid: number) => Object.fromEntries(randomColors)[tid],
-  //   [allClustersID]
-  // )
-
   const intensityColorScaleQuantized = (targetColor) =>
     d3.quantize(d3.scaleLinear().range(['white', targetColor]), COLOR_LEVELS)
 
