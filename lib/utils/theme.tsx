@@ -10,10 +10,6 @@ export const GlobalStyle = createGlobalStyle`
     ${themeValuesToCSSGlobalVar(color)}
   }
 
-  body {
-    color: var(--text);
-  }
-
 `
 
 // getColor('text:black')

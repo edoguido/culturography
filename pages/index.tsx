@@ -1,3 +1,4 @@
-import Home from '@/views/index/index'
+import Home, { getStaticProps } from '@/views/index/index'
 
 export default Home
+export { getStaticProps }

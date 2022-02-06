@@ -1,5 +1,5 @@
 export const ALL_PROJECTS_QUERY = `
-  *[ _type == 'story' ] { slug }
+  *[ _type == 'story' ] { slug, title, phase }
 `
 
 export const PROJECT_QUERY = (project) => `
@@ -46,4 +46,31 @@ export const PROJECT_QUERY = (project) => `
   }
 `
 
-export default PROJECT_QUERY
+export const LANDING_QUERY = `
+  *[ _type == 'landing' ] {
+    project_information,
+    blocks[] {
+      ...,
+      sections {
+        scoping_section {
+          ...,
+          stories[] -> {
+            title, slug
+          }
+        },
+        designing_section {
+          ...,
+          stories[] -> {
+            title, slug
+          }
+        },
+        evaluating_section {
+          ...,
+          stories[] -> {
+            title, slug
+          }
+        },
+      }
+    }
+  }
+`

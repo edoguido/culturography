@@ -2,7 +2,7 @@ import { useEffect, useReducer } from 'react'
 
 import { VizLayoutContext, vizLayoutReducer } from '@/context/vizLayoutContext'
 import client from 'utils/cms'
-import PROJECT_QUERY, { ALL_PROJECTS_QUERY } from 'utils/cms/queries'
+import { PROJECT_QUERY, ALL_PROJECTS_QUERY } from 'utils/cms/queries'
 import { globalCSSVarToPixels } from 'utils/theme'
 
 import DefaultLayout from 'components/layout/main'

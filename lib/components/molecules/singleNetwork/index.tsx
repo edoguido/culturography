@@ -37,10 +37,7 @@ import {
   polygonCentroid,
 } from 'utils/math'
 
-import {
-  groupDatapointsByCluster,
-  rankedClusters,
-} from 'utils/dataManipulations'
+import { groupDatapointsByCluster, rankedClusters } from 'utils/data'
 
 import { hideUiControls, isDevelopment } from 'utils/index'
 

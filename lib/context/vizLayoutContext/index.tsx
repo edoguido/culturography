@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { rankedClusters } from 'utils/dataManipulations'
+import { rankedClusters } from 'utils/data'
 
 // types
 
