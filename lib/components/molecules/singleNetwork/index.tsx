@@ -627,7 +627,9 @@ const Cluster = ({ data, scales, color, label, onClick }: ClusterProps) => {
             // {...groupProps} // All THREE.Group props are valid
             // {...divProps} // All HTMLDivElement props are valid
           >
-            <h2 ref={labelRef}>{data.name}</h2>
+            <h2 ref={labelRef} className="text-3xl font-medium">
+              {data.name}
+            </h2>
           </Html>
         </group>
       )}
