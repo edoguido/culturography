@@ -63,11 +63,11 @@ const CollapsibleTextBlock = (props) => {
           id={hash}
           ref={b.ref}
           className="mx-6 p-6 border-t-2 border-black overflow-hidden"
+          onPointerLeave={handleLeave}
         >
           <button
             className="block w-full text-left cursor-pointer"
             onPointerEnter={() => handleEnter(i)}
-            onPointerLeave={handleLeave}
             onClick={() => toggle(i)}
           >
             <h3 className="text-6xl py-6">
