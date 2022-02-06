@@ -10,7 +10,7 @@ const Nav = ({ title }) => {
       <Styled.NavContent>
         <Styled.NavProjectHeaderSection>
           <Link href="/" passHref>
-            <Styled.NavLogo>The Cultural Impact Index</Styled.NavLogo>
+            <Styled.NavLogo>Culturographies</Styled.NavLogo>
           </Link>
           <Styled.NavProjectName>{title}</Styled.NavProjectName>
         </Styled.NavProjectHeaderSection>
