@@ -23,11 +23,11 @@ const StoriesListBlock = (props) => {
     <div id={hash} className="my-8 px-6 p-6">
       <h2 className="text-6xl">{title}</h2>
       <div>
-        {memoizedSections.map(({ title, description, stories }) => {
+        {memoizedSections.map(({ title, description, stories }, i) => {
           const hasStories = stories?.length > 0
 
           return (
-            <div className="my-4 py-4 border-t-2 border-gray-500">
+            <div key={i} className="my-4 py-4 border-t-2 border-gray-500">
               <h3 className="text-4xl py-2 my2">
                 {title}
                 {!hasStories && ' — Coming soon'}
@@ -37,7 +37,7 @@ const StoriesListBlock = (props) => {
                   <div className="py-6">
                     {stories.map(({ title, slug }) => {
                       return (
-                        <Link href={slug.current}>
+                        <Link key={slug.current} href={slug.current}>
                           <a className="text-4xl px-4 p-2 whitespace-nowrap rounded-full bg-roskildeOrange">
                             {title}
                           </a>

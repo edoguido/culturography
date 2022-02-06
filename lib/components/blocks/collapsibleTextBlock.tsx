@@ -2,22 +2,22 @@ import { PortableText } from '@portabletext/react'
 import { motion } from 'framer-motion'
 import { createRef, useMemo, useState } from 'react'
 
+const CustomLink = ({ value, children }) => {
+  const target = (value?.href || '').startsWith('http') ? '_blank' : undefined
+  return (
+    <a
+      href={value?.href}
+      target={target}
+      rel={target === '_blank' && 'noindex nofollow'}
+    >
+      {children}
+    </a>
+  )
+}
+
 const SERIALIZERS = {
   marks: {
-    link: ({ value, children }) => {
-      const target = (value?.href || '').startsWith('http')
-        ? '_blank'
-        : undefined
-      return (
-        <a
-          href={value?.href}
-          target={target}
-          rel={target === '_blank' && 'noindex nofollow'}
-        >
-          {children}
-        </a>
-      )
-    },
+    link: CustomLink,
   },
 }
 
@@ -88,6 +88,7 @@ const CollapsibleTextBlock = (props) => {
                 duration: 0.5,
               }}
             >
+              {/* @ts-ignore */}
               <PortableText value={b.blocks} components={SERIALIZERS} />
             </motion.div>
           </div>
