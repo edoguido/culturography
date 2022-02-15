@@ -143,12 +143,12 @@ const Sidebar = ({ data }) => {
                       key={i}
                       ref={storyRefs[i].chapter}
                     >
-                      <Styled.SidebarStoryChapterTitle>
-                        {chapter_title}
-                      </Styled.SidebarStoryChapterTitle>
+                      <h2 className="text-2xl">{chapter_title}</h2>
                       {blocks.map(
-                        ({ block_title, block_content }, j: number) => {
-                          const isHighlighted = j === storyState[1]
+                        ({ /* block_title, */ block_content }, j: number) => {
+                          const isHighlighted =
+                            i === storyState[0] && j === storyState[1]
+
                           const highlightedClassName = isHighlighted
                             ? 'current'
                             : ''
