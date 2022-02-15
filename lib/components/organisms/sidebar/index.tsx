@@ -58,25 +58,23 @@ const Sidebar = ({ data }) => {
           // we first check blocks coords
           if (trigger < by) return
           // and proceed if we're in a block
-          if (trigger > by && trigger < by + bh) {
-            // we then check chapters coords
-            if (trigger < cy) return
-            // and proceed if we're in a chapter
-            if (trigger > cy && trigger < cy + ch) {
-              // we update layout
-              callback((prev) => {
-                const [pc, pb] = prev
-                // if we're in the same chapter and block
-                if (pc === i && pb === j) return prev
-                // if we're in a new chapter but same block
-                if (pc !== i && pb === j) return [i, pb]
-                // if we're in the same chapter but new block
-                if (pc === i && pb !== j) return [pc, j]
-                // if we're in a new chapter and new block
-                if (pc !== i && pb !== j) return [i, j]
-              })
-            }
-          }
+          if (!(trigger > by && trigger < by + bh)) return
+          // we then check chapters coords
+          if (trigger < cy) return
+          // and proceed if we're in a chapter
+          if (!(trigger > cy && trigger < cy + ch)) return
+          // we update layout
+          callback((prev) => {
+            const [pc, pb] = prev
+            // if we're in the same chapter and block
+            if (pc === i && pb === j) return prev
+            // if we're in a new chapter but same block
+            if (pc !== i && pb === j) return [i, pb]
+            // if we're in the same chapter but new block
+            if (pc === i && pb !== j) return [pc, j]
+            // if we're in a new chapter and new block
+            if (pc !== i && pb !== j) return [i, j]
+          })
         })
       })
     },
