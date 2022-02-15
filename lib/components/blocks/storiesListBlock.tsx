@@ -48,7 +48,9 @@ const StoriesListBlock = (props) => {
                 ) : (
                   <div />
                 )}
-                <div className="text-xl">{description}</div>
+                <div className="text-xl">
+                  <p>{description}</p>
+                </div>
               </div>
             </div>
           )
