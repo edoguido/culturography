@@ -53,6 +53,11 @@
         "type": "color",
         "value": "#000000ff"
       },
+      "lime": {
+        "description": null,
+        "type": "color",
+        "value": "#EEFB5D"
+      },
       "green": {
         "description": null,
         "type": "color",
