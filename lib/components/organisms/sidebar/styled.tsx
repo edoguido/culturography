@@ -32,8 +32,9 @@ export const SidebarStoryBlockWrapper = styled.div`
   background-color: ${getColor('lightBackground')};
   border-radius: 0.5rem;
 
-  padding: 0.5rem;
+  padding: 0.75rem;
   margin: 0.5rem 0;
+
   transform: scale(0.95);
   transform-origin: center right;
   transition: transform 0.3s cubic-bezier(0, 0, 0, 1);
@@ -54,7 +55,7 @@ export const SidebarStoryChapterWrapper = styled.div``
 
 export const SidebarStoryContent = styled.div`
   padding: 0.5rem;
-  padding-bottom: calc(50vh - var(--nav-height));
+  padding-bottom: calc(70vh - var(--nav-height));
 `
 
 export const SidebarStoryWrapper = styled.div`
