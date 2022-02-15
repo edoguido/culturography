@@ -1,29 +1,47 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap'); */
-@import url('https://api.fontshare.com/css?f[]=clash-display@400,500,600&display=swap');
+@import url('https://api.fontshare.com/css?f[]=clash-display@400,500,600&f[]=clash-grotesk@400,500,600&display=swap');
+@import url('https://rsms.me/inter/inter.css');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --font-family: 'Clash Display', -apple-system, BlinkMacSystemFont, Segoe UI,
-    Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-    sans-serif;
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  --font-display: 'Clash Display', -apple-system, BlinkMacSystemFont, Segoe UI,
+    Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue;
   --nav-height: 64px;
   --sidebar-width: 380px;
   --timeline-height: 80px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
 }
 
 html,
 body {
   padding: 0;
   margin: 0;
+
   font-family: var(--font-family);
+  font-weight: 300;
+  font-size: 15px;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+p {
+  letter-spacing: -0.3px;
 }
 
 * {
