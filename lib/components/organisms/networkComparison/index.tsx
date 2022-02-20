@@ -133,7 +133,7 @@ const NetworkComparison = ({ data }) => {
                 showingBothNetworks={showBothNetworks}
               />
             )}
-            {activeCluster && targetNetworkName && <Legend />}
+            {/* {activeCluster && targetNetworkName && <Legend />} */}
             {networks.map((n) => {
               const isSource = n === 'source'
               const { animate, style } = networkLayoutProperties(isSource)
