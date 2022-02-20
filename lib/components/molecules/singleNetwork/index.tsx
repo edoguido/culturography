@@ -107,6 +107,7 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
   //
   const accessorKey: string = `${accessor}_network_shapefile`
   const networkName: string = data.networks[`${accessor}_network_name`]
+  const zoomLevel: string = layout.networks[accessor].zoomLevel
   //
   // is this the network on the left? or on the right?
   // we can find out with its accessor
@@ -219,6 +220,7 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
               activeClusterId={activeClusterId}
               activeCluster={activeCluster}
               isSourceNetwork={isSourceNetwork}
+              zoomLevel={zoomLevel}
             />
           )}
         </ContextBridge>
@@ -235,6 +237,7 @@ interface SceneProps {
   activeClusterId: number
   activeCluster: ClusterObjectProps
   isSourceNetwork: boolean
+  zoomLevel: string
   forwardRef?: Ref<HTMLCanvasElement>
 }
 
@@ -244,6 +247,7 @@ const Scene = ({
   activeClusterId,
   activeCluster,
   isSourceNetwork,
+  zoomLevel,
 }: SceneProps) => {
   const [{ cameraPosition, cameraZoom }, set] = useControls(
     networkName,
@@ -406,10 +410,13 @@ const Scene = ({
 
   // handle change of block and chapter
   useEffect(() => {
+    // if we're not highlighting we reset the view
     if (!activeCluster) {
       resetView()
       return
     }
+
+    const targetZoomLevel = isNaN(+zoomLevel) ? ZOOMED_IN : +zoomLevel
 
     // if we're in source network...
     if (isSourceNetwork) {
@@ -420,11 +427,10 @@ const Scene = ({
 
       const screenCoordsCentroid = [xScale(cx), -yScale(cy)]
 
-      moveTo({ location: screenCoordsCentroid, zoom: ZOOMED_IN })
+      moveTo({ location: screenCoordsCentroid, zoom: targetZoomLevel })
       return
     }
-    // otherwise we have to find
-    // the matching clusters
+    // otherwise we have to find the matching clusters
     const matchingClusters = dataset.allClusters.filter(
       ({ cluster_id }: ClusterObjectProps) => {
         const similarity = activeCluster.similarities[cluster_id]

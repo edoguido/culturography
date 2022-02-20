@@ -27,6 +27,7 @@ export interface VizLayoutState extends VizLayoutAction {
   networks?: {
     highlight: string
     nameHighlight: string
+    zoomLevel: number
     source: {
       show: boolean
       zoom: string | null
@@ -65,6 +66,8 @@ export const makeStoryPayload = ({ source, chapterIndex, blockIndex }) => {
   const {
     highlight,
     network_cluster_highlight,
+    zoom_source_level,
+    zoom_target_level,
     show_source_network,
     show_target_network,
     // source_cluster_zoom,
@@ -80,12 +83,14 @@ export const makeStoryPayload = ({ source, chapterIndex, blockIndex }) => {
         // id: source_network_id,
         // name: source_network_name,
         show: show_source_network,
+        zoomLevel: zoom_source_level,
         // zoom: source_cluster_zoom,
       },
       target: {
         // id: target_network_id,
         // name: right_network_name,
         show: show_target_network,
+        zoomLevel: zoom_target_level,
         // zoom: target_cluster_zoom,
       },
     },
