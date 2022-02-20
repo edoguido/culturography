@@ -12,7 +12,7 @@ import { Color, Vector3 } from 'three'
 import { Canvas, OrthographicCameraProps, useFrame } from '@react-three/fiber'
 import {
   OrthographicCamera,
-  MapControls,
+  // MapControls,
   useContextBridge,
   Html,
 } from '@react-three/drei'
@@ -39,7 +39,7 @@ import {
 
 import { groupDatapointsByCluster, rankedClusters } from 'utils/data'
 
-import { hideUiControls, isDevelopment } from 'utils/index'
+import { hideUiControls /* , isDevelopment */ } from 'utils/index'
 
 import Spinner from 'components/atoms/spinner'
 import { motion } from 'framer-motion'
@@ -249,6 +249,8 @@ const Scene = ({
   isSourceNetwork,
   zoomLevel,
 }: SceneProps) => {
+  const [_, dispatch] = useVizLayout()
+
   const [{ cameraPosition, cameraZoom }, set] = useControls(
     networkName,
     () => ({
@@ -291,8 +293,23 @@ const Scene = ({
     [allClustersID]
   )
 
-  const intensityColorScaleQuantized = (targetColor) =>
-    d3.quantize(d3.scaleLinear().range(['white', targetColor]), COLOR_LEVELS)
+  const intensityColorScaleQuantized = useMemo(
+    () => (targetColor) =>
+      d3.quantize(d3.scaleLinear().range(['white', targetColor]), COLOR_LEVELS),
+    []
+  )
+
+  const highlightColor = activeCluster
+    ? hueScale(activeCluster.cluster_id)
+    : null
+
+  const quantizedColorRange = activeCluster
+    ? intensityColorScaleQuantized(highlightColor)
+    : null
+
+  const similarityScale = activeCluster
+    ? d3.scaleQuantize().domain([0, 1]).range(quantizedColorRange)
+    : null
 
   const getColor = useCallback(
     (id) => {
@@ -314,41 +331,9 @@ const Scene = ({
         similarityWithHighlightedCluster &&
         similarityWithHighlightedCluster > MIN_SIMILARITY_THRESHOLD
       ) {
-        const color = hueScale(activeCluster.cluster_id)
-        const quantizedColorRange = intensityColorScaleQuantized(color)
-
-        const similarityScaleValue = d3
-          .scaleQuantize()
-          .domain([0, 1])
-          .range(quantizedColorRange)(similarityWithHighlightedCluster)
-
-        // log cluster and color info
-        if (isDevelopment) {
-          const { name: matchingClusterName }: ClusterObjectProps =
-            dataset.allClusters.find(
-              (c: ClusterObjectProps) => c.cluster_id === id
-            )
-
-          console.groupCollapsed(
-            `%c${matchingClusterName}`,
-            `background-color: ${similarityScaleValue}; color: black`
-          )
-          console.log(
-            `Target color: %c${color}`,
-            `background-color: ${color}; color: black`
-          )
-          console.log(
-            `Current color: %c${similarityScaleValue}`,
-            `background-color: ${similarityScaleValue}; color: black`
-          )
-          console.log(
-            'Similarity:',
-            similarityWithHighlightedCluster,
-            'Color scale:',
-            quantizedColorRange
-          )
-          console.groupEnd()
-        }
+        const similarityScaleValue = similarityScale(
+          similarityWithHighlightedCluster
+        )
 
         return similarityScaleValue
       }
@@ -447,9 +432,14 @@ const Scene = ({
     moveTo({ location: rescaledCentroidCoords, zoom: ZOOMED_IN })
   }, [activeClusterId])
 
+  useEffect(() => {
+    if (isSourceNetwork)
+      dispatch({ type: 'SET_LEGEND', payload: { legend: quantizedColorRange } })
+  }, [highlightColor])
+
   //
   // **
-  // runtime operations
+  // frame operations
   useFrame(() => {
     // updating zoom
     if (cameraRef.current) {

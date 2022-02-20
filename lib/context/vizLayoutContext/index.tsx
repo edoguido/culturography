@@ -26,6 +26,7 @@ export interface VizLayoutState extends VizLayoutAction {
   clusters?: object[]
   networks?: {
     highlight: string
+    legend: string[]
     nameHighlight: string
     zoomLevel: number
     source: {
@@ -116,33 +117,17 @@ export const vizLayoutReducer = (state, action) => {
       return { ...payload }
     }
 
-    case 'UPDATE_SIDEBAR_WIDTH': {
+    case 'SET_LEGEND': {
+      const { legend } = payload
+
       return {
         ...state,
-        sidebarWidth: payload,
+        networks: {
+          ...state.networks,
+          legend,
+        },
       }
     }
-
-    case 'TOGGLE_DEV': {
-      return {
-        ...state,
-        development: !state.development,
-      }
-    }
-
-    case 'DEV_TOGGLE_READ_MODE': {
-      if (state.development === false) return { ...state }
-      return {
-        ...state,
-        read: !state.read,
-      }
-    }
-
-    case 'TOGGLE_READ_MODE':
-      return {
-        ...state,
-        read: !state.read,
-      }
 
     case 'UPDATE_STORY_DATA': {
       const { story, networks } = payload
