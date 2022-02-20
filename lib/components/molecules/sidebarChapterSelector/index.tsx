@@ -1,14 +1,20 @@
 import { useVizLayout } from '@/context/vizLayoutContext'
 import { AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as Styled from './styled'
 
 const SidebarChapterSelector = ({ chapters, forwardRef, storyRefs }) => {
   const [layout] = useVizLayout()
-  const [open, setOpen] = useState(false)
+  const [isOpen, setOpen] = useState(false)
+
+  const ref = useRef<HTMLDivElement>(null)
+
+  function open() {
+    setOpen(true)
+  }
 
   function close() {
-    setOpen((prev) => !prev)
+    setOpen(false)
   }
 
   function handleClick(index) {
@@ -23,15 +29,27 @@ const SidebarChapterSelector = ({ chapters, forwardRef, storyRefs }) => {
     close()
   }
 
+  useEffect(() => {
+    function checkOutsideClick(e) {
+      const clickedInside = ref.current.contains(e.target)
+
+      if (clickedInside) open()
+      else close()
+    }
+
+    window.addEventListener('pointerup', checkOutsideClick)
+    return () => window.removeEventListener('pointerup', checkOutsideClick)
+  }, [ref.current])
+
   return (
     chapters.length > 1 && (
-      <Styled.SidebarChapterSelectorWrapper>
+      <Styled.SidebarChapterSelectorWrapper ref={ref}>
         <Styled.SidebarChapterSelectorContent>
-          <Styled.SidebarChapterSelectorCurrentChapterName onClick={close}>
+          <Styled.SidebarChapterSelectorCurrentChapterName onClick={open}>
             {chapters[layout.story.chapter].chapter_title}
           </Styled.SidebarChapterSelectorCurrentChapterName>
           <AnimatePresence>
-            {open && (
+            {isOpen && (
               <Styled.SidebarChapterSelectorChapterNameOptionsList
                 initial="initial"
                 animate="animate"
