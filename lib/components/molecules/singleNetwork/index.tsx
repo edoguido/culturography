@@ -583,12 +583,12 @@ const Cluster = ({ data, scales, color, label, onClick }: ClusterProps) => {
   useFrame(({ camera }) => {
     pointMaterialRef.current.size = lerp(
       pointMaterialRef.current.size,
-      BASE_POINT_SIZE + camera.zoom / 10,
+      BASE_POINT_SIZE + camera.zoom / 20,
       LERP_FACTOR
     )
 
     if (!mounted) return
-    const z = BASE_LABEL_SCALE - (camera.zoom * 3.5) / MAX_ZOOM
+    const z = BASE_LABEL_SCALE - camera.zoom / MAX_ZOOM
     labelRef.current.style.transform = `scale3d(${z},${z},${z})`
 
     const o = labelRef.current.style.opacity
