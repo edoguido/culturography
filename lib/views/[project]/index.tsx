@@ -5,11 +5,11 @@ import client from 'utils/cms'
 import { PROJECT_QUERY, ALL_PROJECTS_QUERY } from 'utils/cms/queries'
 import { globalCSSVarToPixels } from 'utils/theme'
 
+import Nav from 'components/molecules/nav'
 import DefaultLayout from 'components/layout/main'
 import Sidebar from 'components/organisms/sidebar'
 import NetworkComparison from 'components/organisms/networkComparison'
-import Nav from 'components/molecules/nav'
-// import DevArea from 'components/atoms/devArea'
+
 import { Leva } from 'leva'
 import { hideUiControls } from 'utils/index'
 
@@ -36,7 +36,6 @@ const ProjectPage = ({ data }) => {
       <DefaultLayout>
         <Leva hidden={!hideUiControls} />
         <VizLayoutContext.Provider value={[state, dispatch]}>
-          {/* <DevArea /> */}
           <Styled.ProjectPageWrapper>
             <Nav title={title} />
             <Sidebar data={data} />
