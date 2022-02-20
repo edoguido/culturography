@@ -91,7 +91,13 @@ const NetworkComparison = ({ data }) => {
         animate: {
           zIndex: zIndex,
           width: width,
-          left: source ? '0%' : showBothNetworks ? '50%' : show ? '20%' : '50%',
+          left: source
+            ? '0%'
+            : showBothNetworks
+            ? '50.5%'
+            : show
+            ? '20%'
+            : '50.5%',
           x: x,
           scale: scale,
           opacity: opacity,

@@ -22,7 +22,6 @@ export const NetworkComparisonSingleNetworkWrapper = styled(motion.div)`
 export const NetworkComparisonContent = styled.div`
   position: relative;
   height: calc(100% - 0.5rem);
-  margin: 0 0.5rem;
 
   display: flex;
   /* grid-template-columns: 1fr 1fr;
