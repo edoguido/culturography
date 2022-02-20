@@ -18,7 +18,11 @@ const Legend = () => {
       <div className="absolute z-10 right-0 top-0 text-white bg-[#ffffff30] p-2">
         <div>Overlap</div>
         {legend.map((color, i) => {
-          return <span className="text-sm">{labels[i]}</span>
+          return (
+            <span key={i} className="text-sm">
+              {labels[i]}
+            </span>
+          )
         })}
       </div>
     )
