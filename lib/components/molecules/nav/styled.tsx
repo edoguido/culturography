@@ -42,7 +42,7 @@ export const NavWrapper = styled.div`
   left: 0;
   height: var(--nav-height);
 
-  z-index: 99;
+  z-index: 999;
 
   padding: 0 0.5rem;
 `
