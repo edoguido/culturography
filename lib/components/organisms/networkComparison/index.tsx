@@ -15,6 +15,7 @@ import { motionOptions } from '@/const/motionProps'
 import { ClusterObjectProps, useVizLayout } from '@/context/vizLayoutContext'
 
 import * as Styled from './styled'
+import Legend from 'components/molecules/legend'
 
 const networks = ['source', 'target']
 
@@ -121,44 +122,46 @@ const NetworkComparison = ({ data }) => {
       }}
       transition={motionOptions}
     >
-      {layout.clusters && (
-        <Styled.NetworkComparisonContent>
-          {activeCluster && targetNetworkName && (
-            <NetworkComparisonAnnouncer
-              data={layout.clusters}
-              highlightedClusterName={activeCluster.name}
-              targetNetworkName={targetNetworkName}
-              showingBothNetworks={showBothNetworks}
-            />
-          )}
-          {networks.map((n) => {
-            const isSource = n === 'source'
-            const { animate, style } = networkLayoutProperties(isSource)
-
-            return (
-              <Styled.NetworkComparisonSingleNetworkWrapper
-                key={n}
-                layout
-                initial={false}
-                animate={animate}
-                transition={{
-                  type: 'spring',
-                  stiffness: 800,
-                  damping: 60,
-                }}
-                style={style}
-              >
-                <SingleNetwork
-                  data={networksData}
-                  activeCluster={activeCluster}
-                  activeClusterId={activeClusterId}
-                  accessor={n}
-                />
-              </Styled.NetworkComparisonSingleNetworkWrapper>
-            )
-          })}
-        </Styled.NetworkComparisonContent>
-      )}
+      <div className="relative h-full px-2">
+        {layout.clusters && (
+          <Styled.NetworkComparisonContent>
+            {activeCluster && targetNetworkName && (
+              <NetworkComparisonAnnouncer
+                data={layout.clusters}
+                highlightedClusterName={activeCluster.name}
+                targetNetworkName={targetNetworkName}
+                showingBothNetworks={showBothNetworks}
+              />
+            )}
+            {activeCluster && targetNetworkName && <Legend />}
+            {networks.map((n) => {
+              const isSource = n === 'source'
+              const { animate, style } = networkLayoutProperties(isSource)
+              return (
+                <Styled.NetworkComparisonSingleNetworkWrapper
+                  key={n}
+                  layout
+                  initial={false}
+                  animate={animate}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 800,
+                    damping: 60,
+                  }}
+                  style={style}
+                >
+                  <SingleNetwork
+                    data={networksData}
+                    activeCluster={activeCluster}
+                    activeClusterId={activeClusterId}
+                    accessor={n}
+                  />
+                </Styled.NetworkComparisonSingleNetworkWrapper>
+              )
+            })}
+          </Styled.NetworkComparisonContent>
+        )}
+      </div>
     </Styled.NetworkComparisonWrapper>
   )
 }
