@@ -23,12 +23,12 @@ export default function Home({ data }) {
 
       <div className="z-10">
         <div className="mx-auto flex justify-center items-center bg-gradient-to-b from-roskildeOrange to-transparent">
-          <h1 className="" style={{ fontSize: '12vw' }}>
+          <h1 className="" style={{ fontSize: '14vw' }}>
             {project_title}
           </h1>
         </div>
         <div className="p-6 max-w-6xl text-roskildeOrange flex justify-center items-center">
-          <h2 className="text-6xl">{project_subtitle}</h2>
+          <h2 className="text-4xl md:text-6xl">{project_subtitle}</h2>
         </div>
       </div>
 
