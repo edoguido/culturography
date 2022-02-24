@@ -32,23 +32,27 @@ export default function Home({ data }) {
         </div>
       </div>
 
-      {/* <div className="richText p-6 text-2xl max-w-6xl">
-        <PortableText value={abstract} />
-        <style>{`
+      <div className="flex">
+        <div className="richText p-6 text-2xl max-w-6xl">
+          <PortableText value={abstract} />
+          <style>{`
           .richText p {
             margin: 1rem 0;
           }
         `}</style>
-      </div> */}
+        </div>
 
-      {/* <div className="relative h-screen translate-y-1/3">
-        <div className="absolute min-w-full aspect-square -translate-y-1/4">
-          <Image src="/splashes/000.png" layout="fill" />
-        </div>
-        <div className="absolute min-w-full aspect-square -translate-y-1/4">
-          <Image src="/splashes/101.png" layout="fill" />
-        </div>
-      </div> */}
+        {/* <div className="absolute right-0 h-screen">
+          <div className="relative w-[100vh] h-[100vh]">
+            <div className="absolute right-0 min-w-full min-h-full aspect-square translate-x-1/2">
+              <Image src="/splashes/000.png" layout="fill" />
+            </div>
+            <div className="absolute right-0 min-w-full min-h-full aspect-square translate-x-1/2">
+              <Image src="/splashes/101.png" layout="fill" />
+            </div>
+          </div>
+        </div> */}
+      </div>
 
       <div>
         {blocks.map((b, i) => (
