@@ -30,10 +30,12 @@ export interface VizLayoutState extends VizLayoutAction {
     nameHighlight: string
     zoomLevel: number
     source: {
+      name: string
       show: boolean
       zoom: string | null
     }
     target: {
+      name: string
       show: boolean
       zoom: string | null
     }
@@ -57,12 +59,12 @@ export const makeStoryPayload = ({ source, chapterIndex, blockIndex }) => {
   const chapter = source.story_chapters[chapterIndex]
   const block = chapter.blocks[blockIndex]
 
-  // const {
-  //   source_network_name,
-  //   source_network_id,
-  //   right_network_name,
-  //   target_network_id,
-  // } = chapter.networks
+  const {
+    source_network_name,
+    // source_network_id,
+    target_network_name,
+    // target_network_id,
+  } = chapter.networks
 
   const {
     highlight,
@@ -82,14 +84,14 @@ export const makeStoryPayload = ({ source, chapterIndex, blockIndex }) => {
       nameHighlight: network_cluster_highlight,
       source: {
         // id: source_network_id,
-        // name: source_network_name,
+        name: source_network_name,
         show: show_source_network,
         zoomLevel: zoom_source_level,
         // zoom: source_cluster_zoom,
       },
       target: {
         // id: target_network_id,
-        // name: right_network_name,
+        name: target_network_name,
         show: show_target_network,
         zoomLevel: zoom_target_level,
         // zoom: target_cluster_zoom,
