@@ -176,41 +176,10 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
   }, [layout.story.chapter])
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-      }}
-    >
+    <div className="relative w-full h-full">
       {fetching && <Spinner />}
-      <motion.div
-        style={{
-          position: 'absolute',
-          zIndex: 30,
-          backgroundColor: '#ffffff30',
-          color: 'white',
-          padding: '0.125rem 0.85rem 0.125rem 0.5rem',
-          borderRadius: '0 0 1rem 0',
-        }}
-      >
-        {networkName}
-      </motion.div>
-      {hideUiControls && (
-        <div
-          style={{
-            position: 'absolute',
-            zIndex: 20,
-            top: '50%',
-            left: '50%',
-            color: 'red',
-            transform: 'translate(-50%,-50%) scale(3)',
-            fontWeight: '100',
-          }}
-        >
-          +
-        </div>
-      )}
+      <NetworkName label={networkName} />
+      <Cursor />
       <Canvas ref={canvasRef}>
         <ContextBridge>
           {!fetching && dataset && (
@@ -226,6 +195,24 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
         </ContextBridge>
       </Canvas>
     </div>
+  )
+}
+
+const NetworkName = ({ label }: { label: string }) => {
+  return (
+    <motion.div className="absolute z-30 bg-white bg-opacity-10 text-white py-1 px-3 rounded-br-2xl">
+      {label}
+    </motion.div>
+  )
+}
+
+const Cursor = () => {
+  return (
+    hideUiControls && (
+      <div className="absolute z-20 top-1/2 left-1/2 text-red-500 -translate-x-1/2 -translate-y-1/2">
+        +
+      </div>
+    )
   )
 }
 
@@ -343,21 +330,21 @@ const Scene = ({
     [hueScale]
   )
 
-  // here we'll highlight cluster in explore mode
-  function handleClusterClick(e) {
-    function animateToRandomPoint() {
-      const randZ = round(INITIAL_ZOOM + Math.random() * 100)
+  // // here we'll highlight cluster in explore mode
+  // function handleClusterClick(e) {
+  //   function animateToRandomPoint() {
+  //     const randZ = round(INITIAL_ZOOM + Math.random() * 100)
 
-      const [randX, randY] = [
-        round((Math.random() - 0.5) * 15),
-        round((Math.random() - 0.5) * 15),
-      ]
+  //     const [randX, randY] = [
+  //       round((Math.random() - 0.5) * 15),
+  //       round((Math.random() - 0.5) * 15),
+  //     ]
 
-      moveTo({ location: [randX, randY], zoom: randZ })
-    }
+  //     moveTo({ location: [randX, randY], zoom: randZ })
+  //   }
 
-    animateToRandomPoint()
-  }
+  //   animateToRandomPoint()
+  // }
 
   // we should set initial zoom here
   // -- how can we fit to objects bounds?
