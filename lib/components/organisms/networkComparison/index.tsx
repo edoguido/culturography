@@ -14,19 +14,19 @@ const NetworkComparisonAnnouncer = dynamic(
 import { motionOptions } from '@/const/motionProps'
 import { ClusterObjectProps, useVizLayout } from '@/context/vizLayoutContext'
 
-import * as Styled from './styled'
 import Legend from 'components/molecules/legend'
+import { motion } from 'framer-motion'
 
-const networks = ['source', 'target']
+const networkNames = ['source', 'target']
 
 const NetworkComparison = ({ data }) => {
   const [layout, dispatch] = useVizLayout()
   //
   // story properties
-  const currentBlock = layout.story.block
-  // networks properties
+  const { networks: networksProperties } = layout
+  const { block } = layout.story
+  // net properties
   const networksData = data.story_chapters[layout.story.chapter]
-  const networksProperties = layout.networks
   const targetNetworkName = networksData.networks.target_network_name
   //
   // clusters properties
@@ -46,22 +46,22 @@ const NetworkComparison = ({ data }) => {
 
   useEffect(() => {
     const fetchMetadata = async () => {
-      let data
+      let dataset
 
       try {
         const metadata = data.network_metadata.asset
 
-        data = await fetch(`https://api.sanity.io/${metadata.path}`).then((r) =>
-          r.json()
+        dataset = await fetch(`https://api.sanity.io/${metadata.path}`).then(
+          (r) => r.json()
         )
       } catch {
         const { source_network_id, target_network_id } = networksData.networks
 
-        data =
+        dataset =
           await require(`../../../../public/data/${source_network_id}_${target_network_id}_clusters.json`)
       }
 
-      return data
+      return dataset
     }
 
     const updateMetadata = (metadata) => {
@@ -108,38 +108,29 @@ const NetworkComparison = ({ data }) => {
         },
       }
     },
-    [currentBlock]
+    [block]
   )
 
   return (
-    <Styled.NetworkComparisonWrapper
+    <motion.div
+      className="fixed top-[var(--nav-height)] bottom-0 left-0"
       initial={false}
-      animate={{
-        right: layout.read ? layout.sidebarWidth.value : 0,
-        // bottom: layout.read
-        //   ? 0
-        //   : globalCSSVarToPixels('--timeline-height').value,
-      }}
+      animate={{ right: layout.read ? layout.sidebarWidth.value : 0 }}
       transition={motionOptions}
     >
       <div className="relative h-full px-2">
         {layout.clusters && (
-          <Styled.NetworkComparisonContent>
-            {activeCluster && targetNetworkName && (
-              <NetworkComparisonAnnouncer
-                data={layout.clusters}
-                highlightedClusterName={activeCluster.name}
-                targetNetworkName={targetNetworkName}
-                showingBothNetworks={showBothNetworks}
-              />
-            )}
-            {/* {activeCluster && targetNetworkName && <Legend />} */}
-            {networks.map((n) => {
+          <div className="relative h-[calc(100%-0.5rem)] flex">
+            {/*  */}
+            <Legend />
+            {/*  */}
+            {networkNames.map((n) => {
               const isSource = n === 'source'
               const { animate, style } = networkLayoutProperties(isSource)
               return (
-                <Styled.NetworkComparisonSingleNetworkWrapper
+                <motion.div
                   key={n}
+                  className="absolute inset-0 w-1/2 rounded-lg overflow-hidden bg-black flex flex-1 justify-center items-center"
                   layout
                   initial={false}
                   animate={animate}
@@ -156,13 +147,13 @@ const NetworkComparison = ({ data }) => {
                     activeClusterId={activeClusterId}
                     accessor={n}
                   />
-                </Styled.NetworkComparisonSingleNetworkWrapper>
+                </motion.div>
               )
             })}
-          </Styled.NetworkComparisonContent>
+          </div>
         )}
       </div>
-    </Styled.NetworkComparisonWrapper>
+    </motion.div>
   )
 }
 
