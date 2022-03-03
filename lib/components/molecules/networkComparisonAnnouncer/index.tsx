@@ -1,17 +1,24 @@
-import { ClusterObjectProps } from '@/context/vizLayoutContext'
+import { ClusterObjectProps, useVizLayout } from '@/context/vizLayoutContext'
 import { AnimatePresence, motion } from 'framer-motion'
 
-const NetworkComparisonAnnouncer = ({
-  data,
-  highlightedClusterName,
-  targetNetworkName,
-  showingBothNetworks,
-}: {
-  data: any[]
-  highlightedClusterName: string
-  targetNetworkName: string
-  showingBothNetworks: boolean
-}) => {
+const NetworkComparisonAnnouncer = () => {
+  const [layout] = useVizLayout()
+
+  if (!layout.networks) return null
+
+  const isHighlighting =
+    layout.networks.nameHighlight != 'undefined' &&
+    layout.networks.nameHighlight != 'null'
+
+  const { target } = layout.networks
+
+  if (!isHighlighting) return null
+
+  const highlightedSourceNetworkCluster: ClusterObjectProps =
+    layout.clusters?.find(
+      (c: ClusterObjectProps) => c.cluster_id == +layout.networks.nameHighlight
+    )
+
   return (
     <motion.div
       initial={{
@@ -31,79 +38,47 @@ const NetworkComparisonAnnouncer = ({
         ease: [0, 0, 0, 1],
         duration: 0.35,
       }}
-      style={{
-        position: 'absolute',
-        bottom: 0,
-        zIndex: 99,
-        padding: '1rem',
-        display: 'flex',
-        alignItems: 'center',
-      }}
+      className="relative p-0 flex items-center"
     >
-      <motion.div
-        style={{
-          display: 'flex',
-          alignItems: 'baseline',
-          marginRight: '.125rem',
-        }}
-      >
+      <motion.div className="flex items-baseline">
         <motion.span>Observing the</motion.span>
-        <AnimatePresence key={highlightedClusterName} exitBeforeEnter>
-          {data.map((c: ClusterObjectProps) => {
-            return (
-              c.name === highlightedClusterName && (
-                <motion.div
-                  id={c.name}
-                  key={c.name}
-                  layout
-                  initial={{ y: 30, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -30, opacity: 0 }}
-                  transition={{
-                    type: 'ease',
-                    ease: [0, 0, 0, 1],
-                    duration: 0.35,
-                  }}
-                  style={{
-                    color: 'white',
-                    backgroundColor: '#333',
-                    padding: '.125rem .5rem',
-                    margin: '0 .5rem',
-                    borderRadius: '99rem',
-                  }}
-                >
-                  {highlightedClusterName}
-                </motion.div>
-              )
-            )
-          })}
+        <AnimatePresence
+          key={highlightedSourceNetworkCluster?.name}
+          exitBeforeEnter
+        >
+          {highlightedSourceNetworkCluster && (
+            <motion.div
+              id={highlightedSourceNetworkCluster.name}
+              key={highlightedSourceNetworkCluster.name}
+              layout
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -30, opacity: 0 }}
+              transition={{
+                type: 'ease',
+                ease: [0, 0, 0, 1],
+                duration: 0.35,
+              }}
+              className="bg-white bg-opacity-10 text-white mx-1 py-1 px-2 rounded-full my-1"
+            >
+              {highlightedSourceNetworkCluster.name}
+            </motion.div>
+          )}
         </AnimatePresence>
-        <motion.span>cluster</motion.span>
+        {/* <motion.span>community</motion.span> */}
       </motion.div>
-      {showingBothNetworks && (
-        <AnimatePresence key={targetNetworkName}>
+      {isHighlighting && (
+        <AnimatePresence key={target.name}>
           <motion.div
-            key={targetNetworkName}
+            key={target.name}
+            className="flex items-baseline mx-1"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 1 }}
-            style={{
-              display: 'flex',
-              alignItems: 'baseline',
-              margin: '0 .3125rem',
-            }}
           >
-            <span>correspondences in the</span>
-            <span
-              style={{
-                backgroundColor: '#ffffff30',
-                color: 'white',
-                padding: '.125rem .5rem',
-                borderRadius: '99rem',
-                margin: '0 0.3125rem',
-              }}
-            >
-              {targetNetworkName}
+            <span>community correspondences in the</span>
+            <span className="bg-white bg-opacity-10 text-white mx-1 py-1 px-2 rounded-full my-1">
+              {target.name}
             </span>
             <span>network</span>
           </motion.div>
