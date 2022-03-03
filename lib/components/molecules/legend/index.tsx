@@ -1,7 +1,7 @@
 import { useVizLayout } from '@/context/vizLayoutContext'
 import { AnimatePresence, motion } from 'framer-motion'
 
-const labels = ['None', 'Very weak', 'Weak', 'Strong', 'Very strong']
+const labels = ['None', 'Very weak', 'Weak', 'Medium', 'Strong', 'Very strong']
 
 const Legend = () => {
   const [layout] = useVizLayout()

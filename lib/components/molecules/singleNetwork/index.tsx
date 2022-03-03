@@ -75,6 +75,7 @@ const ZOOMED_IN = 6
 const BASE_POINT_SIZE = 1
 const BASE_LABEL_SCALE = 4
 const COLOR_LEVELS = 4
+const NO_OVERLAP_COLOR = '#222222'
 // motion
 const LERP_FACTOR = 0.1
 
@@ -325,7 +326,7 @@ const Scene = ({
         return similarityScaleValue
       }
 
-      return '#222222'
+      return NO_OVERLAP_COLOR
     },
     [hueScale]
   )
@@ -421,7 +422,10 @@ const Scene = ({
 
   useEffect(() => {
     if (isSourceNetwork)
-      dispatch({ type: 'SET_LEGEND', payload: { legend: quantizedColorRange } })
+      dispatch({
+        type: 'SET_LEGEND',
+        payload: { legend: [NO_OVERLAP_COLOR].concat(quantizedColorRange) },
+      })
   }, [highlightColor])
 
   //
