@@ -10,7 +10,7 @@ const Legend = () => {
 
   return (
     <AnimatePresence>
-      {legend && (
+      {layout?.networks.highlight && (
         <motion.div
           initial="initial"
           animate="animate"
