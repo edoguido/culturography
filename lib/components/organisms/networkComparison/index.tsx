@@ -27,7 +27,7 @@ const NetworkComparison = ({ data }) => {
   const { block } = layout.story
   // net properties
   const networksData = data.story_chapters[layout.story.chapter]
-  const targetNetworkName = networksData.networks.target_network_name
+  // const targetNetworkName = networksData.networks.target_network_name
   //
   // clusters properties
   const rawClusterId = +layout.networks.nameHighlight
@@ -113,9 +113,8 @@ const NetworkComparison = ({ data }) => {
 
   return (
     <motion.div
-      className="fixed top-[var(--nav-height)] bottom-0 left-0"
+      className="fixed top-[var(--nav-height)] bottom-0 left-0 right-0"
       initial={false}
-      animate={{ right: layout.read ? layout.sidebarWidth.value : 0 }}
       transition={motionOptions}
     >
       <div className="relative h-full px-2">
