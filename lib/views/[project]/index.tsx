@@ -13,8 +13,6 @@ import NetworkComparison from 'components/organisms/networkComparison'
 import { Leva } from 'leva'
 import { hideUiControls } from 'utils/index'
 
-import * as Styled from './styled'
-
 const ProjectPage = ({ data }) => {
   const { title } = data
 
@@ -36,11 +34,11 @@ const ProjectPage = ({ data }) => {
       <DefaultLayout>
         <Leva hidden={!hideUiControls} />
         <VizLayoutContext.Provider value={[state, dispatch]}>
-          <Styled.ProjectPageWrapper>
+          <div className="overflow-hidden fixed inset-0 bg-[#111111]">
             <Nav title={title} />
             <Sidebar data={data} />
             {state.story && <NetworkComparison data={data} />}
-          </Styled.ProjectPageWrapper>
+          </div>
         </VizLayoutContext.Provider>
       </DefaultLayout>
     )

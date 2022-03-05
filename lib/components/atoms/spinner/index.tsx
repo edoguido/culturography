@@ -1,15 +1,15 @@
-import * as Styled from './styled'
-
 const Spinner = () => {
   return (
-    <Styled.SpinnerWrapper>
+    <div className="absolute inset-0 z-[999] bg-black flex justify-center items-center">
       <div
         dangerouslySetInnerHTML={{
-          __html: `<?xml version="1.0" encoding="utf-8"?/>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" />`,
+          __html: `
+            <?xml version="1.0" encoding="utf-8"?/>
+            <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" />`,
         }}
       />
       <svg
+        className="w-8 h-8 animate-spin"
         width="64"
         height="64"
         viewBox="0 0 64 64"
@@ -28,7 +28,7 @@ const Spinner = () => {
           </clipPath>
         </defs> */}
       </svg>
-    </Styled.SpinnerWrapper>
+    </div>
   )
 }
 

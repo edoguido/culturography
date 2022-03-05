@@ -4,8 +4,6 @@ import { apiFetch } from 'utils/cms'
 import BarChart from '../barChart'
 import SankeyChart from '../sankeyChart'
 
-import * as Styled from './styled'
-
 const CHART_TYPES = {
   sankey: SankeyChart,
   barchart: BarChart,
@@ -30,15 +28,17 @@ const ChartSerializer = (props) => {
 
   return (
     fetchedDataset && (
-      <Styled.ChartSerializerWrapper>
-        <Styled.ChartSerializerContent>
-          {createElement(
-            CHART_TYPES[chart_type],
-            { fetchedDataset, ...node },
-            { ...children }
-          )}
-        </Styled.ChartSerializerContent>
-      </Styled.ChartSerializerWrapper>
+      <div>
+        <div className="relative min-h-[320px]">
+          <div className="absolute inset-0 z-0">
+            {createElement(
+              CHART_TYPES[chart_type],
+              { fetchedDataset, ...node },
+              { ...children }
+            )}
+          </div>
+        </div>
+      </div>
     )
   )
 }

@@ -1,7 +1,6 @@
 import { useVizLayout } from '@/context/vizLayoutContext'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
-import * as Styled from './styled'
 
 const SidebarChapterSelector = ({ chapters, forwardRef, storyRefs }) => {
   const [layout] = useVizLayout()
@@ -43,14 +42,21 @@ const SidebarChapterSelector = ({ chapters, forwardRef, storyRefs }) => {
 
   return (
     chapters.length > 1 && (
-      <Styled.SidebarChapterSelectorWrapper ref={ref}>
-        <Styled.SidebarChapterSelectorContent>
-          <Styled.SidebarChapterSelectorCurrentChapterName onClick={open}>
+      <div
+        ref={ref}
+        className="z-10 flex items-center select-none cursor-pointer text-2xl"
+      >
+        <div className="relative w-full">
+          <div
+            className="h-[var(--nav-height)] p-4 z-[101] text-ellipsis overflow-hidden whitespace-nowrap bg-orange-500"
+            onClick={open}
+          >
             {chapters[layout.story.chapter].chapter_title}
-          </Styled.SidebarChapterSelectorCurrentChapterName>
+          </div>
           <AnimatePresence>
             {isOpen && (
-              <Styled.SidebarChapterSelectorChapterNameOptionsList
+              <motion.div
+                className="absolute z-[100] overflow-hidden bg-black top-0 right-0 left-0"
                 initial="initial"
                 animate="animate"
                 exit="exit"
@@ -82,8 +88,9 @@ const SidebarChapterSelector = ({ chapters, forwardRef, storyRefs }) => {
                 }}
               >
                 {chapters.map((sc, i) => (
-                  <Styled.SidebarChapterSelectorChapterNameOption
+                  <motion.div
                     key={i}
+                    className="p-4"
                     onClick={() => handleClick(i)}
                     custom={i}
                     variants={{
@@ -104,13 +111,13 @@ const SidebarChapterSelector = ({ chapters, forwardRef, storyRefs }) => {
                     }}
                   >
                     {sc.chapter_title}
-                  </Styled.SidebarChapterSelectorChapterNameOption>
+                  </motion.div>
                 ))}
-              </Styled.SidebarChapterSelectorChapterNameOptionsList>
+              </motion.div>
             )}
           </AnimatePresence>
-        </Styled.SidebarChapterSelectorContent>
-      </Styled.SidebarChapterSelectorWrapper>
+        </div>
+      </div>
     )
   )
 }

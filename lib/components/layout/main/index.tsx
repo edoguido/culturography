@@ -1,7 +1,5 @@
-import * as Styled from './styled'
-
 const DefaultLayout = ({ children }) => {
-  return <Styled.DefaultLayoutWrapper>{children}</Styled.DefaultLayoutWrapper>
+  return <div className="text-white">{children}</div>
 }
 
 export default DefaultLayout

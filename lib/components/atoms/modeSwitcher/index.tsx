@@ -1,7 +1,7 @@
 import { useVizLayout } from '@/context/vizLayoutContext'
+import { motion } from 'framer-motion'
 import { useControls } from 'leva'
 import { useEffect, useRef } from 'react'
-import * as Styled from './styled'
 
 const ModeSwitcher = () => {
   const [state, dispatch] = useVizLayout()
@@ -28,11 +28,15 @@ const ModeSwitcher = () => {
   }
 
   return (
-    <Styled.ModeSwitcherWrapper onClick={handleChangeLayout}>
-      <Styled.ModeSwitcherLabel>Read</Styled.ModeSwitcherLabel>
-      <Styled.ModeSwitcherToggle>
-        <Styled.ModeSwitcherToggleRail />
-        <Styled.ModeSwitcherToggleThumb
+    <motion.button
+      className="appearance-none bg-transparent text-white border-none flex justify-between items-center cursor-pointer select-none"
+      onClick={handleChangeLayout}
+    >
+      <span>Read</span>
+      <div className="relative w-full h-full mx-4 flex justify-center items-center">
+        <div className="bg-white w-9 h-3 rounded-full" />
+        <motion.div
+          className="absolute w-6 h-6 bg-orange-500 rounded-full"
           initial={false}
           animate={{
             left: state.read ? 0 : '100%',
@@ -50,9 +54,9 @@ const ModeSwitcher = () => {
             scale: 0.8,
           }}
         />
-      </Styled.ModeSwitcherToggle>
-      <Styled.ModeSwitcherLabel>Explore</Styled.ModeSwitcherLabel>
-    </Styled.ModeSwitcherWrapper>
+      </div>
+      <span>Explore</span>
+    </motion.button>
   )
 }
 

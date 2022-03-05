@@ -13,7 +13,44 @@ import { motionOptions } from '@/const/motionProps'
 
 import SidebarChapterSelector from 'components/molecules/sidebarChapterSelector'
 import ChartSerializer from 'components/molecules/chartSerializer'
-import * as Styled from './styled'
+import { motion } from 'framer-motion'
+
+const handleBlockChange = (refs, { trigger, callback }) => {
+  refs.forEach((ref, i) => {
+    const chapterRef = ref.chapter.current
+
+    if (!chapterRef) return
+
+    const blockRefs = ref.blocks
+
+    const { y: cy, height: ch } = chapterRef.getBoundingClientRect()
+
+    blockRefs.forEach((bRef, j) => {
+      const { y: by, height: bh } = bRef.current.getBoundingClientRect()
+
+      // we first check blocks coords
+      if (trigger < by) return
+      // and proceed if we're in a block
+      if (!(trigger > by && trigger < by + bh)) return
+      // we then check chapters coords
+      if (trigger < cy) return
+      // and proceed if we're in a chapter
+      if (!(trigger > cy && trigger < cy + ch)) return
+      // we update layout
+      callback((prev) => {
+        const [pc, pb] = prev
+        // if we're in the same chapter and block
+        if (pc === i && pb === j) return prev
+        // if we're in a new chapter but same block
+        if (pc !== i && pb === j) return [i, pb]
+        // if we're in the same chapter but new block
+        if (pc === i && pb !== j) return [pc, j]
+        // if we're in a new chapter and new block
+        if (pc !== i && pb !== j) return [i, j]
+      })
+    })
+  })
+}
 
 const SERIALIZERS = {
   types: {
@@ -41,45 +78,7 @@ const Sidebar = ({ data }) => {
 
   //
 
-  const check = useCallback(
-    (refs, { trigger, callback }) => {
-      refs.forEach((ref, i) => {
-        const chapterRef = ref.chapter.current
-
-        if (!chapterRef) return
-
-        const blockRefs = ref.blocks
-
-        const { y: cy, height: ch } = chapterRef.getBoundingClientRect()
-
-        blockRefs.forEach((bRef, j) => {
-          const { y: by, height: bh } = bRef.current.getBoundingClientRect()
-
-          // we first check blocks coords
-          if (trigger < by) return
-          // and proceed if we're in a block
-          if (!(trigger > by && trigger < by + bh)) return
-          // we then check chapters coords
-          if (trigger < cy) return
-          // and proceed if we're in a chapter
-          if (!(trigger > cy && trigger < cy + ch)) return
-          // we update layout
-          callback((prev) => {
-            const [pc, pb] = prev
-            // if we're in the same chapter and block
-            if (pc === i && pb === j) return prev
-            // if we're in a new chapter but same block
-            if (pc !== i && pb === j) return [i, pb]
-            // if we're in the same chapter but new block
-            if (pc === i && pb !== j) return [pc, j]
-            // if we're in a new chapter and new block
-            if (pc !== i && pb !== j) return [i, j]
-          })
-        })
-      })
-    },
-    [storyRefs]
-  )
+  const check = useCallback(handleBlockChange, [storyRefs])
 
   const onScroll = useCallback(() => {
     window.requestAnimationFrame(onScroll)
@@ -117,32 +116,34 @@ const Sidebar = ({ data }) => {
   }, [storyState])
 
   return (
-    <Styled.SidebarWrapper
+    <motion.div
+      className="z-[100] fixed top-[var(--nav-height)] bottom-0 w-[var(--sidebar-width)] max-h-screen"
       ref={storyRef}
       animate={{
-        x: layout.read ? 0 : '100%',
+        x: layout.read ? '-50%' : '-50%',
+        left: '50%',
         // visibility: 'hidden',
       }}
       transition={motionOptions}
     >
-      <Styled.SidebarContent>
-        {layout.story && (
+      <div className="h-full">
+        {/* {layout.story && (
           <SidebarChapterSelector
             chapters={data.story_chapters}
             forwardRef={storyContentRef}
             storyRefs={storyRefs}
           />
-        )}
+        )} */}
         {data.story_chapters && (
-          <Styled.SidebarStoryWrapper ref={storyContentRef}>
-            <Styled.SidebarStoryContent>
+          <div
+            ref={storyContentRef}
+            className="max-w-[var(--sidebar-width)] max-h-full flex basis-auto flex-grow flex-shrink-0 overflow-x-hidden overflow-y-auto"
+          >
+            <div className="relative h-full w-full p-2 pb-[calc(70vh-var(--nav-height))]">
               {data.story_chapters.map(
                 ({ chapter_title, blocks }, i: number) => {
                   return (
-                    <Styled.SidebarStoryChapterWrapper
-                      key={i}
-                      ref={storyRefs[i].chapter}
-                    >
+                    <div key={i} ref={storyRefs[i].chapter}>
                       <h2 className="text-2xl">{chapter_title}</h2>
                       {blocks.map(
                         ({ /* block_title, */ block_content }, j: number) => {
@@ -154,35 +155,37 @@ const Sidebar = ({ data }) => {
                             : ''
 
                           return (
-                            <Styled.SidebarStoryBlockWrapper
+                            <div
                               key={j}
                               ref={storyRefs[i].blocks[j]}
-                              className={highlightedClassName}
+                              className={`my-2 h-[200vh] ${highlightedClassName}`}
                             >
-                              {/* <Styled.SidebarStoryBlockTitle>
+                              <div className="p-3 rounded-lg bg-[#111111]">
+                                {/* <h2>
                                 {block_title}
-                              </Styled.SidebarStoryBlockTitle> */}
-                              {block_content.map((c, t: number) => (
-                                <Styled.SidebarStoryBlockContent key={t}>
-                                  <BlockContent
-                                    blocks={c}
-                                    serializers={SERIALIZERS}
-                                  />
-                                </Styled.SidebarStoryBlockContent>
-                              ))}
-                            </Styled.SidebarStoryBlockWrapper>
+                              </h2> */}
+                                {block_content.map((c, t: number) => (
+                                  <div key={t} className="rich-text hwul">
+                                    <BlockContent
+                                      blocks={c}
+                                      serializers={SERIALIZERS}
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
                           )
                         }
                       )}
-                    </Styled.SidebarStoryChapterWrapper>
+                    </div>
                   )
                 }
               )}
-            </Styled.SidebarStoryContent>
-          </Styled.SidebarStoryWrapper>
+            </div>
+          </div>
         )}
-      </Styled.SidebarContent>
-    </Styled.SidebarWrapper>
+      </div>
+    </motion.div>
   )
 }
 
