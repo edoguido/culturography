@@ -143,8 +143,8 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
     } catch {
       const { source_network_id, target_network_id } = data.networks
       const localFile = isSourceNetwork
-        ? `${source_network_id}_nodes.json`
-        : `${target_network_id}_nodes.json`
+        ? `${source_network_id}_${layout.story.phase}_nodes.json`
+        : `${target_network_id}_${layout.story.phase}_nodes.json`
 
       dataset = fetch(`/data/${localFile}`).then((r) => r.json())
     }

@@ -13,6 +13,7 @@ export const PROJECT_QUERY = (project) => `
     network_metadata {
       asset ->
     },
+    phase,
     story_chapters[] {
       chapter_title,
       snapshot_date,

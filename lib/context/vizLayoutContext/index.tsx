@@ -22,7 +22,7 @@ export interface VizLayoutState extends VizLayoutAction {
   development?: boolean
   sidebarWidth?: { unit: string; value: number }
   read?: boolean
-  story?: { chapter: number | null; block: number | null }
+  story?: { phase: string; chapter: number | null; block: number | null }
   clusters?: object[]
   networks?: {
     highlight: string
@@ -54,7 +54,7 @@ export interface VizLayoutContextInterface {
 // utils
 
 export const makeStoryPayload = ({ source, chapterIndex, blockIndex }) => {
-  const { title } = source
+  const { title, phase } = source
 
   const chapter = source.story_chapters[chapterIndex]
   const block = chapter.blocks[blockIndex]
@@ -78,7 +78,7 @@ export const makeStoryPayload = ({ source, chapterIndex, blockIndex }) => {
   } = block.network_control
 
   return {
-    story: { title, chapter: chapterIndex, block: blockIndex },
+    story: { title, phase, chapter: chapterIndex, block: blockIndex },
     networks: {
       highlight: highlight,
       nameHighlight: network_cluster_highlight,
@@ -134,13 +134,14 @@ export const vizLayoutReducer = (state, action) => {
     case 'UPDATE_STORY_DATA': {
       const { story, networks } = payload
 
-      const { chapter, block } = story
+      const { phase, chapter, block } = story
       const { highlight, nameHighlight, source, target } = networks
 
       return {
         ...state,
         story: {
           ...state.story,
+          phase,
           chapter,
           block,
         },

@@ -39,7 +39,7 @@ const Legend = () => {
           <div className="flex mt-2">
             {legend.map((color, i) => {
               return (
-                <div className="w-20 mr-2 last:mr-0 flex flex-col">
+                <div key={i} className="w-20 mr-2 last:mr-0 flex flex-col">
                   <div
                     className="w-full h-4 rounded-sm"
                     style={{ backgroundColor: color }}

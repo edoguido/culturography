@@ -5,10 +5,6 @@ const SingleNetwork = dynamic(
   () => import('components/molecules/singleNetwork'),
   { ssr: false }
 )
-const NetworkComparisonAnnouncer = dynamic(
-  () => import('components/molecules/networkComparisonAnnouncer'),
-  { ssr: false }
-)
 
 //
 import { motionOptions } from '@/const/motionProps'
@@ -25,6 +21,7 @@ const NetworkComparison = ({ data }) => {
   // story properties
   const { networks: networksProperties } = layout
   const { block } = layout.story
+
   // net properties
   const networksData = data.story_chapters[layout.story.chapter]
   // const targetNetworkName = networksData.networks.target_network_name
@@ -46,22 +43,22 @@ const NetworkComparison = ({ data }) => {
 
   useEffect(() => {
     const fetchMetadata = async () => {
-      let dataset
+      let clusterMetadata
 
       try {
-        const metadata = data.network_metadata.asset
+        const clustersMetadataPath = data.network_metadata.asset.path
 
-        dataset = await fetch(`https://api.sanity.io/${metadata.path}`).then(
-          (r) => r.json()
-        )
+        clusterMetadata = await fetch(
+          `https://api.sanity.io/${clustersMetadataPath}`
+        ).then((r) => r.json())
       } catch {
         const { source_network_id, target_network_id } = networksData.networks
 
-        dataset =
-          await require(`../../../../public/data/${source_network_id}_${target_network_id}_clusters.json`)
+        clusterMetadata =
+          await require(`../../../../public/data/${source_network_id}_${target_network_id}_${data.phase}_clusters.json`)
       }
 
-      return dataset
+      return clusterMetadata
     }
 
     const updateMetadata = (metadata) => {
