@@ -11,6 +11,12 @@ import storyChart from './story.chart'
 import story from './story'
 import storyBlock from './story.block'
 import storyChapter from './story.chapter'
+//
+import landing from './landing'
+import blockCollapsibleSections from './block.collapsibleSections'
+import blockStoriesList from './block.storiesList'
+import blockText from './block.text'
+import richText from './richText'
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -21,12 +27,19 @@ export default createSchema({
   types: schemaTypes.concat([
     // The following are document types which will appear
     // in the studio.
+    // Stories
     story,
     storyChapter,
     storyBlock,
     storyNetwork,
     storyNetworkControl,
     storyChart,
+    // Landing page
+    landing,
+    blockText,
+    blockCollapsibleSections,
+    blockStoriesList,
+    richText,
     // When added to this list, object types can be used as
     // { type: 'typename' } in other document schemas
   ]),
