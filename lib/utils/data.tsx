@@ -1,5 +1,5 @@
 export const rankedClusters = (metadata) =>
-  metadata.filter((d) => d.centroid.length > 0)
+  metadata.filter((d) => d.pca_centroid.length > 0)
 
 export const groupDatapointsByCluster = ({ dataset, clusters }) =>
   clusters

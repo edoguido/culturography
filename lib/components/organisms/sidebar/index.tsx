@@ -71,7 +71,7 @@ const Sidebar = ({ data }) => {
     () =>
       data.story_chapters.map(({ blocks }) => ({
         chapter: createRef(),
-        blocks: blocks.map(() => createRef()),
+        blocks: blocks ? blocks.map(() => createRef()) : [],
       })),
     []
   )
@@ -145,38 +145,39 @@ const Sidebar = ({ data }) => {
                   return (
                     <div key={i} ref={storyRefs[i].chapter}>
                       <h2 className="text-2xl">{chapter_title}</h2>
-                      {blocks.map(
-                        ({ /* block_title, */ block_content }, j: number) => {
-                          const isHighlighted =
-                            i === storyState[0] && j === storyState[1]
+                      {blocks &&
+                        blocks.map(
+                          ({ /* block_title, */ block_content }, j: number) => {
+                            const isHighlighted =
+                              i === storyState[0] && j === storyState[1]
 
-                          const highlightedClassName = isHighlighted
-                            ? 'current'
-                            : ''
+                            const highlightedClassName = isHighlighted
+                              ? 'current'
+                              : ''
 
-                          return (
-                            <div
-                              key={j}
-                              ref={storyRefs[i].blocks[j]}
-                              className={`my-2 h-[200vh] ${highlightedClassName}`}
-                            >
-                              <div className="p-3 rounded-lg bg-[#111111]">
-                                {/* <h2>
+                            return (
+                              <div
+                                key={j}
+                                ref={storyRefs[i].blocks[j]}
+                                className={`my-2 h-[200vh] ${highlightedClassName}`}
+                              >
+                                <div className="p-3 rounded-lg bg-[#111111]">
+                                  {/* <h2>
                                 {block_title}
                               </h2> */}
-                                {block_content.map((c, t: number) => (
-                                  <div key={t} className="rich-text hwul">
-                                    <BlockContent
-                                      blocks={c}
-                                      serializers={SERIALIZERS}
-                                    />
-                                  </div>
-                                ))}
+                                  {block_content.map((c, t: number) => (
+                                    <div key={t} className="rich-text hwul">
+                                      <BlockContent
+                                        blocks={c}
+                                        serializers={SERIALIZERS}
+                                      />
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
-                            </div>
-                          )
-                        }
-                      )}
+                            )
+                          }
+                        )}
                     </div>
                   )
                 }
