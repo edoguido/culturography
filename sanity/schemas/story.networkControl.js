@@ -9,13 +9,13 @@ export default {
       name: 'show_source_network',
       type: 'boolean',
       title: 'Show source network',
-      initialValue: 0,
+      initialValue: true,
     },
     {
       name: 'show_target_network',
       type: 'boolean',
       title: 'Show target network',
-      initialValue: 0,
+      initialValue: true,
     },
     {
       name: 'network_cluster_highlight',
