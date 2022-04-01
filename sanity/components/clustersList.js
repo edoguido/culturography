@@ -8,7 +8,9 @@ import { useId } from '@reach/auto-id'
 const accessorKey = 'network_metadata'
 
 function groupByNetwork(data) {
-  const relevantClusters = data.filter((c) => c.centroid.length > 0)
+  const relevantClusters = data.filter((c) =>
+    c.centroid ? c.centroid.length > 0 : c.pca_centroid.length > 0
+  )
   const networkNames = relevantClusters.map((c) => c.network)
   const uniqueNames = [...new Set(networkNames)]
 
@@ -89,24 +91,25 @@ const ClustersList = React.forwardRef((props, ref) => {
             onChange={handleChange} // A function to call when the input value changes
           >
             <option value={'null'}>None</option>
-            {listItems.map(([networkName, data]) =>
-              data.length === 1 ? (
-                data.map(({ cluster_id }) => (
-                  <option key={cluster_id} value={cluster_id}>
-                    {networkName}
-                  </option>
-                ))
-              ) : (
-                <>
-                  <option disabled>{networkName}</option>
-                  {data.map(({ cluster_id, name }) => (
-                    <option key={cluster_id} value={cluster_id}>
-                      {name}
+            {listItems &&
+              listItems?.map(([networkName, data]) =>
+                data.length === 1 ? (
+                  data.map(({ cluster_id, name }) => (
+                    <option key={name} value={cluster_id}>
+                      {networkName}
                     </option>
-                  ))}
-                </>
-              )
-            )}
+                  ))
+                ) : (
+                  <>
+                    <option disabled>{networkName}</option>
+                    {data.map(({ cluster_id, name }) => (
+                      <option key={name} value={cluster_id}>
+                        {name}
+                      </option>
+                    ))}
+                  </>
+                )
+              )}
           </Select>
         </Stack>
       </Card>
