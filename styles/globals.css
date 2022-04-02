@@ -15,6 +15,7 @@
   --sidebar-width: 480px;
   --timeline-height: 80px;
   --bg: #cacaca;
+  --accent: #93ff00;
 }
 
 ::-moz-selection {
@@ -49,7 +50,7 @@ body {
   font-weight: 400;
   font-size: 15px;
 
-  background-color: var(--bg);
+  background-color: var(--accent);
 }
 
 a {
