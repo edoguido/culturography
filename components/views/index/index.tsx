@@ -74,12 +74,12 @@ export default function Home({ stories }) {
         animate="animate"
         exit="exit"
       >
-        <div className="relative hero h-[80vh]">
+        <div className="relative hero h-[50vh] md:h-[80vh]">
           <div className="relative z-10">
             <div className="mx-auto flex justify-center items-center bg-gradient-to-b from-accent to-transparent">
               <Title label={strings.title} />
             </div>
-            <div className="p-6">
+            <div className="p-2 lg:p-6">
               <Subtitle lines={strings.subtitle} />
             </div>
           </div>
@@ -199,7 +199,7 @@ const Title = ({ label }) => (
 
 const Subtitle = ({ lines }) => (
   <motion.h2
-    className="text-4xl md:text-6xl"
+    className="text-[5.2vw]"
     variants={{
       animate: {
         transition: {
@@ -210,9 +210,9 @@ const Subtitle = ({ lines }) => (
     }}
   >
     {lines.map((line, i) => (
-      <motion.div key={i} className="h-[6vw] lg:h-[4.5vw] overflow-hidden">
+      <motion.div key={i} className="h-[7vw] md:h-[6vw] overflow-hidden">
         <motion.span
-          className="block text-[4.5vw]"
+          className="block"
           variants={{
             initial: { y: 200 },
             animate: { y: 0 },
