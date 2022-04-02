@@ -9,11 +9,10 @@ import {
 import BlockContent from '@sanity/block-content-to-react'
 
 import { makeStoryPayload, useVizLayout } from '@/context/vizLayoutContext'
-import { motionOptions } from '@/const/motionProps'
 
-import SidebarChapterSelector from 'components/molecules/sidebarChapterSelector'
+// import SidebarChapterSelector from 'components/molecules/sidebarChapterSelector'
 import ChartSerializer from 'components/molecules/chartSerializer'
-import { motion } from 'framer-motion'
+import { motion, MotionConfig } from 'framer-motion'
 
 const handleBlockChange = (refs, { trigger, callback }) => {
   refs.forEach((ref, i) => {
@@ -85,7 +84,7 @@ const Sidebar = ({ data }) => {
 
     if (!storyRef.current) return
 
-    const scrollTrigger = window.innerHeight / 2.5
+    const scrollTrigger = window.innerHeight / 1
 
     check(storyRefs, {
       trigger: scrollTrigger,
@@ -115,81 +114,110 @@ const Sidebar = ({ data }) => {
     })
   }, [storyState])
 
+  const networksState = layout.networks
+  const showSourceNetwork = networksState?.source.show
+  const showTargetNetwork = networksState?.target.show
+
+  const sidebarShift =
+    showSourceNetwork && showTargetNetwork
+      ? '0%'
+      : showSourceNetwork
+      ? '25%'
+      : showTargetNetwork
+      ? '-25%'
+      : '50%'
+
   return (
-    <motion.div
-      className="z-[100] fixed top-[var(--nav-height)] bottom-0 w-[var(--sidebar-width)] max-h-screen"
-      ref={storyRef}
-      initial={false}
-      animate={{
-        x: layout.read ? '-50%' : '-50%',
-        left: '50%',
-        // visibility: 'hidden',
-      }}
-      transition={motionOptions}
+    <MotionConfig
+    // transition={{
+    //   type: 'spring',
+    //   stiffness: 2000,
+    //   damping: 300,
+    // }}
     >
-      <div className="h-full">
-        {/* {layout.story && (
+      <div
+        ref={storyRef}
+        className="z-[100] fixed top-[var(--nav-height)] w-full bottom-0 max-h-screen"
+      >
+        <div className="h-full">
+          {/* {layout.story && (
           <SidebarChapterSelector
             chapters={data.story_chapters}
             forwardRef={storyContentRef}
             storyRefs={storyRefs}
           />
         )} */}
-        {data.story_chapters && (
-          <div
-            ref={storyContentRef}
-            className="hide-scrollbar max-w-[var(--sidebar-width)] max-h-full flex basis-auto flex-grow flex-shrink-0 overflow-x-hidden overflow-y-auto"
-          >
-            <div className="relative h-full w-full p-2 pb-[calc(70vh-var(--nav-height))]">
-              {data.story_chapters.map(
-                ({ chapter_title, blocks }, i: number) => {
-                  return (
-                    <div key={i} ref={storyRefs[i].chapter}>
-                      <h2 className="text-accent font-normal text-3xl inline-block rounded-full py-1 px-3">
-                        {chapter_title}
-                      </h2>
-                      {blocks &&
-                        blocks.map(
-                          ({ /* block_title, */ block_content }, j: number) => {
-                            const isHighlighted =
-                              i === storyState[0] && j === storyState[1]
+          {data.story_chapters && networksState && (
+            <div
+              ref={storyContentRef}
+              className="hide-scrollbar w-full max-h-full flex basis-auto flex-grow flex-shrink-0 overflow-x-hidden overflow-y-auto"
+            >
+              <motion.div
+                className="relative h-full max-w-[var(--sidebar-width)] mx-auto p-2 pb-[calc(70vh-var(--nav-height))]"
+                initial={false}
+                animate={{
+                  x: '0%',
+                  left: sidebarShift,
+                  transition: {
+                    type: 'ease',
+                    ease: [0.8, 0, 0, 1],
+                    duration: 1.25,
+                  },
+                }}
+              >
+                {data.story_chapters.map(
+                  ({ chapter_title, blocks }, i: number) => {
+                    return (
+                      <div key={i} ref={storyRefs[i].chapter}>
+                        <h2 className="text-accent font-normal text-3xl inline-block rounded-full py-1 px-3">
+                          {chapter_title}
+                        </h2>
+                        {blocks &&
+                          blocks.map(
+                            (
+                              { /* block_title, */ block_content },
+                              j: number
+                            ) => {
+                              const isHighlighted =
+                                i === storyState[0] && j === storyState[1]
 
-                            const highlightedClassName = isHighlighted
-                              ? 'current'
-                              : ''
+                              const highlightedClassName = isHighlighted
+                                ? 'current'
+                                : ''
 
-                            return (
-                              <div
-                                key={j}
-                                ref={storyRefs[i].blocks[j]}
-                                className={`my-2 h-[200vh] ${highlightedClassName}`}
-                              >
-                                <div className="p-3 rounded-lg bg-[#111111]">
-                                  {/* <h2>
+                              return (
+                                <div
+                                  key={j}
+                                  ref={storyRefs[i].blocks[j]}
+                                  className={`my-2 h-[200vh] ${highlightedClassName}`}
+                                >
+                                  <div className="p-3 rounded-lg bg-[#111111]">
+                                    {/* <h2>
                                 {block_title}
                               </h2> */}
-                                  {block_content.map((c, t: number) => (
-                                    <div key={t} className="rich-text hwul">
-                                      <BlockContent
-                                        blocks={c}
-                                        serializers={SERIALIZERS}
-                                      />
-                                    </div>
-                                  ))}
+                                    {block_content.map((c, t: number) => (
+                                      <div key={t} className="rich-text hwul">
+                                        <BlockContent
+                                          blocks={c}
+                                          serializers={SERIALIZERS}
+                                        />
+                                      </div>
+                                    ))}
+                                  </div>
                                 </div>
-                              </div>
-                            )
-                          }
-                        )}
-                    </div>
-                  )
-                }
-              )}
+                              )
+                            }
+                          )}
+                      </div>
+                    )
+                  }
+                )}
+              </motion.div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </motion.div>
+    </MotionConfig>
   )
 }
 
