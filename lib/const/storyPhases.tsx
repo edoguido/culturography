@@ -1,4 +1,4 @@
-export default [
+const storyPhases = [
   {
     title: 'Scoping',
     value: 'scoping',
@@ -15,3 +15,5 @@ export default [
     order: 2,
   },
 ]
+
+export default storyPhases

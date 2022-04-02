@@ -1,4 +1,4 @@
-import ClustersList from '../components/clustersList'
+import ClustersList from '../components/clustersList.jsx'
 
 export default {
   name: 'story.networkControl',

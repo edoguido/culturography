@@ -1,3 +1,5 @@
+import storyPhases from '../../lib/const/storyPhases'
+
 export default {
   name: 'story',
   type: 'document',
@@ -18,16 +20,10 @@ export default {
       name: 'phase',
       type: 'string',
       title: 'Phase',
-      initialValue: {
-        title: 'Scoping',
-      },
+      initialValue: storyPhases[0].value,
       options: {
         layout: 'dropdown',
-        list: [
-          { title: 'Scoping', value: 'scoping' },
-          { title: 'Designing', value: 'designing' },
-          { title: 'Evaluating', value: 'evaluating' },
-        ],
+        list: storyPhases,
       },
     },
     {
