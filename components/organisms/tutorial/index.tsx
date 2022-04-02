@@ -36,7 +36,7 @@ const Tutorial = ({ onClose }) => {
     >
       <div className="relative z-10 flex flex-col justify-center w-full h-full">
         <button
-          className="relative z-10 h-[var(--nav-height)] text-white"
+          className="relative z-10 h-[var(--nav-height)]"
           onClick={onClose}
         >
           Close

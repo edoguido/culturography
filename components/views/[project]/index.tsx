@@ -32,9 +32,9 @@ const ProjectPage = ({ data }) => {
   return (
     state && (
       <DefaultLayout>
-        <Leva hidden={!hideUiControls} />
+        <Leva hidden={true} />
         <VizLayoutContext.Provider value={[state, dispatch]}>
-          <div className="overflow-hidden fixed inset-0 bg-[#111111]">
+          <div className="overflow-hidden fixed inset-0 bg-secondary">
             <Nav title={title} />
             <Sidebar data={data} />
             {state.story && <NetworkComparison data={data} />}

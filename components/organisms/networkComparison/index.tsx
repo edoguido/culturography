@@ -55,7 +55,7 @@ const NetworkComparison = ({ data }) => {
         const { source_network_id, target_network_id } = networksData.networks
 
         clusterMetadata =
-          await require(`../../../../public/data/${source_network_id}_${target_network_id}_${data.phase}_clusters.json`)
+          await require(`../../../public/data/${source_network_id}_${target_network_id}_${data.phase}_clusters.json`)
       }
 
       return clusterMetadata

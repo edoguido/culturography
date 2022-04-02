@@ -1,17 +1,15 @@
 import React, { createElement, Fragment, ReactChild } from 'react'
 import dynamic from 'next/dynamic'
 
-const StoriesListBlock = dynamic(
-  () => import('../components/blocks/storiesListBlock'),
-  { ssr: false }
-)
-const TextBlock = dynamic(() => import('../components/blocks/textBlock'), {
+const StoriesListBlock = dynamic(() => import('./storiesListBlock'), {
   ssr: false,
 })
-const CollapsibleTextBlock = dynamic(
-  () => import('../components/blocks/collapsibleTextBlock'),
-  { ssr: false }
-)
+const TextBlock = dynamic(() => import('./textBlock'), {
+  ssr: false,
+})
+const CollapsibleTextBlock = dynamic(() => import('./collapsibleTextBlock'), {
+  ssr: false,
+})
 
 // block-component mapping
 const MODELS = {

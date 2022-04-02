@@ -59,7 +59,7 @@ const NetworkComparisonAnnouncer = () => {
                 ease: [0, 0, 0, 1],
                 duration: 0.35,
               }}
-              className="bg-white bg-opacity-10 text-white mx-1 py-1 px-2 rounded-full my-1"
+              className="text-accent mx-1 py-1 px-2 rounded-full my-1"
             >
               {highlightedSourceNetworkCluster.name}
             </motion.div>
@@ -77,7 +77,7 @@ const NetworkComparisonAnnouncer = () => {
             exit={{ opacity: 1 }}
           >
             <span>community correspondences in the</span>
-            <span className="bg-white bg-opacity-10 text-white mx-1 py-1 px-2 rounded-full my-1">
+            <span className="text-accent mx-1 py-1 px-2 rounded-full my-1">
               {target.name}
             </span>
             <span>network</span>

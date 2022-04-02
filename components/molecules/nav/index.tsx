@@ -21,22 +21,22 @@ const Nav = ({ title }) => {
   }
 
   return (
-    <div className="fixed top-0 right-0 bottom-0 left-0 h-[var(--nav-height)] z-[999] px-2">
+    <div className="fixed top-0 right-0 bottom-0 left-0 h-[var(--nav-height)] z-[999] text-text px-2">
       <div className="h-full flex justify-between items-center">
         <div className="flex items-center m-0">
           <Link href="/" passHref>
             <a>
-              <h1 className="text-lg">Culturographies</h1>
+              <motion.h1 className="text-2xl mr-4">Culturography</motion.h1>
             </a>
           </Link>
-          <h2 className="bg-white text-black text-lg py-1 px-4 rounded-full mx-2">
+          {/* <h2 className="bg-white text-black text-xl py-1 px-4 rounded-full mx-2">
             {title}
-          </h2>
+          </h2> */}
           <NetworkComparisonAnnouncer />
         </div>
         <div>
           <button
-            className="flex cursor-pointer rounded-full border-2 border-white w-auto py-1 px-3"
+            className="flex cursor-pointer rounded-full border-2 border-text w-auto py-1 px-3"
             onClick={showTutorial}
           >
             <motion.div

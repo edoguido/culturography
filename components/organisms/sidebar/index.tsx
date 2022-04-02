@@ -119,6 +119,7 @@ const Sidebar = ({ data }) => {
     <motion.div
       className="z-[100] fixed top-[var(--nav-height)] bottom-0 w-[var(--sidebar-width)] max-h-screen"
       ref={storyRef}
+      initial={false}
       animate={{
         x: layout.read ? '-50%' : '-50%',
         left: '50%',
@@ -137,14 +138,16 @@ const Sidebar = ({ data }) => {
         {data.story_chapters && (
           <div
             ref={storyContentRef}
-            className="max-w-[var(--sidebar-width)] max-h-full flex basis-auto flex-grow flex-shrink-0 overflow-x-hidden overflow-y-auto"
+            className="hide-scrollbar max-w-[var(--sidebar-width)] max-h-full flex basis-auto flex-grow flex-shrink-0 overflow-x-hidden overflow-y-auto"
           >
             <div className="relative h-full w-full p-2 pb-[calc(70vh-var(--nav-height))]">
               {data.story_chapters.map(
                 ({ chapter_title, blocks }, i: number) => {
                   return (
                     <div key={i} ref={storyRefs[i].chapter}>
-                      <h2 className="text-2xl">{chapter_title}</h2>
+                      <h2 className="text-accent font-normal text-3xl inline-block rounded-full py-1 px-3">
+                        {chapter_title}
+                      </h2>
                       {blocks &&
                         blocks.map(
                           ({ /* block_title, */ block_content }, j: number) => {

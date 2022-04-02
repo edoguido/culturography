@@ -1,5 +1,5 @@
 export const ALL_PROJECTS_QUERY = `
-  *[ _type == 'story' ] { slug, title, phase }
+  *[ _type == 'story' ] { slug { current }, title, phase }
 `
 
 export const PROJECT_QUERY = (project) => `
@@ -75,3 +75,5 @@ export const LANDING_QUERY = `
     }
   }
 `
+
+export const STORIES = ``
