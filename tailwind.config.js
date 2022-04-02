@@ -6,10 +6,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        roskildeOrange: '#ee7203ff',
-        paletteGreen: '#45f194ff',
-        paletteLightBlue: '#4fccf4ff',
-        paletteViolet: '#c17df7ff',
+        text: '#1D1D1D',
+        accent: '#93FF00',
+        secondary: '#CACACA',
       },
     },
   },
