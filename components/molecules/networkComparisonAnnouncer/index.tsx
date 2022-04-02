@@ -47,7 +47,7 @@ const NetworkComparisonAnnouncer = () => {
           exitBeforeEnter
         >
           {highlightedSourceNetworkCluster && (
-            <motion.div
+            <motion.h3
               id={highlightedSourceNetworkCluster.name}
               key={highlightedSourceNetworkCluster.name}
               layout
@@ -59,10 +59,10 @@ const NetworkComparisonAnnouncer = () => {
                 ease: [0, 0, 0, 1],
                 duration: 0.35,
               }}
-              className="text-accent mx-1 py-1 px-2 rounded-full my-1"
+              className="bg-text text-accent font-medium tracking-wide mx-1 py-1 px-3 rounded-full my-1"
             >
               {highlightedSourceNetworkCluster.name}
-            </motion.div>
+            </motion.h3>
           )}
         </AnimatePresence>
         {/* <motion.span>community</motion.span> */}
@@ -77,9 +77,9 @@ const NetworkComparisonAnnouncer = () => {
             exit={{ opacity: 1 }}
           >
             <span>community correspondences in the</span>
-            <span className="text-accent mx-1 py-1 px-2 rounded-full my-1">
+            <h3 className="bg-text text-accent font-medium tracking-wide mx-1 py-1 px-3 rounded-full my-1">
               {target.name}
-            </span>
+            </h3>
             <span>network</span>
           </motion.div>
         </AnimatePresence>
