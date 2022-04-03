@@ -7,10 +7,11 @@ const Legend = () => {
   const [layout] = useVizLayout()
 
   const legend = layout?.networks?.legend
+  const isHighlighting = JSON.parse(layout?.networks?.nameHighlight)
 
   return (
     <AnimatePresence>
-      {layout?.networks.highlight && (
+      {isHighlighting && (
         <motion.div
           initial="initial"
           animate="animate"
@@ -37,19 +38,20 @@ const Legend = () => {
         >
           <div>Overlap</div>
           <div className="flex mt-2">
-            {legend.map((color, i) => {
-              return (
-                <div key={i} className="w-20 mr-2 last:mr-0 flex flex-col">
-                  <div
-                    className="w-full h-4 rounded-sm"
-                    style={{ backgroundColor: color }}
-                  />
-                  <span key={i} className="mt-2 text-xs">
-                    {labels[i]}
-                  </span>
-                </div>
-              )
-            })}
+            {legend &&
+              legend.map((color, i) => {
+                return (
+                  <div key={i} className="w-20 mr-2 last:mr-0 flex flex-col">
+                    <div
+                      className="w-full h-4 rounded-sm"
+                      style={{ backgroundColor: color }}
+                    />
+                    <span key={i} className="mt-2 text-xs">
+                      {labels[i]}
+                    </span>
+                  </div>
+                )
+              })}
           </div>
         </motion.div>
       )}
