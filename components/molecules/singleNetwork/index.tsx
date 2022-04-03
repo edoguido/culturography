@@ -423,11 +423,12 @@ const Scene = ({
   }, [activeClusterId])
 
   useEffect(() => {
-    if (isSourceNetwork)
+    if (isSourceNetwork) {
       dispatch({
         type: 'SET_LEGEND',
         payload: { legend: [NO_OVERLAP_COLOR].concat(quantizedColorRange) },
       })
+    }
   }, [highlightColor])
 
   //
