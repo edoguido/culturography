@@ -203,9 +203,9 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
 
 const NetworkName = ({ label }: { label: string }) => {
   return (
-    <motion.div className="absolute z-30 bg-white bg-opacity-10 text-white py-1 px-3 rounded-br-2xl">
+    <motion.h3 className="absolute z-30 bg-white bg-opacity-10 text-white font-medium tracking-wider py-1 px-3 rounded-br-2xl">
       {label}
-    </motion.div>
+    </motion.h3>
   )
 }
 
