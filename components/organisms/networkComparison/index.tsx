@@ -80,27 +80,28 @@ const NetworkComparison = ({ data }) => {
         ? networksProperties.source.show
         : networksProperties.target.show
 
-      const width = showBothNetworks ? '49.5%' : show ? '85%' : '49.5%'
+      const width = showBothNetworks ? '49.5%' : show ? '75%' : '49.5%'
+      const left = source
+        ? '0%'
+        : showBothNetworks
+        ? '50.5%'
+        : show
+        ? '20%'
+        : '50.5%'
       const zIndex = showBothNetworks ? 1 : show ? 2 : 1
-      const scale = show ? 1 : 0.9
-      const opacity = showBothNetworks || show ? 1 : 0.05
       const transformOrigin = source ? '100% 50% 0px' : '0% 50% 0px'
       const x = source ? (show ? 0 : -20) : show ? 0 : 0
+      const scale = show ? 1 : 0.9
+      const opacity = showBothNetworks || show ? 1 : 0.05
 
       return {
         show: show,
         animate: {
           zIndex: zIndex,
           width: width,
-          left: source
-            ? '0%'
-            : showBothNetworks
-            ? '50.5%'
-            : show
-            ? '20%'
-            : '50.5%',
+          left: left,
           x: x,
-          scale: scale,
+          // scale: scale,
           opacity: opacity,
         },
         style: {

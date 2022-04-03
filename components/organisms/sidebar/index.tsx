@@ -122,10 +122,10 @@ const Sidebar = ({ data }) => {
     showSourceNetwork && showTargetNetwork
       ? '0%'
       : showSourceNetwork
-      ? '25%'
+      ? '30%'
       : showTargetNetwork
-      ? '-25%'
-      : '50%'
+      ? '-30%'
+      : '0%'
 
   return (
     <div
@@ -162,7 +162,7 @@ const Sidebar = ({ data }) => {
                 ({ chapter_title, blocks }, i: number) => {
                   return (
                     <div key={i} ref={storyRefs[i].chapter}>
-                      <h2 className="text-accent font-normal text-3xl inline-block rounded-full py-1 px-3">
+                      <h2 className="text-accent font-medium text-3xl inline-block rounded-full py-1 px-3">
                         {chapter_title}
                       </h2>
                       {blocks &&
