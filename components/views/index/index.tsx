@@ -69,11 +69,20 @@ export default function Home({ stories }) {
   return (
     <>
       <Head>
-        {/* <title>
-          {project_title} | {project_subtitle}
-          </title>
-          <meta name="description" content={project_subtitle} />
-        <link rel="icon" href="/favicon.ico" /> */}
+        <title>Culturography</title>
+        <meta
+          name="description"
+          content="A digital method that helps brands engage in meaningful partnerships
+          with communities that matter to them"
+        />
+        <meta
+          name="og:description"
+          content="A digital method that helps brands engage in meaningful partnerships
+          with communities that matter to them"
+        />
+        <meta name="url" content="https://culturography.com" />
+        <meta name="image" content="/media_banner_b.png" />
+        <meta name="og:image" content="/media_banner_b.png" />
       </Head>
       <MotionConfig
       // transition={{
