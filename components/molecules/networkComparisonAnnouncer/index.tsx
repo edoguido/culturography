@@ -59,7 +59,7 @@ const NetworkComparisonAnnouncer = () => {
                 ease: [0, 0, 0, 1],
                 duration: 0.35,
               }}
-              className="bg-text text-accent font-medium tracking-wide mx-1 py-1 px-3 rounded-full my-1"
+              className="bg-text text-white font-medium tracking-wide mx-1 py-1 px-3 rounded-full my-1"
             >
               {highlightedSourceNetworkCluster.name}
             </motion.h3>
@@ -77,9 +77,7 @@ const NetworkComparisonAnnouncer = () => {
             exit={{ opacity: 1 }}
           >
             <span>community correspondences in the</span>
-            <h3 className="bg-text text-accent font-medium tracking-wide mx-1 py-1 px-3 rounded-full my-1">
-              {target.name}
-            </h3>
+            <Pill data={target} />
             <span>network</span>
           </motion.div>
         </AnimatePresence>
@@ -87,5 +85,11 @@ const NetworkComparisonAnnouncer = () => {
     </motion.div>
   )
 }
+
+const Pill = ({ data }) => (
+  <h3 className="bg-text text-white font-medium tracking-wide mx-1 py-1 px-3 rounded-full my-1">
+    {data.name}
+  </h3>
+)
 
 export default NetworkComparisonAnnouncer
