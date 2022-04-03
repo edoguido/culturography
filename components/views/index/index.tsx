@@ -28,6 +28,14 @@ const strings = {
   open-source digital universe allows you to explore the
   method on your own and read about specific cases analyzed by
   Backscatter and Roskilde Festival.`,
+  more: [
+    'This project helps brands and cultural institutions position their core values and strategies in the right communities and tracks how these are reacting to the partnership. By doing so we set out to challenge the traditional way in which we calculate the value of partnerships between cultural institutions and commercial partners. We replace traditional quantitative goals - as for example a degree of exposure among specific target group segments - with a qualitative understanding of developments in brand affiliations to communities.',
+  ],
+  contact: [
+    'Andreas Groth Clausen',
+    'Head of Partnerships, Roskilde Festival',
+    'partnerskaber[at]roskilde-festival.dk',
+  ],
 }
 
 const phases = [
@@ -63,75 +71,140 @@ export default function Home({ stories }) {
       <Head>
         {/* <title>
           {project_title} | {project_subtitle}
-        </title>
-        <meta name="description" content={project_subtitle} />
+          </title>
+          <meta name="description" content={project_subtitle} />
         <link rel="icon" href="/favicon.ico" /> */}
       </Head>
-      {/*  */}
-      <motion.main
-        className="bg-secondary text-text min-h-screen"
-        initial="initial"
-        animate="animate"
-        exit="exit"
+      <MotionConfig
+      // transition={{
+      //   initial: { type: 'ease', ease: [0.7, 0, 0, 1], duration: 2 },
+      //   animate: { type: 'ease', ease: [0.7, 0, 0, 1], duration: 4 },
+      //   exit: { type: 'ease', ease: [0, 0, 0, 1], duration: 10 },
+      // }}
       >
-        <div className="relative hero h-[50vh] md:h-[80vh]">
-          <div className="relative z-10">
-            <div className="mx-auto flex justify-center items-center bg-gradient-to-b from-accent to-transparent">
-              <Title label={strings.title} />
+        {/*  */}
+        <motion.main
+          className="bg-secondary text-text min-h-screen"
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          variants={{
+            animate: {
+              transition: {
+                staggerChildren: 0.5,
+              },
+            },
+          }}
+        >
+          <div className="relative hero min-h-[50vh] md:h-[80vh]">
+            <div className="relative z-10">
+              <div className="mx-auto flex justify-center items-center decoration-accent bg-gradient-to-b from-accent to-transparent">
+                <Title label={strings.title} />
+              </div>
+              <div className="p-2 lg:p-6">
+                <Subtitle lines={strings.subtitle} />
+              </div>
             </div>
-            <div className="p-2 lg:p-6">
-              <Subtitle lines={strings.subtitle} />
-            </div>
+            <Gradient />
+            {/*  */}
           </div>
-          <Gradient />
-          {/*  */}
-        </div>
 
-        <div className="relative p-6 text-3xl lg:flex">
-          {strings.about.map((paragraph, i) => (
-            <p
-              key={i}
-              className="grow w-full lg:first:mr-4 lg:last:ml-4 tracking-tight"
+          <motion.div
+            className="relative p-6 text-4xl lg:flex"
+            variants={{
+              animate: { transition: { staggerChildren: 0.1 } },
+            }}
+          >
+            {strings.about.map((paragraph, i) => (
+              <motion.p
+                key={i}
+                className="grow w-full font-light lg:first:mr-6 lg:last:ml-6 tracking-tight"
+                variants={{
+                  initial: { opacity: 0, y: 50 },
+                  animate: { opacity: 1, y: 0 },
+                }}
+                transition={{
+                  type: 'ease',
+                  ease: [0.7, 0, 0, 1],
+                  duration: 1.75,
+                }}
+              >
+                {paragraph}
+              </motion.p>
+            ))}
+          </motion.div>
+
+          <div className="px-6 pt-20">
+            {/* <div>Phases</div> */}
+            <motion.div
+              className="lg:flex items-baseline font-normal"
+              variants={{ animate: { transition: { staggerChildren: 0.2 } } }}
             >
-              {paragraph}
-            </p>
-          ))}
-        </div>
+              {phases.map(({ id, name, question, label }, i) => {
+                const storiesOfPhase = stories[id]
 
-        <div className="px-6 pt-12">
-          {/* <div>Phases</div> */}
-          <div className="lg:flex items-baseline font-normal">
-            {phases.map(({ id, name, question, label }, i) => {
-              const storiesOfPhase = stories[id]
-
-              return (
-                <div
-                  key={i}
-                  className="relative w-full mb-12 lg:mx-4 first:ml-0 last:ml-0"
-                >
-                  <div className="shrink">{name} ↘</div>
-                  <h3 className="my-2 py-2 text-3xl">{question}</h3>
-                  <div className="shrink">{label}</div>
-                  <div>
-                    {storiesOfPhase.map(({ slug, title }) => (
-                      <Link key={slug.current} href={slug.current}>
-                        <a className="inline-block bg-accent rounded-full text-xl px-4 py-2 my-2">
-                          <h3 className="font-medium">{title} →</h3>
-                        </a>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )
-            })}
+                return (
+                  <motion.div
+                    key={i}
+                    className="relative w-full mb-12 lg:mx-4 first:ml-0 last:ml-0"
+                  >
+                    <div className="shrink">{name} ↘</div>
+                    <h3 className="my-2 py-2 text-4xl">{question}</h3>
+                    <div className="shrink">{label}</div>
+                    <div>
+                      {storiesOfPhase.map(({ slug, title }) => (
+                        <Link key={slug.current} href={slug.current}>
+                          <a className="inline-block bg-accent rounded-full text-xl px-4 py-2 my-2">
+                            <h3 className="font-medium">{title} →</h3>
+                          </a>
+                        </Link>
+                      ))}
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </motion.div>
+            <div className="py-4 w-full text-3xl lg:text-5xl text-right flex justify-end">
+              <h3 className="leading-[1.25] max-w-5xl">{strings.phases}</h3>
+            </div>
+            {/*  */}
+            <div className="py-4 border-t-2 border-text">
+              <div className="shrink py-4">More on the project ↘</div>
+              <div className="leading-[1.25] text-2xl lg:text-3xl lg:grid grid-cols-2 gap-16">
+                <p className="">{strings.more}</p>
+                <p className="">
+                  The platform itself is open source and shared under a{' '}
+                  <a
+                    className="text-accent underline"
+                    href="https://creativecommons.org/licenses/by-sa/4.0/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    CC-BY-SA
+                  </a>{' '}
+                  license. This means that you are free to reuse the platform
+                  for your own datasets and adapt the code as you like, as long
+                  as you cite the Culturograhy project and share any adaptations
+                  you make under the same license for others to use.,
+                </p>
+              </div>
+            </div>
+            {/*  */}
+            <div className="py-4 border-t-2 border-text">
+              <div className="shrink py-4">
+                Curious to know more about the project and the method? ↘
+              </div>
+              <div className="leading-[1.25] text-2xl lg:text-3xl lg:flex lg:justify-between">
+                {strings.contact.map((line, i) => (
+                  <p key={i} className="w-full py-1">
+                    {line}
+                  </p>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div className="mx-6 py-4 text-4xl lg:text-6xl leading-[1.15] border-t-2 border-text">
-          <h3>{strings.phases}</h3>
-        </div>
-
-        {/* <div className="flex">
+          {/* <div className="flex">
           <div className="richText p-6 text-2xl max-w-6xl">
             <PortableText value={abstract} />
             <style>
@@ -144,7 +217,7 @@ export default function Home({ stories }) {
           </div>
         </div> */}
 
-        {/* <div>
+          {/* <div>
           {blocks.map((b, i) => (
             <BlockSerializer
               key={i}
@@ -155,20 +228,21 @@ export default function Home({ stories }) {
           ))}
         </div> */}
 
-        {/* <footer></footer> */}
-      </motion.main>
+          {/* <footer></footer> */}
+        </motion.main>
+      </MotionConfig>
     </>
   )
 }
 
 const Title = ({ label }) => (
   <motion.h1
-    className="text-[14vw] leading-none"
+    className="text-[13.8vw] leading-none"
     variants={{
       animate: {
         transition: {
           staggerChildren: 0.01,
-          duration: 3,
+          staggerDirection: -1,
         },
       },
     }}
@@ -178,18 +252,10 @@ const Title = ({ label }) => (
         key={i}
         className="inline-block"
         variants={{
-          initial: { y: 0, scale: 0.8, opacity: 0 },
-          animate: {
-            y: 0,
-            scale: 1,
-            opacity: 1,
-          },
+          initial: { y: '50%', scale: 0.8, opacity: 0 },
+          animate: { y: ['50%', '0%'], scale: 1, opacity: 1 },
         }}
-        transition={{
-          type: 'ease',
-          ease: [0.7, 0, 0, 1],
-          duration: 1.25,
-        }}
+        transition={{ type: 'ease', ease: [0.7, 0, 0, 1], duration: 1.75 }}
       >
         {letter}
       </motion.span>
@@ -199,29 +265,24 @@ const Title = ({ label }) => (
 
 const Subtitle = ({ lines }) => (
   <motion.h2
-    className="text-[5.2vw]"
+    className="text-[5vw] leading-none md:text-[5vw]"
     variants={{
       animate: {
         transition: {
-          staggerChildren: 0.05,
-          delayChildren: 1,
+          staggerChildren: 0.15,
         },
       },
     }}
   >
     {lines.map((line, i) => (
-      <motion.div key={i} className="h-[7vw] md:h-[6vw] overflow-hidden">
+      <motion.div key={i} className="overflow-hidden">
         <motion.span
           className="block"
           variants={{
             initial: { y: 200 },
             animate: { y: 0 },
           }}
-          transition={{
-            type: 'spring',
-            stiffness: 1200,
-            damping: 200,
-          }}
+          transition={{ type: 'ease', ease: [0.5, 0, 0, 1], duration: 1.25 }}
         >
           {line}
         </motion.span>
@@ -235,7 +296,12 @@ const Gradient = () => {
   const fxOffset = '-100%'
 
   return (
-    <div className="absolute inset-0">
+    <motion.div
+      className="absolute inset-0"
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
       <svg
         className="z-0 overflow-visible"
         xmlns="http://www.w3.org/2000/svg"
@@ -335,7 +401,7 @@ const Gradient = () => {
                 y: '25%',
                 width: '250%',
                 transition: {
-                  ease: [0.8, 0, 0, 1],
+                  ease: [0, 0, 0, 1],
                   duration: 3,
                 },
               },
@@ -358,7 +424,7 @@ const Gradient = () => {
                 y: '15%',
                 width: '150%',
                 transition: {
-                  ease: [0.8, 0, 0, 1],
+                  ease: [0, 0, 0, 1],
                   duration: 3,
                 },
               },
@@ -374,7 +440,7 @@ const Gradient = () => {
           />
         </g>
       </svg>
-    </div>
+    </motion.div>
   )
 }
 
