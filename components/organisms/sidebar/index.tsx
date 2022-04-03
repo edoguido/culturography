@@ -12,7 +12,7 @@ import { makeStoryPayload, useVizLayout } from '@/context/vizLayoutContext'
 
 // import SidebarChapterSelector from 'components/molecules/sidebarChapterSelector'
 import ChartSerializer from 'components/molecules/chartSerializer'
-import { motion, MotionConfig } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 const handleBlockChange = (refs, { trigger, callback }) => {
   refs.forEach((ref, i) => {
@@ -128,69 +128,60 @@ const Sidebar = ({ data }) => {
       : '50%'
 
   return (
-    <MotionConfig
-    // transition={{
-    //   type: 'spring',
-    //   stiffness: 2000,
-    //   damping: 300,
-    // }}
+    <div
+      ref={storyRef}
+      className="z-[100] fixed top-[var(--nav-height)] w-full bottom-0 max-h-screen"
     >
-      <div
-        ref={storyRef}
-        className="z-[100] fixed top-[var(--nav-height)] w-full bottom-0 max-h-screen"
-      >
-        <div className="h-full">
-          {/* {layout.story && (
+      <div className="h-full">
+        {/* {layout.story && (
           <SidebarChapterSelector
             chapters={data.story_chapters}
             forwardRef={storyContentRef}
             storyRefs={storyRefs}
           />
         )} */}
-          {data.story_chapters && networksState && (
-            <div
-              ref={storyContentRef}
-              className="hide-scrollbar w-full max-h-full flex basis-auto flex-grow flex-shrink-0 overflow-x-hidden overflow-y-auto"
+        {data.story_chapters && networksState && (
+          <div
+            ref={storyContentRef}
+            className="hide-scrollbar w-full max-h-full flex basis-auto flex-grow flex-shrink-0 overflow-x-hidden overflow-y-auto"
+          >
+            <motion.div
+              className="relative h-full max-w-[var(--sidebar-width)] mx-auto p-2 pb-[calc(70vh-var(--nav-height))]"
+              initial={false}
+              animate={{
+                x: '0%',
+                left: sidebarShift,
+                transition: {
+                  type: 'ease',
+                  ease: [0.8, 0, 0, 1],
+                  duration: 1.25,
+                },
+              }}
             >
-              <motion.div
-                className="relative h-full max-w-[var(--sidebar-width)] mx-auto p-2 pb-[calc(70vh-var(--nav-height))]"
-                initial={false}
-                animate={{
-                  x: '0%',
-                  left: sidebarShift,
-                  transition: {
-                    type: 'ease',
-                    ease: [0.8, 0, 0, 1],
-                    duration: 1.25,
-                  },
-                }}
-              >
-                {data.story_chapters.map(
-                  ({ chapter_title, blocks }, i: number) => {
-                    return (
-                      <div key={i} ref={storyRefs[i].chapter}>
-                        <h2 className="text-accent font-normal text-3xl inline-block rounded-full py-1 px-3">
-                          {chapter_title}
-                        </h2>
-                        {blocks &&
-                          blocks.map(
-                            (
-                              { /* block_title, */ block_content },
-                              j: number
-                            ) => {
-                              const isHighlighted =
-                                i === storyState[0] && j === storyState[1]
+              {data.story_chapters.map(
+                ({ chapter_title, blocks }, i: number) => {
+                  return (
+                    <div key={i} ref={storyRefs[i].chapter}>
+                      <h2 className="text-accent font-normal text-3xl inline-block rounded-full py-1 px-3">
+                        {chapter_title}
+                      </h2>
+                      {blocks &&
+                        blocks.map(
+                          ({ /* block_title, */ block_content }, j: number) => {
+                            const isHighlighted =
+                              i === storyState[0] && j === storyState[1]
 
-                              const highlightedClassName = isHighlighted
-                                ? 'current'
-                                : ''
+                            const highlightedClassName = isHighlighted
+                              ? 'current'
+                              : ''
 
-                              return (
-                                <div
-                                  key={j}
-                                  ref={storyRefs[i].blocks[j]}
-                                  className={`my-2 h-[200vh] ${highlightedClassName}`}
-                                >
+                            return (
+                              <div
+                                key={j}
+                                ref={storyRefs[i].blocks[j]}
+                                className={`my-2 h-[200vh] ${highlightedClassName}`}
+                              >
+                                {block_content && (
                                   <div className="p-3 rounded-lg bg-[#111111]">
                                     {/* <h2>
                                 {block_title}
@@ -204,20 +195,20 @@ const Sidebar = ({ data }) => {
                                       </div>
                                     ))}
                                   </div>
-                                </div>
-                              )
-                            }
-                          )}
-                      </div>
-                    )
-                  }
-                )}
-              </motion.div>
-            </div>
-          )}
-        </div>
+                                )}
+                              </div>
+                            )
+                          }
+                        )}
+                    </div>
+                  )
+                }
+              )}
+            </motion.div>
+          </div>
+        )}
       </div>
-    </MotionConfig>
+    </div>
   )
 }
 
