@@ -1,9 +1,9 @@
-import { motion, MotionConfig } from 'framer-motion'
 import Head from 'next/head'
 import Link from 'next/link'
+import { motion, MotionConfig } from 'framer-motion'
 
 import client from 'utils/cms'
-import { ALL_PROJECTS_QUERY, LANDING_QUERY } from 'utils/cms/queries'
+import { ALL_PROJECTS_QUERY } from 'utils/cms/queries'
 
 // import BlockSerializer from 'components/blocks/blockSerializer'
 // import { PortableText } from '@portabletext/react'
