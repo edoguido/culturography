@@ -155,11 +155,11 @@ export default function Home({ stories }) {
                 return (
                   <motion.div
                     key={i}
-                    className="relative w-full mb-12 lg:mx-4 first:ml-0 last:ml-0"
+                    className="relative w-full mb-12 lg:mx-4 first:ml-0 last:ml-0 border-t-2 border-accent"
                   >
-                    <div className="shrink">{name} ↘</div>
-                    <h3 className="my-2 py-2 text-4xl">{question}</h3>
-                    <div className="shrink">{label}</div>
+                    <div className="shrink my-2">{name} ↘</div>
+                    <h3 className="my-2 text-4xl">{question}</h3>
+                    <div className="shrink my-2">{label}</div>
                     <div>
                       {storiesOfPhase.map(({ slug, title }) => (
                         <Link key={slug.current} href={slug.current}>
