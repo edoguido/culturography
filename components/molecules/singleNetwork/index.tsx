@@ -77,7 +77,7 @@ const BASE_LABEL_SCALE = 4
 const COLOR_LEVELS = 4
 const NO_OVERLAP_COLOR = '#222222'
 // motion
-const LERP_FACTOR = 0.1
+const LERP_FACTOR = 0.05
 
 // sub-types
 
