@@ -12,6 +12,7 @@ import NetworkComparison from 'components/organisms/networkComparison'
 
 import { Leva } from 'leva'
 import { hideUiControls } from 'utils/index'
+import { MotionConfig } from 'framer-motion'
 
 const ProjectPage = ({ data }) => {
   const { title } = data
@@ -39,6 +40,22 @@ const ProjectPage = ({ data }) => {
             <Sidebar data={data} />
             {state.story && <NetworkComparison data={data} />}
           </div>
+          <MotionConfig
+            transition={{
+              // type: 'spring',
+              // stiffness: 2000,
+              // damping: 300,
+              type: 'ease',
+              ease: [0.8, 0, 0, 1],
+              duration: 1.25,
+            }}
+          >
+            <div className="overflow-hidden fixed inset-0 bg-secondary">
+              <Nav title={title} />
+              <Sidebar data={data} />
+              {state.story && <NetworkComparison data={data} />}
+            </div>
+          </MotionConfig>
         </VizLayoutContext.Provider>
       </DefaultLayout>
     )
