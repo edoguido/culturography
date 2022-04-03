@@ -1,16 +1,16 @@
-import { createGlobalStyle } from 'styled-components'
+// import { createGlobalStyle } from 'styled-components'
 
-import theme from 'public/design-tokens.json'
+// import theme from 'public/design-tokens.json'
 
-const { color } = theme
+// const { color } = theme
 
-export const GlobalStyle = createGlobalStyle`
+// export const GlobalStyle = createGlobalStyle`
 
-  :root {
-    ${themeValuesToCSSGlobalVar(color)}
-  }
+//   :root {
+//     ${themeValuesToCSSGlobalVar(color)}
+//   }
 
-`
+// `
 
 // getColor('text:black')
 // getColor('palette:purple:500')
