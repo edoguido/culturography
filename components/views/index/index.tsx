@@ -324,12 +324,7 @@ const Gradient = () => {
       >
         <defs>
           <radialGradient id="gggrain-gradient" r="1">
-            <stop offset="0%" stopColor="#93FF0080"></stop>
-            <stop offset="50%" stopColor="rgba(255,255,255,0)"></stop>
-            <stop offset="100%" stopColor="rgba(255,255,255,0)"></stop>
-          </radialGradient>
-          <radialGradient id="gggrain-gradient-red" r="1">
-            <stop offset="0%" stopColor="#95ff0080"></stop>
+            <stop offset="0%" stopColor="var(--accent)"></stop>
             <stop offset="50%" stopColor="rgba(255,255,255,0)"></stop>
             <stop offset="100%" stopColor="rgba(255,255,255,0)"></stop>
           </radialGradient>
@@ -394,15 +389,12 @@ const Gradient = () => {
         </defs>
         <g>
           <motion.rect
-            x={'0%'}
-            y={'0%'}
-            width="100%"
             height="100%"
             fill="url(#gggrain-gradient)"
             variants={{
               initial: {
-                x: '0%',
-                y: '0%',
+                x: '-100%',
+                y: '80%',
                 width: '250%',
               },
               animate: {
@@ -412,20 +404,18 @@ const Gradient = () => {
                 transition: {
                   ease: [0, 0, 0, 1],
                   duration: 3,
+                  delay: 2,
                 },
               },
             }}
           />
           <motion.rect
-            x={'0%'}
-            y={'0%'}
-            width="100%"
             height="100%"
-            fill="url(#gggrain-gradient-red)"
+            fill="url(#gggrain-gradient)"
             variants={{
               initial: {
-                x: '0%',
-                y: '0%',
+                x: '100%',
+                y: '80%',
                 width: '250%',
               },
               animate: {
@@ -435,6 +425,7 @@ const Gradient = () => {
                 transition: {
                   ease: [0, 0, 0, 1],
                   duration: 3,
+                  delay: 2,
                 },
               },
             }}
