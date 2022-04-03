@@ -1,1 +1,82 @@
-[{"network":"roskilde","cluster_id":"1_source_with_layout","name":"","pca_centroid":[299.01146068705503,-596.6926698811244],"similarities":{"3_target_with_layout":0.1637092671833388,"8_target_with_layout":0.019831156419241797,"5_target_with_layout":0.08482834994462901,"6_target_with_layout":0.03240671474311021,"7_target_with_layout":0.03250877115068615,"10_target_with_layout":0.01547911547911548,"2_target_with_layout":0.019775280898876403,"4_target_with_layout":0.02311477285730633,"0_target_with_layout":0.012852880422308928}},{"network":"andel","cluster_id":"10_target_with_layout","name":"plastik","pca_centroid":[-1170.6422706981175,-1838.2727718430203],"similarities":{"1_source_with_layout":0.01547911547911548}},{"network":"andel","cluster_id":"6_target_with_layout","name":"natur og milj\u00f8","pca_centroid":[2553.959613566134,685.4824531049883],"similarities":{"1_source_with_layout":0.03240671474311021}},{"network":"andel","cluster_id":"0_target_with_layout","name":"andel","pca_centroid":[4661.004696099785,-1678.915056638944],"similarities":{"1_source_with_layout":0.012852880422308928}},{"network":"andel","cluster_id":"2_target_with_layout","name":"veganer","pca_centroid":[-920.8286372945187,-1230.4622228028472],"similarities":{"1_source_with_layout":0.019775280898876403}},{"network":"andel","cluster_id":"5_target_with_layout","name":"madaktivisme","pca_centroid":[-1472.1188814973664,-1320.8580898699158],"similarities":{"1_source_with_layout":0.08482834994462901}},{"network":"andel","cluster_id":"8_target_with_layout","name":"gr\u00f8n forbrug/genbrug","pca_centroid":[677.3838799518691,-1493.8429647033258],"similarities":{"1_source_with_layout":0.019831156419241797}},{"network":"andel","cluster_id":"7_target_with_layout","name":"politisk aktivisme","pca_centroid":[56.81087402039167,301.7761434524127],"similarities":{"1_source_with_layout":0.03250877115068615}},{"network":"andel","cluster_id":"4_target_with_layout","name":"ung klimaaktivisme","pca_centroid":[-2510.2224369083333,1124.6204724870572],"similarities":{"1_source_with_layout":0.02311477285730633}},{"network":"andel","cluster_id":"3_target_with_layout","name":"urgency aktivisme","pca_centroid":[-2200.915162776406,357.1955538148658],"similarities":{"1_source_with_layout":0.1637092671833388}}]
+[
+  {
+    "network": "roskilde",
+    "cluster_id": "1",
+    "name": "",
+    "pca_centroid": [299.01146068705503, -596.6926698811244],
+    "similarities": {
+      "3": 0.001637092671833388,
+      "8": 0.00019831156419241797,
+      "5": 0.0008482834994462901,
+      "6": 0.0003240671474311021,
+      "7": 0.0003250877115068615,
+      "10": 0.0001547911547911548,
+      "2": 0.00019775280898876403,
+      "4": 0.0002311477285730633,
+      "0": 0.00012852880422308928
+    }
+  },
+  {
+    "network": "andel",
+    "cluster_id": "10",
+    "name": "plastik",
+    "pca_centroid": [-1170.6422706981175, -1838.2727718430203],
+    "similarities": { "1": 0.0001547911547911548 }
+  },
+  {
+    "network": "andel",
+    "cluster_id": "6",
+    "name": "natur og milj\u00f8",
+    "pca_centroid": [2553.959613566134, 685.4824531049883],
+    "similarities": { "1": 0.0003240671474311021 }
+  },
+  {
+    "network": "andel",
+    "cluster_id": "0",
+    "name": "andel",
+    "pca_centroid": [4661.004696099785, -1678.915056638944],
+    "similarities": { "1": 0.00012852880422308928 }
+  },
+  {
+    "network": "andel",
+    "cluster_id": "2",
+    "name": "veganer",
+    "pca_centroid": [-920.8286372945187, -1230.4622228028472],
+    "similarities": { "1": 0.00019775280898876403 }
+  },
+  {
+    "network": "andel",
+    "cluster_id": "5",
+    "name": "madaktivisme",
+    "pca_centroid": [-1472.1188814973664, -1320.8580898699158],
+    "similarities": { "1": 0.0008482834994462901 }
+  },
+  {
+    "network": "andel",
+    "cluster_id": "8",
+    "name": "gr\u00f8n forbrug/genbrug",
+    "pca_centroid": [677.3838799518691, -1493.8429647033258],
+    "similarities": { "1": 0.00019831156419241797 }
+  },
+  {
+    "network": "andel",
+    "cluster_id": "7",
+    "name": "politisk aktivisme",
+    "pca_centroid": [56.81087402039167, 301.7761434524127],
+    "similarities": { "1": 0.0003250877115068615 }
+  },
+  {
+    "network": "andel",
+    "cluster_id": "4",
+    "name": "ung klimaaktivisme",
+    "pca_centroid": [-2510.2224369083333, 1124.6204724870572],
+    "similarities": { "1": 0.0002311477285730633 }
+  },
+  {
+    "network": "andel",
+    "cluster_id": "3",
+    "name": "urgency aktivisme",
+    "pca_centroid": [-2200.915162776406, 357.1955538148658],
+    "similarities": { "1": 0.001637092671833388 }
+  }
+]
