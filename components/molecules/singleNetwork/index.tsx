@@ -142,6 +142,8 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
       ).then((r) => r.json())
     } catch {
       const { source_network_id, target_network_id } = data.networks
+
+      console.warn("Couldn't fetch from Sanity CDN. Sourcing local files...")
       const localFile = isSourceNetwork
         ? `${source_network_id}_${layout.story.phase}_nodes.json`
         : `${target_network_id}_${layout.story.phase}_nodes.json`
