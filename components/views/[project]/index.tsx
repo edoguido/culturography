@@ -35,11 +35,6 @@ const ProjectPage = ({ data }) => {
       <DefaultLayout>
         <Leva hidden={true} />
         <VizLayoutContext.Provider value={[state, dispatch]}>
-          <div className="overflow-hidden fixed inset-0 bg-secondary">
-            <Nav title={title} />
-            <Sidebar data={data} />
-            {state.story && <NetworkComparison data={data} />}
-          </div>
           <MotionConfig
             transition={{
               // type: 'spring',
