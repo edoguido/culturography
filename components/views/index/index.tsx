@@ -37,21 +37,21 @@ const phases = [
     name: 'Scoping',
     question:
       'How are different communities interacting around a chosen societal issue?',
-    label: 'Establishing a common ground for the partnership',
+    // label: 'Establishing a common ground for the partnership',
   },
   {
     id: 'designing',
     name: 'Designing',
     question:
       "How are the two partners' target groups interacting around that societal issue?",
-    label:
-      "Designing a joint intervention to activate each other's target groups",
+    // label:
+    //   "Designing a joint intervention to activate each other's target groups",
   },
   {
     id: 'monitoring',
     name: 'Monitoring',
     question: 'How is the public reacting to the joint intervention?',
-    label: 'Measuring the impact of the activation on different communities',
+    // label: 'Measuring the impact of the activation on different communities',
   },
 ]
 
@@ -138,34 +138,6 @@ export default function Home({ stories }) {
 
           <div className="px-6 pt-20">
             {/* <div>Phases</div> */}
-            <motion.div
-              className="lg:flex items-baseline font-normal"
-              variants={{ animate: { transition: { staggerChildren: 0.2 } } }}
-            >
-              {phases.map(({ id, name, question, label }, i) => {
-                const storiesOfPhase = stories[id]
-
-                return (
-                  <motion.div
-                    key={i}
-                    className="relative w-full mb-12 lg:mx-4 first:ml-0 last:ml-0 border-t-2 border-accent"
-                  >
-                    <div className="shrink my-2">{name} ↘</div>
-                    <h3 className="my-2 text-4xl">{question}</h3>
-                    <div className="shrink my-2">{label}</div>
-                    <div>
-                      {storiesOfPhase.map(({ slug, title }) => (
-                        <Link key={slug.current} href={slug.current}>
-                          <a className="inline-block bg-accent rounded-full text-xl px-4 py-2 my-2">
-                            <h3 className="font-medium">{title} →</h3>
-                          </a>
-                        </Link>
-                      ))}
-                    </div>
-                  </motion.div>
-                )
-              })}
-            </motion.div>
             <div className="py-4 w-full text-3xl lg:text-5xl text-right flex justify-end">
               <h3 className="leading-[1.25] max-w-5xl">
                 Culturograpy builds upon three analytical phases of a
@@ -183,6 +155,34 @@ export default function Home({ stories }) {
                 Roskilde Festival.
               </h3>
             </div>
+            <motion.div
+              className="lg:flex items-baseline font-normal"
+              variants={{ animate: { transition: { staggerChildren: 0.2 } } }}
+            >
+              {phases.map(({ id, name, question }, i) => {
+                const storiesOfPhase = stories[id]
+
+                return (
+                  <motion.div
+                    key={i}
+                    className="relative w-full mb-12 lg:mx-4 first:ml-0 last:ml-0 border-t-2 border-accent"
+                  >
+                    <div className="shrink my-2">{name} ↘</div>
+                    <h3 className="my-2 text-4xl">{question}</h3>
+                    {/* <div className="shrink my-2">{label}</div> */}
+                    <div>
+                      {storiesOfPhase.map(({ slug, title }) => (
+                        <Link key={slug.current} href={slug.current}>
+                          <a className="inline-block bg-accent rounded-full text-xl px-4 py-2 my-2">
+                            <h3 className="font-medium">{title} →</h3>
+                          </a>
+                        </Link>
+                      ))}
+                    </div>
+                  </motion.div>
+                )
+              })}
+            </motion.div>
             {/*  */}
             <div className="py-4 border-t-2 border-text">
               <div className="shrink py-4">More on the project ↘</div>
@@ -331,7 +331,7 @@ const Gradient = () => {
       >
         <defs>
           <radialGradient id="gggrain-gradient" r="1">
-            <stop offset="0%" stopColor="var(--accent)"></stop>
+            <stop offset="0%" stopColor="#93FF0020"></stop>
             <stop offset="50%" stopColor="rgba(255,255,255,0)"></stop>
             <stop offset="100%" stopColor="rgba(255,255,255,0)"></stop>
           </radialGradient>
