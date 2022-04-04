@@ -91,7 +91,7 @@ const NetworkComparison = ({ data }) => {
       const zIndex = showBothNetworks ? 1 : show ? 2 : 1
       const transformOrigin = source ? '100% 50% 0px' : '0% 50% 0px'
       const x = source ? (show ? 0 : -20) : show ? 0 : 0
-      const scale = show ? 1 : 0.9
+      // const scale = show ? 1 : 0.9
       const opacity = showBothNetworks || show ? 1 : 0.05
 
       return {
