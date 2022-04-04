@@ -86,7 +86,7 @@ const NetworkComparison = ({ data }) => {
         : showBothNetworks
         ? '50.5%'
         : show
-        ? '20%'
+        ? '25%'
         : '50.5%'
       const zIndex = showBothNetworks ? 1 : show ? 2 : 1
       const transformOrigin = source ? '100% 50% 0px' : '0% 50% 0px'
