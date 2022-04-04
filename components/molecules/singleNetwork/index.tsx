@@ -406,22 +406,24 @@ const Scene = ({
 
       moveTo({ location: screenCoordsCentroid, zoom: targetZoomLevel })
       return
-    }
-    // otherwise we have to find the matching clusters
-    const matchingClusters = dataset.allClusters.filter(
-      ({ cluster_id }: ClusterObjectProps) => {
-        const similarity = activeCluster.similarities[cluster_id]
-        return similarity > MIN_SIMILARITY_THRESHOLD
-      }
-    )
-    const matchingClustersCentroids = matchingClusters.map(
-      (c: ClusterObjectProps) => c.pca_centroid
-    )
-    // we compute the centroid of all the matching polygons
-    const [x, y] = polygonCentroid(matchingClustersCentroids)
-    const rescaledCentroidCoords = [xScale(x), -yScale(y)]
+      //
+    } else {
+      // otherwise we have to find the matching clusters
+      const matchingClusters = dataset.allClusters.filter(
+        ({ cluster_id }: ClusterObjectProps) => {
+          const similarity = activeCluster.similarities[cluster_id]
+          return similarity > MIN_SIMILARITY_THRESHOLD
+        }
+      )
+      const matchingClustersCentroids = matchingClusters.map(
+        (c: ClusterObjectProps) => c.pca_centroid
+      )
+      // we compute the centroid of all the matching polygons
+      const [x, y] = polygonCentroid(matchingClustersCentroids)
+      const rescaledCentroidCoords = [xScale(x), -yScale(y)]
 
-    moveTo({ location: rescaledCentroidCoords, zoom: ZOOMED_IN })
+      moveTo({ location: rescaledCentroidCoords, zoom: ZOOMED_IN })
+    }
   }, [activeClusterId])
 
   useEffect(() => {
