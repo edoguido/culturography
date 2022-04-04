@@ -82,7 +82,7 @@ const LERP_FACTOR = 0.05
 // sub-types
 
 interface DatasetProps {
-  clusters: object[]
+  clusters: ClusterObjectProps[]
   allClusters: object[]
   extent: { x: number[]; y: number[] }
 }
@@ -525,15 +525,9 @@ const Scene = ({
 
 // Cluster
 
-interface ClusterProps {
+interface ClusterVisualization {
   key: number
-  data: {
-    name?: string
-    cluster_id?: number
-    centroid?: [number, number]
-    pca_centroid?: [number, number]
-    nodes?: any[]
-  }
+  data: ClusterObjectProps
   scales: {
     xScale: (a: number) => number
     yScale: (a: number) => number
@@ -544,7 +538,13 @@ interface ClusterProps {
   onClick?: (e: any) => void
 }
 
-const Cluster = ({ data, scales, color, label, onClick }: ClusterProps) => {
+const Cluster = ({
+  data,
+  scales,
+  color,
+  label,
+  onClick,
+}: ClusterVisualization) => {
   const { xScale, yScale } = scales
 
   const [mounted, setMounted] = useState(false)
