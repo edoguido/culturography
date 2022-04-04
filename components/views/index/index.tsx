@@ -21,13 +21,6 @@ const strings = {
     `,
     'Culturography is the study of how the public engages in different communities and interacts around different societal issues online. The method gives brands and cultural institutions a data-driven approach to engage in meaningful partnerships and strengthen brand affiliation to each other’s communities by engaging in important agendas.',
   ],
-  phases: `Culturograpy builds upon three analytical phases that will inform
-  the three phases of the collaboration, namely: scoping the
-  partnership between a brand and a cultural institution; designing a
-  joint intervention; measuring the effect of the partnership. This
-  open-source digital universe allows you to explore the
-  method on your own and read about specific cases analyzed by
-  Backscatter and Roskilde Festival.`,
   more: [
     'This project helps brands and cultural institutions position their core values and strategies in the right communities and tracks how these are reacting to the partnership. By doing so we set out to challenge the traditional way in which we calculate the value of partnerships between cultural institutions and commercial partners. We replace traditional quantitative goals - as for example a degree of exposure among specific target group segments - with a qualitative understanding of developments in brand affiliations to communities.',
   ],
@@ -174,7 +167,21 @@ export default function Home({ stories }) {
               })}
             </motion.div>
             <div className="py-4 w-full text-3xl lg:text-5xl text-right flex justify-end">
-              <h3 className="leading-[1.25] max-w-5xl">{strings.phases}</h3>
+              <h3 className="leading-[1.25] max-w-5xl">
+                Culturograpy builds upon three analytical phases of a
+                partnership between a brand and cultural institution. This{' '}
+                <a
+                  className="inline-link"
+                  href="https://github.com/edoguido/cultural-impact-index"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  open-source
+                </a>{' '}
+                digital universe allows you to explore the method on your own
+                and read about specific partnerships analyzed by Backscatter and
+                Roskilde Festival.
+              </h3>
             </div>
             {/*  */}
             <div className="py-4 border-t-2 border-text">
@@ -184,7 +191,7 @@ export default function Home({ stories }) {
                 <p className="">
                   The platform itself is open source and shared under a{' '}
                   <a
-                    className="text-accent underline"
+                    className="inline-link"
                     href="https://creativecommons.org/licenses/by-sa/4.0/"
                     target="_blank"
                     rel="noopener noreferrer"
