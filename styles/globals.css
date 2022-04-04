@@ -58,6 +58,11 @@ a {
   text-decoration: none;
 }
 
+a.inline-link {
+  color: var(--accent);
+  font-weight: 400;
+}
+
 p {
   font-weight: 300;
   letter-spacing: -0.3px;
