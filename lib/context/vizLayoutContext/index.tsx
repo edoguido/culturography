@@ -3,6 +3,13 @@ import { rankedClusters } from 'utils/data'
 
 // types
 
+interface NetworkNode {
+  id: string
+  x: number
+  y: number
+  cluster_id: string | number
+}
+
 export interface ClusterObjectProps {
   network?: string
   cluster_original?: number
@@ -12,6 +19,7 @@ export interface ClusterObjectProps {
   pca_centroid?: [number, number]
   shape?: number[]
   similarities?: object
+  nodes?: NetworkNode[]
 }
 
 export interface VizLayoutAction {
