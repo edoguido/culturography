@@ -392,9 +392,11 @@ const Scene = ({
     }
 
     const targetZoomLevel = isNaN(+zoomLevel) ? ZOOMED_IN : +zoomLevel
+    const activeClusterIsInThisNetwork =
+      activeCluster.network === dataset.clusters[0].network
 
     // if we're in source network...
-    if (isSourceNetwork) {
+    if (isSourceNetwork && activeClusterIsInThisNetwork) {
       // we move to its cluster centroid...
       const {
         pca_centroid: [cx, cy],
