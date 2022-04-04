@@ -10,8 +10,8 @@ const storyPhases = [
     order: 1,
   },
   {
-    title: 'Evaluating',
-    value: 'evaluating',
+    title: 'Monitoring',
+    value: 'monitoring',
     order: 2,
   },
 ]
