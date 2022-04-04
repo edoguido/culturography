@@ -62,6 +62,10 @@ const SERIALIZERS = {
 const Sidebar = ({ data }) => {
   const [layout, dispatch] = useVizLayout()
   //
+  const networksState = layout.networks
+  const showSourceNetwork = networksState?.source.show
+  const showTargetNetwork = networksState?.target.show
+  //
   const [storyState, setStoryState] = useState<number[]>([0, 0])
   //
   const storyRef = useRef<HTMLDivElement>(null)
@@ -74,9 +78,7 @@ const Sidebar = ({ data }) => {
       })),
     []
   )
-
   //
-
   const check = useCallback(handleBlockChange, [storyRefs])
 
   const onScroll = useCallback(() => {
@@ -114,10 +116,6 @@ const Sidebar = ({ data }) => {
     })
   }, [storyState])
 
-  const networksState = layout.networks
-  const showSourceNetwork = networksState?.source.show
-  const showTargetNetwork = networksState?.target.show
-
   const sidebarShift =
     showSourceNetwork && showTargetNetwork
       ? '0%'
@@ -140,13 +138,13 @@ const Sidebar = ({ data }) => {
             storyRefs={storyRefs}
           />
         )} */}
-        {data.story_chapters && networksState && (
+        {data.story_chapters && (
           <div
             ref={storyContentRef}
             className="hide-scrollbar w-full max-h-full flex basis-auto flex-grow flex-shrink-0 overflow-x-hidden overflow-y-auto"
           >
             <motion.div
-              className="relative h-full max-w-[var(--sidebar-width)] mx-auto p-2 pb-[calc(70vh-var(--nav-height))]"
+              className="relative h-full max-w-[var(--sidebar-width)] mx-auto p-2 pt-36 pb-[calc(70vh-var(--nav-height))]"
               initial={false}
               animate={{
                 x: '0%',

@@ -59,6 +59,10 @@ export const makeStoryPayload = ({ source, chapterIndex, blockIndex }) => {
   const chapter = source.story_chapters[chapterIndex]
   const block = chapter.blocks[blockIndex]
 
+  if (!chapter.networks) {
+    return { story: { title, phase, chapter: chapterIndex, block: blockIndex } }
+  }
+
   const {
     source_network_name,
     // source_network_id,
@@ -135,6 +139,18 @@ export const vizLayoutReducer = (state, action) => {
       const { story, networks } = payload
 
       const { phase, chapter, block } = story
+
+      if (!networks) {
+        return {
+          story: {
+            ...state.story,
+            phase,
+            chapter,
+            block,
+          },
+        }
+      }
+
       const { highlight, nameHighlight, source, target } = networks
 
       return {

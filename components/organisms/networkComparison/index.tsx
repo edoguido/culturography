@@ -18,6 +18,9 @@ const networkNames = ['source', 'target']
 const NetworkComparison = ({ data }) => {
   const [layout, dispatch] = useVizLayout()
   //
+  // if we don't have data about the networks, we simply don't show the comparison
+  if (!layout.networks) return null
+  //
   // story properties
   const { networks: networksProperties } = layout
   const { block } = layout.story
@@ -27,7 +30,8 @@ const NetworkComparison = ({ data }) => {
   // const targetNetworkName = networksData.networks.target_network_name
   //
   // clusters properties
-  const rawClusterId = +layout.networks.nameHighlight
+  const rawClusterId = +layout.networks?.nameHighlight
+
   const activeClusterId: number = isNaN(rawClusterId) ? null : rawClusterId
   //
   const clusterIdMatch = (c: ClusterObjectProps) =>
