@@ -181,7 +181,7 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
   return (
     <div className="relative w-full h-full">
       {fetching && <Spinner />}
-      <NetworkName label={networkName} />
+      <NetworkName label={networkName} isSource={isSourceNetwork} />
       <Cursor />
       <Canvas ref={canvasRef}>
         <ContextBridge>
@@ -201,9 +201,19 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
   )
 }
 
-const NetworkName = ({ label }: { label: string }) => {
+const NetworkName = ({
+  label,
+  isSource,
+}: {
+  label: string
+  isSource: boolean
+}) => {
+  const positioning = isSource ? 'rounded-br-2xl' : 'right-0 rounded-bl-2xl'
+
   return (
-    <motion.h3 className="absolute z-30 bg-white bg-opacity-10 text-white font-medium tracking-wider py-1 px-3 rounded-br-2xl">
+    <motion.h3
+      className={`absolute ${positioning} z-30 bg-white bg-opacity-10 text-xl tracking-wider py-1 px-3`}
+    >
       {label}
     </motion.h3>
   )
