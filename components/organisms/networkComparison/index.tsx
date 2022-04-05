@@ -20,6 +20,8 @@ const NetworkComparison = ({ data }) => {
   const { block } = layout.story
   //
   useEffect(() => {
+    if (!layout.networks) return null
+
     const fetchMetadata = async () => {
       let clusterMetadata
 
@@ -50,7 +52,7 @@ const NetworkComparison = ({ data }) => {
     }
 
     fetchMetadata().then(updateMetadata)
-  }, [data.network_metadata.asset])
+  }, [data.network_metadata?.asset])
 
   const networkLayoutProperties = useCallback(
     (source) => {
@@ -89,7 +91,6 @@ const NetworkComparison = ({ data }) => {
     },
     [block]
   )
-
   //
   // if we don't have data about the networks, we simply don't show the comparison
   if (!layout.networks) return null
