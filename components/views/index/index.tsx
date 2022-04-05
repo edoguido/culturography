@@ -112,7 +112,7 @@ export default function Home({ stories }) {
           </div>
 
           <motion.div
-            className="relative p-6 text-4xl lg:flex"
+            className="relative p-4 md:p-6 text-2xl md:text-4xl lg:flex"
             variants={{
               animate: { transition: { staggerChildren: 0.1 } },
             }}
@@ -138,8 +138,11 @@ export default function Home({ stories }) {
 
           <div className="px-6 pt-20">
             {/* <div>Phases</div> */}
-            <div className="py-4 w-full text-3xl lg:text-5xl text-right flex justify-end">
-              <h3 className="leading-[1.25] max-w-5xl">
+            <div className="py-4 my-3 w-full text-3xl md:text-5xl lg:flex items-baseline justify-between">
+              <div className="font-display w-full">
+                Phases of the method and case studies
+              </div>
+              <h3 className="leading-[1.25] font-sans font-light text-2xl md:text-4xl max-w-5xl text-right">
                 Culturograpy builds upon three analytical phases of a
                 partnership between a brand and cultural institution. This{' '}
                 <a
