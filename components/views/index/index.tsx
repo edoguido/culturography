@@ -86,7 +86,7 @@ export default function Home({ stories }) {
       >
         {/*  */}
         <motion.main
-          className="bg-secondary text-text min-h-screen"
+          className="bg-secondary text-text dark:bg-text dark:text-white min-h-screen"
           initial="initial"
           animate="animate"
           exit="exit"
