@@ -49,7 +49,7 @@ const Nav = ({ title }) => {
                 opacity: 1,
               }}
             >
-              {!userHasViewedTutorial ? 'Click here for tutorial' : '?'}
+              {!userHasViewedTutorial ? 'How to understand the networks' : '?'}
             </motion.div>
           </button>
         </div>
