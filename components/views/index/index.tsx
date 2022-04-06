@@ -231,11 +231,11 @@ export default function Home({ stories }) {
             </div>
           </div>
 
-          <div className="relative w-full bg-accent text-text p-4 md:p-6 py-6 grid grid-cols-3 items-center">
+          <div className="relative w-full bg-accent text-text p-4 md:p-6 py-6 lg:grid grid-cols-3 items-center">
             <h3 className="font-normal text-2xl">
               This project was made possible by
             </h3>
-            <div className="flex">
+            <div className="flex justify-center my-3 py-6">
               <Image
                 src="/roskilde_logo.png"
                 layout="intrinsic"
@@ -243,7 +243,7 @@ export default function Home({ stories }) {
                 height={96}
               />
             </div>
-            <div className="flex">
+            <div className="flex justify-center my-3 py-6">
               <Image
                 src="/backscatter_logo.png"
                 layout="intrinsic"
