@@ -93,7 +93,7 @@ export default function Home({ stories }) {
       >
         {/*  */}
         <motion.main
-          className="bg-secondary text-text dark:bg-text dark:text-white min-h-screen"
+          className="bg-secondary text-text dark:bg-text dark:text-[#dddddd] min-h-screen"
           initial="initial"
           animate="animate"
           exit="exit"
@@ -228,6 +228,28 @@ export default function Home({ stories }) {
                   </p>
                 ))}
               </div>
+            </div>
+          </div>
+
+          <div className="relative w-full bg-accent text-text p-4 md:p-6 py-6 grid grid-cols-3 items-center">
+            <h3 className="font-normal text-2xl">
+              This project was made possible by
+            </h3>
+            <div className="flex">
+              <Image
+                src="/roskilde_logo.png"
+                layout="intrinsic"
+                width={96}
+                height={96}
+              />
+            </div>
+            <div className="flex">
+              <Image
+                src="/backscatter_logo.png"
+                layout="intrinsic"
+                width={96}
+                height={96}
+              />
             </div>
           </div>
 
