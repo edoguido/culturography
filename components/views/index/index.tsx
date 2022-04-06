@@ -236,20 +236,32 @@ export default function Home({ stories }) {
               This project was made possible by
             </h3>
             <div className="flex justify-center my-3 py-6">
-              <Image
-                src="/roskilde_logo.png"
-                layout="intrinsic"
-                width={96}
-                height={96}
-              />
+              <a
+                href="https://www.roskilde-festival.dk/en/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src="/roskilde_logo.png"
+                  layout="intrinsic"
+                  width={96}
+                  height={96}
+                />
+              </a>
             </div>
             <div className="flex justify-center my-3 py-6">
-              <Image
-                src="/backscatter_logo.png"
-                layout="intrinsic"
-                width={96}
-                height={96}
-              />
+              <a
+                href="https://www.backscatter.dk/en/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src="/backscatter_logo.png"
+                  layout="intrinsic"
+                  width={96}
+                  height={96}
+                />
+              </a>
             </div>
           </div>
 
