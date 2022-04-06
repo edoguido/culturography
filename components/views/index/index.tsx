@@ -1,6 +1,13 @@
+import dynamic from 'next/dynamic'
 import Head from 'next/head'
+import Image from 'next/image'
 import Link from 'next/link'
+
 import { motion, MotionConfig } from 'framer-motion'
+
+const Splashes = dynamic(() => import('components/atoms/splashes'), {
+  ssr: false,
+})
 
 import client from 'utils/cms'
 import { ALL_PROJECTS_QUERY } from 'utils/cms/queries'
@@ -98,7 +105,7 @@ export default function Home({ stories }) {
             },
           }}
         >
-          <div className="relative hero min-h-[50vh] md:h-[80vh]">
+          <div className="relative hero min-h-[80vh] md:h-[90vh]">
             <div className="relative z-10">
               <div className="mx-auto flex justify-center items-center decoration-accent bg-gradient-to-b from-accent to-transparent">
                 <Title label={strings.title} />
@@ -107,12 +114,13 @@ export default function Home({ stories }) {
                 <Subtitle lines={strings.subtitle} />
               </div>
             </div>
-            <Gradient />
+            {/* <Gradient /> */}
+            <Splashes />
             {/*  */}
           </div>
 
           <motion.div
-            className="relative p-4 md:p-6 text-2xl md:text-4xl lg:flex"
+            className="relative z-10 p-4 md:p-6 text-2xl md:text-4xl lg:flex"
             variants={{
               animate: { transition: { staggerChildren: 0.1 } },
             }}
@@ -136,7 +144,7 @@ export default function Home({ stories }) {
             ))}
           </motion.div>
 
-          <div className="px-6 pt-20">
+          <div className="px-6 pt-4">
             {/* <div>Phases</div> */}
             <div className="py-4 my-3 w-full text-3xl md:text-5xl lg:flex items-baseline justify-between">
               <div className="font-display w-full">
@@ -310,149 +318,149 @@ const Subtitle = ({ lines }) => (
   </motion.h2>
 )
 
-const Gradient = () => {
-  const fxSize = '400%'
-  const fxOffset = '-100%'
+// const Gradient = () => {
+//   const fxSize = '400%'
+//   const fxOffset = '-100%'
 
-  return (
-    <motion.div
-      className="absolute inset-0"
-      initial="initial"
-      animate="animate"
-      exit="exit"
-    >
-      <svg
-        className="z-0 overflow-visible"
-        xmlns="http://www.w3.org/2000/svg"
-        version="1.1"
-        xmlns-xlink="http://www.w3.org/1999/xlink"
-        xmlns-svgjs="http://svgjs.dev/svgjs"
-        viewBox="0 0 1280 1280"
-        preserveAspectRatio="xMinYMin meet"
-        width="100%"
-        height="100%"
-      >
-        <defs>
-          <radialGradient id="gggrain-gradient" r="1">
-            <stop offset="0%" stopColor="#93FF0020"></stop>
-            <stop offset="50%" stopColor="rgba(255,255,255,0)"></stop>
-            <stop offset="100%" stopColor="rgba(255,255,255,0)"></stop>
-          </radialGradient>
-          <filter
-            id="gggrain-filter"
-            x={fxOffset}
-            y={fxOffset}
-            width={fxSize}
-            height={fxSize}
-            filterUnits="objectBoundingBox"
-            primitiveUnits="userSpaceOnUse"
-            colorInterpolationFilters="sRGB"
-          >
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.63"
-              numOctaves="2"
-              seed="2"
-              stitchTiles="stitch"
-              x={fxOffset}
-              y={fxOffset}
-              width={fxSize}
-              height={fxSize}
-              result="turbulence"
-            ></feTurbulence>
-            <feColorMatrix
-              type="saturate"
-              values="0"
-              x={fxOffset}
-              y={fxOffset}
-              width={fxSize}
-              height={fxSize}
-              in="turbulence"
-              result="colormatrix"
-            ></feColorMatrix>
-            <feComponentTransfer
-              x={fxOffset}
-              y={fxOffset}
-              width={fxSize}
-              height={fxSize}
-              in="colormatrix"
-              result="componentTransfer"
-            >
-              <feFuncR type="linear" slope="3"></feFuncR>
-              <feFuncG type="linear" slope="3"></feFuncG>
-              <feFuncB type="linear" slope="3"></feFuncB>
-            </feComponentTransfer>
-            <feColorMatrix
-              x={fxOffset}
-              y={fxOffset}
-              width={fxSize}
-              height={fxSize}
-              in="componentTransfer"
-              result="colormatrix2"
-              type="matrix"
-              values="1 0 0 0 0
-0 1 0 0 0
-0 0 1 0 0
-0 0 0 18 -10"
-            ></feColorMatrix>
-          </filter>
-        </defs>
-        <g>
-          <motion.rect
-            height="100%"
-            fill="url(#gggrain-gradient)"
-            variants={{
-              initial: {
-                x: '-100%',
-                y: '80%',
-                width: '250%',
-              },
-              animate: {
-                x: '-50%',
-                y: '25%',
-                width: '250%',
-                transition: {
-                  ease: [0, 0, 0, 1],
-                  duration: 3,
-                  delay: 2,
-                },
-              },
-            }}
-          />
-          <motion.rect
-            height="100%"
-            fill="url(#gggrain-gradient)"
-            variants={{
-              initial: {
-                x: '100%',
-                y: '80%',
-                width: '250%',
-              },
-              animate: {
-                x: '50%',
-                y: '15%',
-                width: '150%',
-                transition: {
-                  ease: [0, 0, 0, 1],
-                  duration: 3,
-                  delay: 2,
-                },
-              },
-            }}
-          />
-          <rect
-            width="100%"
-            height="100%"
-            fill="transparent"
-            filter="url(#gggrain-filter)"
-            opacity="0.64"
-            style={{ mixBlendMode: 'soft-light' }}
-          />
-        </g>
-      </svg>
-    </motion.div>
-  )
-}
+//   return (
+//     <motion.div
+//       className="absolute inset-0"
+//       initial="initial"
+//       animate="animate"
+//       exit="exit"
+//     >
+//       <svg
+//         className="z-0 overflow-visible"
+//         xmlns="http://www.w3.org/2000/svg"
+//         version="1.1"
+//         xmlns-xlink="http://www.w3.org/1999/xlink"
+//         xmlns-svgjs="http://svgjs.dev/svgjs"
+//         viewBox="0 0 1280 1280"
+//         preserveAspectRatio="xMinYMin meet"
+//         width="100%"
+//         height="100%"
+//       >
+//         <defs>
+//           <radialGradient id="gggrain-gradient" r="1">
+//             <stop offset="0%" stopColor="#93FF0020"></stop>
+//             <stop offset="50%" stopColor="rgba(255,255,255,0)"></stop>
+//             <stop offset="100%" stopColor="rgba(255,255,255,0)"></stop>
+//           </radialGradient>
+//           <filter
+//             id="gggrain-filter"
+//             x={fxOffset}
+//             y={fxOffset}
+//             width={fxSize}
+//             height={fxSize}
+//             filterUnits="objectBoundingBox"
+//             primitiveUnits="userSpaceOnUse"
+//             colorInterpolationFilters="sRGB"
+//           >
+//             <feTurbulence
+//               type="fractalNoise"
+//               baseFrequency="0.63"
+//               numOctaves="2"
+//               seed="2"
+//               stitchTiles="stitch"
+//               x={fxOffset}
+//               y={fxOffset}
+//               width={fxSize}
+//               height={fxSize}
+//               result="turbulence"
+//             ></feTurbulence>
+//             <feColorMatrix
+//               type="saturate"
+//               values="0"
+//               x={fxOffset}
+//               y={fxOffset}
+//               width={fxSize}
+//               height={fxSize}
+//               in="turbulence"
+//               result="colormatrix"
+//             ></feColorMatrix>
+//             <feComponentTransfer
+//               x={fxOffset}
+//               y={fxOffset}
+//               width={fxSize}
+//               height={fxSize}
+//               in="colormatrix"
+//               result="componentTransfer"
+//             >
+//               <feFuncR type="linear" slope="3"></feFuncR>
+//               <feFuncG type="linear" slope="3"></feFuncG>
+//               <feFuncB type="linear" slope="3"></feFuncB>
+//             </feComponentTransfer>
+//             <feColorMatrix
+//               x={fxOffset}
+//               y={fxOffset}
+//               width={fxSize}
+//               height={fxSize}
+//               in="componentTransfer"
+//               result="colormatrix2"
+//               type="matrix"
+//               values="1 0 0 0 0
+// 0 1 0 0 0
+// 0 0 1 0 0
+// 0 0 0 18 -10"
+//             ></feColorMatrix>
+//           </filter>
+//         </defs>
+//         <g>
+//           <motion.rect
+//             height="100%"
+//             fill="url(#gggrain-gradient)"
+//             variants={{
+//               initial: {
+//                 x: '-100%',
+//                 y: '80%',
+//                 width: '250%',
+//               },
+//               animate: {
+//                 x: '-50%',
+//                 y: '25%',
+//                 width: '250%',
+//                 transition: {
+//                   ease: [0, 0, 0, 1],
+//                   duration: 3,
+//                   delay: 2,
+//                 },
+//               },
+//             }}
+//           />
+//           <motion.rect
+//             height="100%"
+//             fill="url(#gggrain-gradient)"
+//             variants={{
+//               initial: {
+//                 x: '100%',
+//                 y: '80%',
+//                 width: '250%',
+//               },
+//               animate: {
+//                 x: '50%',
+//                 y: '15%',
+//                 width: '150%',
+//                 transition: {
+//                   ease: [0, 0, 0, 1],
+//                   duration: 3,
+//                   delay: 2,
+//                 },
+//               },
+//             }}
+//           />
+//           <rect
+//             width="100%"
+//             height="100%"
+//             fill="transparent"
+//             filter="url(#gggrain-filter)"
+//             opacity="0.64"
+//             style={{ mixBlendMode: 'soft-light' }}
+//           />
+//         </g>
+//       </svg>
+//     </motion.div>
+//   )
+// }
 
 export async function getStaticProps() {
   const query = ALL_PROJECTS_QUERY
