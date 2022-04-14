@@ -111,7 +111,7 @@ const NetworkComparison = ({ data }) => {
     c.cluster_id == activeClusterId
 
   const activeCluster: ClusterObjectProps = activeClusterId
-    ? layout?.clusters.find(clusterIdMatch)
+    ? layout?.clusters?.find(clusterIdMatch)
     : null
 
   // layout properties
