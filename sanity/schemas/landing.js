@@ -10,18 +10,19 @@ export default {
       fields: [
         {
           name: 'project_title',
-          type: 'string',
           title: 'Title',
+          type: 'string',
         },
         {
           name: 'project_subtitle',
-          type: 'string',
           title: 'Subtitle',
+          type: 'array',
+          of: [{ type: 'string' }],
         },
         {
           name: 'abstract',
-          type: 'richText',
           title: 'Abstract',
+          type: 'richText',
           description: 'Max 200 characters',
         },
       ],
@@ -31,13 +32,16 @@ export default {
       type: 'array',
       of: [
         {
+          type: 'block.phases',
+        },
+        {
+          type: 'block.contact',
+        },
+        {
           type: 'block.text',
         },
         {
           type: 'block.collapsibleSections',
-        },
-        {
-          type: 'block.storiesList',
         },
       ],
     },

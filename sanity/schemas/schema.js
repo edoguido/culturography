@@ -14,9 +14,11 @@ import storyChapter from './story.chapter'
 //
 import landing from './landing'
 import blockCollapsibleSections from './block.collapsibleSections'
-import blockStoriesList from './block.storiesList'
+import blockProjectPhases from './block.phases'
 import blockText from './block.text'
+import blockContact from './block.contact'
 import richText from './richText'
+import footer from './footer'
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -37,9 +39,12 @@ export default createSchema({
     // Landing page
     landing,
     blockText,
+    blockContact,
     blockCollapsibleSections,
-    blockStoriesList,
+    blockProjectPhases,
     richText,
+    // globals
+    footer,
     // When added to this list, object types can be used as
     // { type: 'typename' } in other document schemas
   ]),

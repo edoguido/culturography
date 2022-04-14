@@ -1,7 +1,7 @@
 const PHASES = [
-  { title: 'Scoping', value: 'scoping' },
-  { title: 'Designing', value: 'designing' },
-  { title: 'Monitoring', value: 'monitoring' },
+  { title: 'Scoping', value: 'scoping', order: 0 },
+  { title: 'Designing', value: 'designing', order: 1 },
+  { title: 'Monitoring', value: 'monitoring', order: 2 },
 ]
 
 export { PHASES }

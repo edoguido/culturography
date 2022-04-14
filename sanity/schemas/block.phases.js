@@ -1,13 +1,9 @@
-const sections = [
-  { title: 'scoping', value: 'scoping', order: 0 },
-  { title: 'designing', value: 'designing', order: 1 },
-  { title: 'evaluating', value: 'evaluating', order: 2 },
-]
+import { PHASES } from '../const'
 
 export default {
-  name: 'block.storiesList',
+  name: 'block.phases',
   type: 'object',
-  title: 'Stories List',
+  title: 'Project Phases',
   description:
     'The list is automagically generated from the Stories, grouped by phase',
   fields: [
@@ -15,6 +11,11 @@ export default {
       name: 'title',
       type: 'string',
       title: 'Title',
+    },
+    {
+      name: 'description',
+      type: 'richText',
+      title: 'Description',
     },
     // {
     //   name: 'hash',
@@ -25,7 +26,7 @@ export default {
     {
       name: 'sections',
       type: 'object',
-      fields: sections.map(({ title, value, order }) => ({
+      fields: PHASES.map(({ title, value, order }) => ({
         name: value,
         type: 'object',
         title: title,
@@ -42,6 +43,8 @@ export default {
             name: 'title',
             type: 'string',
             title: 'Title',
+            readOnly: true,
+            initialValue: title,
           },
           {
             name: 'phase_slug',
@@ -56,23 +59,23 @@ export default {
             type: 'text',
             title: 'Description',
           },
-          {
-            name: 'stories',
-            type: 'array',
-            of: [
-              {
-                type: 'reference',
-                to: [
-                  {
-                    type: 'story',
-                  },
-                ],
-              },
-            ],
-            options: {
-              disableNew: true,
-            },
-          },
+          // {
+          //   name: 'stories',
+          //   type: 'array',
+          //   of: [
+          //     {
+          //       type: 'reference',
+          //       to: [
+          //         {
+          //           type: 'story',
+          //         },
+          //       ],
+          //     },
+          //   ],
+          //   options: {
+          //     disableNew: true,
+          //   },
+          // },
         ],
       })),
     },
