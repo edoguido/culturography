@@ -50,27 +50,18 @@ export const PROJECT_QUERY = (project) => `
 export const LANDING_QUERY = `
   *[ _type == 'landing' ] {
     project_information,
+    blocks
+  }
+`
+
+export const FOOTER_QUERY = `
+  *[ _type == 'footer' ] {
+    title,
     blocks[] {
       ...,
-      sections {
-        scoping_section {
-          ...,
-          stories[] -> {
-            title, slug
-          }
-        },
-        designing_section {
-          ...,
-          stories[] -> {
-            title, slug
-          }
-        },
-        evaluating_section {
-          ...,
-          stories[] -> {
-            title, slug
-          }
-        },
+      description,
+      image {
+        asset -> { url }
       }
     }
   }

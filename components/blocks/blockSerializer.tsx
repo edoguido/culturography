@@ -1,35 +1,31 @@
 import React, { createElement, Fragment, ReactChild } from 'react'
 import dynamic from 'next/dynamic'
 
-const StoriesListBlock = dynamic(() => import('./storiesListBlock'), {
-  ssr: false,
-})
 const TextBlock = dynamic(() => import('./textBlock'), {
   ssr: false,
 })
-const CollapsibleTextBlock = dynamic(() => import('./collapsibleTextBlock'), {
+const ProjectPhasesBlock = dynamic(() => import('./projectPhasesBlock'), {
   ssr: false,
 })
 
 // block-component mapping
 const MODELS = {
   'block.text': TextBlock,
-  'block.collapsibleSections': CollapsibleTextBlock,
-  'block.storiesList': StoriesListBlock,
+  'block.phases': ProjectPhasesBlock,
 }
 
-interface BlockSerializerProps {
+interface SingleBlockSerializerProps {
   data: any
-  modelKey: (arg0: any) => string
+  accessor: (arg0: any) => string
   index: Number
   forwardRef?: React.RefObject<HTMLElement>
   children?: ReactChild | ReactChild[]
 }
 
-const BlockSerializer = (props: BlockSerializerProps) => {
-  const { data, modelKey, index, forwardRef, children } = props
+const SingleSerializer = (props: SingleBlockSerializerProps) => {
+  const { data, accessor, index, forwardRef, children } = props
 
-  let blockTypeKey = modelKey(data)
+  let blockTypeKey = accessor(data)
   const blockComponent = MODELS[blockTypeKey]
 
   if (!blockTypeKey) {
@@ -57,5 +53,10 @@ const BlockSerializer = (props: BlockSerializerProps) => {
 
   return createElement(blockComponent, { ...data, forwardRef }, children)
 }
+
+const BlockSerializer = ({ blocks, accessor }) =>
+  blocks.map((b, i) => (
+    <SingleSerializer key={i} data={b} accessor={accessor} index={i} />
+  ))
 
 export default BlockSerializer

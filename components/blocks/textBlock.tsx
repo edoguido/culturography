@@ -4,12 +4,30 @@ const TextBlock = (props) => {
   const { /* _type, */ title, hash, blocks } = props
 
   return (
-    <div id={hash} className="mx-6 p-6 border-t-2 border-black overflow-hidden">
-      <h3 className="text-6xl py-6">{title}</h3>
-      <div className="text-3xl max-w-4xl ml-auto">
-        <PortableText value={blocks} />
+    <>
+      <div id={hash} className="py-4 border-t-2 border-text">
+        <div className="shrink py-4">{title} ↘</div>
+        <div className="leading-[1.25] text-2xl lg:text-3xl lg:grid grid-cols-2 gap-16">
+          <PortableText value={blocks} />
+          {/* <p className="">
+            The platform itself is open source and shared under a{' '}
+            <a
+              className="inline-link"
+              href="https://creativecommons.org/licenses/by-sa/4.0/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              CC-BY-SA
+            </a>{' '}
+            license. This means that you are free to reuse the platform for your
+            own datasets and adapt the code as you like, as long as you cite the
+            Culturograhy project and share any adaptations you make under the
+            same license for others to use.,
+          </p> */}
+        </div>
       </div>
-    </div>
+      {/*  */}
+    </>
   )
 }
 
