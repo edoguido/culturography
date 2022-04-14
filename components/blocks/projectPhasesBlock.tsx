@@ -20,7 +20,7 @@ const ProjectPhasesBlock = (props) => {
 
   return (
     <>
-      <div className="py-4 my-3 w-full text-3xl md:text-5xl lg:flex items-baseline justify-between">
+      <div className="portable-text py-4 my-3 w-full text-3xl md:text-5xl lg:flex items-baseline justify-between">
         <div className="font-display w-full">{title}</div>
         <h3 className="leading-[1.25] font-sans font-light text-2xl md:text-4xl max-w-5xl text-right">
           <PortableText value={description} />

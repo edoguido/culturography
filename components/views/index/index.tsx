@@ -93,7 +93,7 @@ export default function Home({ data, stories, footer }) {
               {abstract.map((paragraph, i) => (
                 <motion.div
                   key={i}
-                  className="grow w-full font-light lg:first:mr-6 lg:last:ml-6 tracking-tight"
+                  className="portable-text grow w-full font-light lg:first:mr-6 lg:last:ml-6 tracking-tight"
                   variants={{
                     initial: { opacity: 0, y: 50 },
                     animate: { opacity: 1, y: 0 },
