@@ -11,7 +11,7 @@ interface PhaseObject {
   title: string
 }
 
-const projectPhasesBlock = (props) => {
+const ProjectPhasesBlock = (props) => {
   const { title, description, sections } = props
   const stories = useStories()
   const phases = Object.values(sections).sort(
@@ -79,4 +79,4 @@ const projectPhasesBlock = (props) => {
   )
 }
 
-export default projectPhasesBlock
+export default ProjectPhasesBlock
