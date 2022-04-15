@@ -59,6 +59,7 @@ export const FOOTER_QUERY = `
     title,
     blocks[] {
       ...,
+      url,
       description,
       image {
         asset -> { url }

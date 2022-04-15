@@ -28,7 +28,7 @@ const strings = {
 export default function Home({ data, stories, footer }) {
   const { project_information, blocks } = data
   const { project_title, project_subtitle, abstract } = project_information
-  const { title, blocks: footerBlocks } = footer
+  const { title: footer_title, blocks: footer_blocks } = footer
 
   return (
     <>
@@ -125,25 +125,30 @@ export default function Home({ data, stories, footer }) {
                 </div>
               </div>
             </div>
-            <footer className="relative w-full bg-accent text-text p-4 md:p-6 py-6 lg:grid grid-cols-3 items-center">
-              <h3 className="font-normal text-2xl">{title}</h3>
-              {footerBlocks.map(({ image, description }, i) => (
-                <div key={i} className="flex justify-center my-3 py-6">
-                  <a
-                    href="https://www.roskilde-festival.dk/en/"
-                    target="_blank"
-                    rel="noopener noreferrer"
+            <footer className="relative w-full bg-accent text-text p-4 md:p-6 py-6 items-center">
+              <h3 className="font-normal text-2xl">{footer_title}</h3>
+              <div className="relative flex flex-wrap justify-around">
+                {footer_blocks.map(({ image, url, description }, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center justify-center m-auto my-3 py-6 w-1/2 lg:w-48"
                   >
-                    <Image
-                      src={image.asset.url}
-                      layout="intrinsic"
-                      width={96}
-                      height={96}
-                      alt={description}
-                    />
-                  </a>
-                </div>
-              ))}
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="relative w-1/2 lg:w-64 h-28"
+                    >
+                      <Image
+                        src={image.asset.url}
+                        layout="fill"
+                        objectFit="contain"
+                        alt={description}
+                      />
+                    </a>
+                  </div>
+                ))}
+              </div>
             </footer>
           </motion.main>
         </MotionConfig>

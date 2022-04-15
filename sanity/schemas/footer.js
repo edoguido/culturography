@@ -2,6 +2,7 @@ const StructuredImage = {
   type: 'object',
   fields: [
     { type: 'image', name: 'image' },
+    { type: 'url', name: 'url', title: 'Website link' },
     { type: 'string', name: 'description', title: 'Description' },
   ],
 }
