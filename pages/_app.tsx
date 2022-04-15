@@ -1,5 +1,5 @@
-import { useRouter } from 'next/dist/client/router'
 import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import ReactGA from 'react-ga'
 
 import '../styles/globals.css'

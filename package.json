@@ -17,6 +17,7 @@
     "@react-three/fiber": "^7.0.25",
     "@sanity/block-content-to-react": "^3.0.0",
     "@sanity/client": "^2.22.3",
+    "@sentry/nextjs": "^6.19.6",
     "@types/three": "^0.136.1",
     "cors": "^2.8.5",
     "d3": "^7.3.0",
