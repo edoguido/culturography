@@ -213,7 +213,7 @@ const Subtitle = ({ lines }) => (
   </motion.h2>
 )
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const query = ALL_PROJECTS_QUERY
 
   const [data] = await client.fetch(LANDING_QUERY)
