@@ -12,7 +12,7 @@ const Tutorial = ({ onClose }) => {
 
   return (
     <motion.div
-      className="fixed z-50 top-0 left-0 bottom-0 right-0 w-full flex justify-center items-center"
+      className="fixed z-50 top-0 left-0 bottom-0 right-0 w-full text-base flex justify-center items-center"
       initial="initial"
       animate="animate"
       exit="exit"

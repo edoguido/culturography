@@ -1,8 +1,10 @@
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { PortableText } from '@portabletext/react'
 
 import useStories from '@/context/storiesContext'
+import { useState } from 'react'
+import Tutorial from 'components/organisms/tutorial'
 
 interface PhaseObject {
   description: string
@@ -12,20 +14,39 @@ interface PhaseObject {
 }
 
 const ProjectPhasesBlock = (props) => {
+  const [tutorial, setTutorial] = useState<boolean>(false)
+
   const { title, description, sections } = props
   const stories = useStories()
   const phases = Object.values(sections).sort(
     (a: PhaseObject, b: PhaseObject) => a.order - b.order
   )
 
+  function showTutorial() {
+    setTutorial(true)
+  }
+
+  function hideTutorial() {
+    setTutorial(false)
+  }
+
   return (
     <>
       <div className="portable-text py-4 my-3 w-full text-3xl md:text-5xl lg:flex items-baseline justify-between">
-        <div className="font-display w-full">{title}</div>
+        <div>
+          <h2 className="font-display text-left">{title}</h2>
+          <button className="w-full text-left" onClick={showTutorial}>
+            <span className="text-base underline inline-block w-auto">
+              How does it work?
+            </span>
+          </button>
+        </div>
+        <AnimatePresence>
+          {tutorial && <Tutorial onClose={hideTutorial} />}
+        </AnimatePresence>
         <h3 className="leading-[1.25] font-sans font-light text-2xl md:text-4xl max-w-5xl text-right">
           <PortableText value={description} />
         </h3>
-
         {/* <h3 className="leading-[1.25] font-sans font-light text-2xl md:text-4xl max-w-5xl text-right">
           Culturograpy builds upon three analytical phases of a partnership
           between a brand and cultural institution. This{' '}
