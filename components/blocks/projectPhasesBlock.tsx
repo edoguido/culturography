@@ -44,7 +44,7 @@ const ProjectPhasesBlock = (props) => {
         <AnimatePresence>
           {tutorial && <Tutorial onClose={hideTutorial} />}
         </AnimatePresence>
-        <h3 className="leading-[1.25] font-sans font-light text-2xl md:text-4xl max-w-5xl text-right">
+        <h3 className="leading-[1.25] font-sans font-light text-2xl md:text-4xl max-w-5xl">
           <PortableText value={description} />
         </h3>
         {/* <h3 className="leading-[1.25] font-sans font-light text-2xl md:text-4xl max-w-5xl text-right">
@@ -64,7 +64,7 @@ const ProjectPhasesBlock = (props) => {
         </h3> */}
       </div>
       <motion.div
-        className="lg:flex items-baseline font-normal"
+        className="lg:flex items-baseline font-normal my-4 py-4"
         variants={{ animate: { transition: { staggerChildren: 0.2 } } }}
       >
         {phases.map(

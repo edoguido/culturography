@@ -85,15 +85,15 @@ export default function Home({ data, stories, footer }) {
             </div>
 
             <motion.div
-              className="relative z-10 p-4 md:p-6 text-2xl md:text-4xl lg:flex"
-              variants={{
-                animate: { transition: { staggerChildren: 0.1 } },
-              }}
+              className=""
+              // variants={{
+              //   animate: { transition: { staggerChildren: 0.1 } },
+              // }}
             >
-              {abstract.map((paragraph, i) => (
+              {/* {abstract.map((paragraph, i) => (
                 <motion.div
                   key={i}
-                  className="portable-text grow w-full font-light lg:first:mr-6 lg:last:ml-6 tracking-tight"
+                  className="portable-text grow w-full font-light lg:first:mr-6 tracking-tight"
                   variants={{
                     initial: { opacity: 0, y: 50 },
                     animate: { opacity: 1, y: 0 },
@@ -103,11 +103,22 @@ export default function Home({ data, stories, footer }) {
                     ease: [0.7, 0, 0, 1],
                     duration: 1.75,
                   }}
-                >
-                  <PortableText value={paragraph} />
-                </motion.div>
-              ))}
+                > */}
+              <div className="max-w-6xl"></div>
+              {/* </motion.div>
+              ))} */}
             </motion.div>
+
+            <div className="portable-text px-6 py-4 my-3 w-full text-3xl md:text-5xl lg:flex items-baseline justify-between relative z-10">
+              <div>
+                <h2 className="font-display text-left">
+                  What is Culturography?
+                </h2>
+              </div>
+              <h3 className="leading-[1.25] font-sans font-light text-2xl md:text-4xl max-w-5xl">
+                <PortableText value={abstract} />
+              </h3>
+            </div>
 
             <div className="px-6 pt-4">
               <BlockSerializer blocks={blocks} accessor={(b) => b._type} />
