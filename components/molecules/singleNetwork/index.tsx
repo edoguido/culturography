@@ -121,7 +121,8 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
   const fetchNetwork = async () => {
     setFetching(true)
 
-    const { asset }: { asset: { path: string } } = data.networks[accessorKey]
+    const { asset }: { asset: { url: string; path: string } } =
+      data.networks[accessorKey]
 
     const options = {
       method: 'GET',
@@ -135,21 +136,21 @@ const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
 
     let dataset
 
-    try {
-      dataset = await fetch(
-        `https://api.sanity.io/${asset.path}`,
-        options
-      ).then((r) => r.json())
-    } catch {
-      const { source_network_id, target_network_id } = data.networks
+    // try {
+    await fetch(asset.url)
+      .then((r) => r.json())
+      .then((d) => (dataset = d))
 
-      console.warn("Couldn't fetch from Sanity CDN. Sourcing local files...")
-      const localFile = isSourceNetwork
-        ? `${source_network_id}_${layout.story.phase}_nodes.json`
-        : `${target_network_id}_${layout.story.phase}_nodes.json`
+    // } catch {
+    //   const { source_network_id, target_network_id } = data.networks
 
-      dataset = fetch(`/data/${localFile}`).then((r) => r.json())
-    }
+    //   console.warn("Couldn't fetch from Sanity CDN. Sourcing local files...")
+    //   const localFile = isSourceNetwork
+    //     ? `${source_network_id}_${layout.story.phase}_nodes.json`
+    //     : `${target_network_id}_${layout.story.phase}_nodes.json`
+
+    //   dataset = fetch(`/data/${localFile}`).then((r) => r.json())
+    // }
 
     setFetching(false)
 
