@@ -7,12 +7,17 @@ import {
   useState,
 } from 'react'
 import BlockContent from '@sanity/block-content-to-react'
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useTransform,
+} from 'framer-motion'
 
 import { makeStoryPayload, useVizLayout } from '@/context/vizLayoutContext'
 
 // import SidebarChapterSelector from 'components/molecules/sidebarChapterSelector'
 import ChartSerializer from 'components/molecules/chartSerializer'
-import { motion } from 'framer-motion'
 
 const handleBlockChange = (refs, { trigger, callback }) => {
   refs.forEach((ref, i) => {
