@@ -45,10 +45,14 @@ const ProjectPage = ({ data }) => {
               duration: 1.25,
             }}
           >
-            <div className="overflow-hidden fixed inset-0 bg-secondary">
-              <Nav title={title} />
-              <Sidebar data={data} />
-              {state.story && <NetworkComparison data={data} />}
+            <div className="overflow-hidden fixed h-screen inset-0 bg-secondary">
+              <div className="relative w-full h-full">
+                <Nav title={title} />
+                <div className="relative w-full h-full">
+                  <Sidebar data={data} />
+                  {state.story && <NetworkComparison data={data} />}
+                </div>
+              </div>
             </div>
           </MotionConfig>
         </VizLayoutContext.Provider>
