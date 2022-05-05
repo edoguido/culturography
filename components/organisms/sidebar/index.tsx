@@ -67,10 +67,6 @@ const SERIALIZERS = {
 const Sidebar = ({ data }) => {
   const [layout, dispatch] = useVizLayout()
   //
-  const networksState = layout.networks
-  const showSourceNetwork = networksState?.source.show
-  const showTargetNetwork = networksState?.target.show
-  //
   const [storyState, setStoryState] = useState<number[]>([0, 0])
   //
   const storyRef = useRef<HTMLDivElement>(null)
@@ -83,6 +79,19 @@ const Sidebar = ({ data }) => {
       })),
     []
   )
+  //
+  const networksState = layout.networks
+  const showSourceNetwork = networksState?.source.show
+  const showTargetNetwork = networksState?.target.show
+  //
+  const sidebarShift =
+    showSourceNetwork && showTargetNetwork
+      ? '0%'
+      : showSourceNetwork
+      ? '30%'
+      : showTargetNetwork
+      ? '-30%'
+      : '0%'
   //
   const check = useCallback(handleBlockChange, [storyRefs])
 
@@ -99,14 +108,7 @@ const Sidebar = ({ data }) => {
     })
   }, [storyState])
 
-  //
-  // check scroll on each frame
-  useEffect(() => {
-    const fid = window.requestAnimationFrame(onScroll)
-    return () => window.cancelAnimationFrame(fid)
-  }, [storyState])
-
-  useEffect(() => {
+  const updateStoryData = () => {
     if (storyState === null) return
 
     const [chapterIndex, blockIndex] = storyState
@@ -119,21 +121,21 @@ const Sidebar = ({ data }) => {
         blockIndex,
       }),
     })
+  }
+
+  //
+  // check scroll on each frame
+  useEffect(() => {
+    const fid = window.requestAnimationFrame(onScroll)
+    return () => window.cancelAnimationFrame(fid)
   }, [storyState])
 
-  const sidebarShift =
-    showSourceNetwork && showTargetNetwork
-      ? '0%'
-      : showSourceNetwork
-      ? '30%'
-      : showTargetNetwork
-      ? '-30%'
-      : '0%'
+  useEffect(() => updateStoryData(), [storyState])
 
   return (
     <div
       ref={storyRef}
-      className="z-[100] fixed top-[var(--nav-height)] w-full bottom-0 max-h-screen"
+      className="z-[100] fixed w-full top-0 bottom-0 max-h-screen"
     >
       {storyContentRef.current && (
         <ScrollProgress
@@ -156,10 +158,9 @@ const Sidebar = ({ data }) => {
             className="hide-scrollbar w-full max-h-full flex basis-auto flex-grow flex-shrink-0 overflow-x-hidden overflow-y-auto"
           >
             <motion.div
-              className="relative h-full max-w-[var(--sidebar-width)] mx-auto p-2 pt-36 pb-[calc(70vh-var(--nav-height))]"
+              className="relative h-full w-full mx-auto"
               initial={false}
               animate={{
-                x: '0%',
                 left: sidebarShift,
                 transition: {
                   type: 'ease',
@@ -172,9 +173,17 @@ const Sidebar = ({ data }) => {
                 ({ chapter_title, blocks }, i: number) => {
                   return (
                     <div key={i} ref={storyRefs[i].chapter}>
-                      <h2 className="text-accent font-medium text-3xl inline-block rounded-full py-1 px-3">
-                        {chapter_title}
-                      </h2>
+                      <div className="h-[calc(100vh-var(--nav-height)*1.5-0.5rem)] rounded-lg flex flex-col justify-end bg-gradient-to-b from-transparent to-accent mx-2">
+                        <div className="mx-auto flex flex-col my-2 py-2">
+                          <h2 className="text-text text-[6vw] inline-block rounded-full">
+                            {chapter_title}
+                          </h2>
+                          <span className="text-text mx-auto my-2 py-2">
+                            Scroll to continue
+                          </span>
+                        </div>
+                      </div>
+
                       {blocks &&
                         blocks.map(
                           ({ /* block_title, */ block_content }, j: number) => {
@@ -189,15 +198,15 @@ const Sidebar = ({ data }) => {
                               <div
                                 key={j}
                                 ref={storyRefs[i].blocks[j]}
-                                className={`my-2 h-[200vh] ${highlightedClassName}`}
+                                className={`h-[200vh] max-w-[var(--sidebar-width)] mx-auto ${highlightedClassName}`}
                               >
                                 {block_content && (
-                                  <div className="p-3 rounded-lg bg-[#111111]">
+                                  <div className="p-3 rounded-lg bg-opacity-50 bg-black backdrop-blur-lg">
                                     {/* <h2>
                                 {block_title}
                               </h2> */}
                                     {block_content.map((c, t: number) => (
-                                      <div key={t} className="rich-text hwul">
+                                      <div key={t} className="rich-text">
                                         <BlockContent
                                           blocks={c}
                                           serializers={SERIALIZERS}
