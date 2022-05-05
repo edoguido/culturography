@@ -39,7 +39,7 @@ const Legend = () => {
             type: 'ease',
             ease: [0, 0, 0, 1],
           }}
-          className="absolute z-10 left-0 bottom-0 origin-bottom-left text-white bg-white bg-opacity-10 rounded-tr-lg p-4"
+          className="absolute z-10 right-0 bottom-0 origin-bottom-right text-white bg-white bg-opacity-10 rounded-tl-lg p-4"
         >
           <div>Overlap</div>
           <div className="flex mt-2">
