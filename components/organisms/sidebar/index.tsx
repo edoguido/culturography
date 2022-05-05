@@ -130,6 +130,13 @@ const Sidebar = ({ data }) => {
       ref={storyRef}
       className="z-[100] fixed top-[var(--nav-height)] w-full bottom-0 max-h-screen"
     >
+      {storyContentRef.current && (
+        <ScrollProgress
+          containerRef={storyContentRef}
+          storyRefs={storyRefs}
+          chapterIndex={storyState[1]}
+        />
+      )}
       <div className="h-full">
         {/* {layout.story && (
           <SidebarChapterSelector
@@ -207,6 +214,73 @@ const Sidebar = ({ data }) => {
         )}
       </div>
     </div>
+  )
+}
+
+const ScrollProgress = ({ containerRef, chapterIndex, storyRefs }) => {
+  const scrollHeight =
+    containerRef.current.children[0].getBoundingClientRect().height
+  //
+  const scrollProgress = useMotionValue(0)
+  const scrollTransform = useTransform(
+    scrollProgress,
+    [0, scrollHeight],
+    [100, 0]
+  )
+  const scrollRailWidth = useMotionTemplate`${scrollTransform}%`
+
+  function checkProgress() {
+    window.requestAnimationFrame(checkProgress)
+
+    if (!containerRef.current) return
+
+    const currentScroll = scrollProgress.get()
+    const scrollTop = containerRef.current.scrollTop
+    const screenHeight = window.innerHeight
+    const normalizedScroll = currentScroll / scrollHeight
+
+    scrollProgress.set(scrollTop + screenHeight * normalizedScroll)
+
+    // console.log(containerRef.current.scrollTop)
+  }
+
+  useEffect(() => {
+    const f = window.requestAnimationFrame(checkProgress)
+    return () => window.cancelAnimationFrame(f)
+  }, [])
+
+  return (
+    containerRef && (
+      <div className="relative mt-[var(--nav-height)] w-full h-[calc(var(--nav-height)/2)]">
+        <div className="rail absolute bg-gray-400 top-1/2 left-0 right-0 mx-2 h-0.5 rounded-full" />
+        <motion.div
+          className="scroll-progress absolute bg-accent top-1/2 left-0 right-0 mx-2 h-0.5 rounded-full"
+          style={{ right: scrollRailWidth }}
+        />
+        {/* <div className="absolute inset-0 top-1/2 mx-2 flex">
+          {storyRefs.map(({ blocks }) => (
+            <div className="w-full flex">
+              {blocks.map((_, i) => {
+                const isPassed = i < chapterIndex ? 'bg-accent' : 'bg-gray-400'
+
+                return (
+                  <div className="w-full flex justify-center">
+                    <div
+                      className={`w-2 h-2 rounded-full ${isPassed} -translate-y-1`}
+                      style={
+                        {
+                          // left: `${(i * 100) / blocks.length}%`,
+                        }
+                      }
+                    />
+                  </div>
+                )
+              })}
+            </div>
+          ))}
+        </div> */}
+      </div>
+    )
   )
 }
 
