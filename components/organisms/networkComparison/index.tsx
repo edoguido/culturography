@@ -70,7 +70,7 @@ const NetworkComparison = ({ data }) => {
         : '50.5%'
       const zIndex = showBothNetworks ? 1 : show ? 2 : 1
       const transformOrigin = source ? '100% 50% 0px' : '0% 50% 0px'
-      const x = source ? (show ? 0 : -20) : show ? 0 : 0
+      const x = source ? (show ? 0 : showBothNetworks ? -20 : 0) : show ? 0 : 0
       // const scale = show ? 1 : 0.9
       const opacity = showBothNetworks || show ? 1 : 0.05
 
@@ -120,40 +120,38 @@ const NetworkComparison = ({ data }) => {
 
   return (
     <motion.div
-      className="fixed top-[var(--nav-height)] bottom-0 left-0 right-0"
+      className="fixed inset-0 top-[calc(var(--nav-height)*1.5)] bottom-2 mx-2"
       initial={false}
       transition={motionOptions}
     >
-      <div className="relative h-full px-2">
-        {layout.clusters && (
-          <div className="relative h-[calc(100%-0.5rem)] flex">
-            {/*  */}
-            <Legend />
-            {/*  */}
-            {networkNames.map((n) => {
-              const isSource = n === 'source'
-              const { animate, style } = networkLayoutProperties(isSource)
-              return (
-                <motion.div
-                  key={n}
-                  className="absolute inset-0 w-1/2 rounded-lg overflow-hidden bg-black flex flex-1 justify-center items-center"
-                  layout
-                  initial={false}
-                  animate={animate}
-                  style={style}
-                >
-                  <SingleNetwork
-                    data={networksData}
-                    activeCluster={activeCluster}
-                    activeClusterId={activeClusterId}
-                    accessor={n}
-                  />
-                </motion.div>
-              )
-            })}
-          </div>
-        )}
-      </div>
+      {layout.clusters && (
+        <div className="absolute right-0 bottom-0 left-0 top-0 flex">
+          {/*  */}
+          <Legend />
+          {/*  */}
+          {networkNames.map((n) => {
+            const isSource = n === 'source'
+            const { animate, style } = networkLayoutProperties(isSource)
+            return (
+              <motion.div
+                key={n}
+                className="absolute inset-0 w-1/2 rounded-lg overflow-hidden bg-black flex flex-1 justify-center items-center"
+                layout
+                initial={false}
+                animate={animate}
+                style={style}
+              >
+                <SingleNetwork
+                  data={networksData}
+                  activeCluster={activeCluster}
+                  activeClusterId={activeClusterId}
+                  accessor={n}
+                />
+              </motion.div>
+            )
+          })}
+        </div>
+      )}
     </motion.div>
   )
 }

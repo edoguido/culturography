@@ -21,7 +21,7 @@ const Nav = ({ title }) => {
   }
 
   return (
-    <div className="fixed top-0 right-0 bottom-0 left-0 h-[var(--nav-height)] z-[999] text-text px-2">
+    <div className="relative h-[var(--nav-height)] z-[999] text-text px-2">
       <div className="h-full flex justify-between items-center">
         <div className="flex items-center m-0">
           <Link href="/" passHref>
