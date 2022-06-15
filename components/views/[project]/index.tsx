@@ -24,7 +24,7 @@ const ProjectPage = ({ data }) => {
       type: 'SET',
       payload: {
         // read this from localStorage
-        read: true,
+        read: false,
         sidebarWidth: globalCSSVarToPixels('--sidebar-width'),
       },
     })
