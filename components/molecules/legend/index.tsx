@@ -1,8 +1,7 @@
+import { LEGEND_LABELS } from '@/const/legend'
 import { useVizLayout } from '@/context/vizLayoutContext'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useMemo } from 'react'
-
-const labels = ['None', 'Very weak', 'Weak', 'Medium', 'Strong', 'Very strong']
 
 const Legend = () => {
   const [layout] = useVizLayout()
@@ -52,7 +51,7 @@ const Legend = () => {
                       style={{ backgroundColor: color }}
                     />
                     <span key={i} className="mt-2 text-xs">
-                      {labels[i]}
+                      {LEGEND_LABELS[i]}
                     </span>
                   </div>
                 )
