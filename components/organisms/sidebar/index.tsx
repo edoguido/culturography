@@ -8,6 +8,7 @@ import {
 } from 'react'
 import BlockContent from '@sanity/block-content-to-react'
 import {
+  AnimatePresence,
   motion,
   useMotionTemplate,
   useMotionValue,
@@ -135,98 +136,115 @@ const Sidebar = ({ data }) => {
   return (
     <div
       ref={storyRef}
-      className="z-[100] fixed w-full top-0 bottom-0 max-h-screen"
+      className="z-[100] fixed w-full top-0 bottom-0 max-h-screen pointer-events-none"
     >
-      {storyContentRef.current && (
-        <ScrollProgress
-          containerRef={storyContentRef}
-          storyRefs={storyRefs}
-          chapterIndex={storyState[1]}
-        />
-      )}
-      <div className="h-full">
-        {/* {layout.story && (
+      <AnimatePresence>
+        {storyContentRef.current && (
+          <ScrollProgress
+            containerRef={storyContentRef}
+            storyRefs={storyRefs}
+            chapterIndex={storyState[1]}
+          />
+        )}
+        <div className="h-full pointer-events-auto">
+          {/* {layout.story && (
           <SidebarChapterSelector
             chapters={data.story_chapters}
             forwardRef={storyContentRef}
             storyRefs={storyRefs}
           />
         )} */}
-        {data.story_chapters && (
-          <div
-            ref={storyContentRef}
-            className="hide-scrollbar w-full max-h-full flex basis-auto flex-grow flex-shrink-0 overflow-x-hidden overflow-y-auto"
-          >
-            <motion.div
-              className="relative h-full w-full mx-auto"
-              initial={false}
-              animate={{
-                left: sidebarShift,
-                transition: {
-                  type: 'ease',
-                  ease: [0.8, 0, 0, 1],
-                  duration: 1.25,
-                },
-              }}
+          {data.story_chapters && (
+            <div
+              ref={storyContentRef}
+              className="hide-scrollbar w-full max-h-full flex basis-auto flex-grow flex-shrink-0 overflow-x-hidden overflow-y-auto"
             >
-              {data.story_chapters.map(
-                ({ chapter_title, blocks }, i: number) => {
-                  return (
-                    <div key={i} ref={storyRefs[i].chapter}>
-                      <div className="h-[calc(100vh-var(--nav-height)*1.5-0.5rem)] rounded-lg flex flex-col justify-end bg-gradient-to-b from-transparent to-accent mx-2">
-                        <div className="mx-auto flex flex-col my-2 py-2">
-                          <h2 className="text-text text-[6vw] inline-block rounded-full">
-                            {chapter_title}
-                          </h2>
-                          <span className="text-text mx-auto my-2 py-2">
-                            Scroll to continue
-                          </span>
+              <motion.div
+                className="relative h-full w-full mx-auto"
+                initial={false}
+                animate={{
+                  left: sidebarShift,
+                  transition: {
+                    type: 'ease',
+                    ease: [0.8, 0, 0, 1],
+                    duration: 1.25,
+                  },
+                }}
+              >
+                {data.story_chapters.map(
+                  ({ chapter_title, blocks }, i: number) => {
+                    return (
+                      <div key={i} ref={storyRefs[i].chapter}>
+                        <div className="h-[calc(100vh-var(--nav-height)*1.5-0.5rem)] rounded-lg flex flex-col justify-end bg-gradient-to-b from-transparent to-accent mx-2">
+                          <motion.div
+                            className="mx-auto flex flex-col my-2 py-2"
+                            initial="initial"
+                            animate="animate"
+                            exit="exit"
+                          >
+                            <motion.h2
+                              className="text-text text-[6vw] inline-block rounded-full"
+                              // variants={{
+                              //   initial: { y: '0%', scale: 0.9, opacity: 0 },
+                              //   animate: { y: '0%', scale: 1, opacity: 1 },
+                              //   exit: { opacity: 0 },
+                              // }}
+                            >
+                              {chapter_title}
+                            </motion.h2>
+                            <span className="text-text mx-auto my-2 py-2">
+                              Scroll to continue
+                            </span>
+                          </motion.div>
                         </div>
-                      </div>
 
-                      {blocks &&
-                        blocks.map(
-                          ({ /* block_title, */ block_content }, j: number) => {
-                            const isHighlighted =
-                              i === storyState[0] && j === storyState[1]
+                        {blocks &&
+                          blocks.map(
+                            (
+                              { /* block_title, */ block_content },
+                              j: number
+                            ) => {
+                              const isHighlighted =
+                                i === storyState[0] && j === storyState[1]
 
-                            const highlightedClassName = isHighlighted
-                              ? 'current'
-                              : ''
+                              const highlightedClassName = isHighlighted
+                                ? 'current'
+                                : ''
 
-                            return (
-                              <div
-                                key={j}
-                                ref={storyRefs[i].blocks[j]}
-                                className={`h-[200vh] max-w-[var(--sidebar-width)] mx-auto ${highlightedClassName}`}
-                              >
-                                {block_content && (
-                                  <div className="p-3 rounded-lg bg-opacity-50 bg-black backdrop-blur-lg">
-                                    {/* <h2>
+                              return (
+                                <div
+                                  key={j}
+                                  ref={storyRefs[i].blocks[j]}
+                                  className={`h-[200vh] max-w-[var(--sidebar-width)] mx-auto ${highlightedClassName}`}
+                                >
+                                  {block_content && (
+                                    <div className="p-3 rounded-lg bg-opacity-50 bg-black backdrop-blur-lg">
+                                      {/* <h2>
                                 {block_title}
                               </h2> */}
-                                    {block_content.map((c, t: number) => (
-                                      <div key={t} className="rich-text">
-                                        <BlockContent
-                                          blocks={c}
-                                          serializers={SERIALIZERS}
-                                        />
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
-                              </div>
-                            )
-                          }
-                        )}
-                    </div>
-                  )
-                }
-              )}
-            </motion.div>
-          </div>
-        )}
-      </div>
+                                      {block_content.map((c, t: number) => (
+                                        <div key={t} className="rich-text">
+                                          <BlockContent
+                                            blocks={c}
+                                            serializers={SERIALIZERS}
+                                          />
+                                        </div>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              )
+                            }
+                          )}
+                      </div>
+                    )
+                  }
+                )}
+              </motion.div>
+            </div>
+          )}
+        </div>
+      </AnimatePresence>
     </div>
   )
 }
