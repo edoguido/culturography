@@ -25,21 +25,11 @@ const NetworkComparison = ({ data }) => {
     const fetchMetadata = async () => {
       let clusterMetadata
 
-      // try {
       const clustersMetadataPath = data.network_metadata.asset.path
 
       clusterMetadata = await fetch(
         `https://api.sanity.io/${clustersMetadataPath}`
       ).then((r) => r.json())
-      // } catch {
-      //   const { source_network_id, target_network_id } = networksData.networks
-
-      //   console.warn(
-      //     "Couldn't fetch metadata from Sanity CDN. Sourcing local files..."
-      //   )
-      //   clusterMetadata =
-      //     await require(`../../../public/data/${source_network_id}_${target_network_id}_${data.phase}_clusters.json`)
-      // }
 
       return clusterMetadata
     }
