@@ -7,6 +7,7 @@ import {
   MutableRefObject,
   Ref,
 } from 'react'
+import { motion } from 'framer-motion'
 
 import { Color, Vector3 } from 'three'
 import { Canvas, OrthographicCameraProps, useFrame } from '@react-three/fiber'
@@ -23,6 +24,8 @@ import * as d3 from 'd3'
 
 //
 
+import Spinner from 'components/atoms/spinner'
+
 import {
   ClusterObjectProps,
   useVizLayout,
@@ -36,13 +39,10 @@ import {
   datasetCoordsToArrayOfPoints,
   polygonCentroid,
 } from 'utils/math'
-
+import { hideUiControls /* , isDevelopment */ } from 'utils/index'
 import { groupDatapointsByCluster, rankedClusters } from 'utils/data'
 
-import { hideUiControls /* , isDevelopment */ } from 'utils/index'
-
-import Spinner from 'components/atoms/spinner'
-import { motion } from 'framer-motion'
+import { LEGEND_NUM_STEPS } from '@/const/legend'
 
 // for testing purposes
 // function Box(props) {
@@ -74,10 +74,9 @@ const ZOOMED_IN = 6
 // appearance
 const BASE_POINT_SIZE = 1
 const BASE_LABEL_SCALE = 4
-const COLOR_LEVELS = 4
 const NO_OVERLAP_COLOR = '#222222'
 // motion
-const LERP_FACTOR = 0.05
+const LERP_FACTOR = 0.075
 
 // sub-types
 
@@ -296,7 +295,10 @@ const Scene = ({
 
   const intensityColorScaleQuantized = useMemo(
     () => (targetColor) =>
-      d3.quantize(d3.scaleLinear().range(['white', targetColor]), COLOR_LEVELS),
+      d3.quantize(
+        d3.scaleLinear().range(['white', targetColor]),
+        LEGEND_NUM_STEPS
+      ),
     []
   )
 
@@ -406,7 +408,7 @@ const Scene = ({
     const activeClusterIsInThisNetwork =
       activeCluster.network === dataset.clusters[0].network
 
-    // if we're in source network...
+    // we only zoom and pan if we're in source network
     if (isSourceNetwork && activeClusterIsInThisNetwork) {
       // we move to its cluster centroid...
       const {
@@ -418,23 +420,23 @@ const Scene = ({
       moveTo({ location: screenCoordsCentroid, zoom: targetZoomLevel })
       return
       //
-    } else {
-      // otherwise we have to find the matching clusters
-      const matchingClusters = dataset.allClusters.filter(
-        ({ cluster_id }: ClusterObjectProps) => {
-          const similarity = activeCluster.similarities[cluster_id]
-          return similarity > MIN_SIMILARITY_THRESHOLD
-        }
-      )
-      const matchingClustersCentroids = matchingClusters.map(
-        (c: ClusterObjectProps) => c.pca_centroid
-      )
-      // we compute the centroid of all the matching polygons
-      const [x, y] = polygonCentroid(matchingClustersCentroids)
-      const rescaledCentroidCoords = [xScale(x), -yScale(y)]
-
-      moveTo({ location: rescaledCentroidCoords, zoom: ZOOMED_IN })
     }
+    // else {
+    // // otherwise we have to find the matching clusters
+    // const matchingClusters = dataset.allClusters.filter(
+    //   ({ cluster_id }: ClusterObjectProps) => {
+    //     const similarity = activeCluster.similarities[cluster_id]
+    //     return similarity > MIN_SIMILARITY_THRESHOLD
+    //   }
+    // )
+    // const matchingClustersCentroids = matchingClusters.map(
+    //   (c: ClusterObjectProps) => c.pca_centroid
+    // )
+    // // we compute the centroid of all the matching polygons
+    // const [x, y] = polygonCentroid(matchingClustersCentroids)
+    // const rescaledCentroidCoords = [xScale(x), -yScale(y)]
+    // moveTo({ location: rescaledCentroidCoords, zoom: ZOOMED_IN })
+    // }
   }, [activeClusterId])
 
   useEffect(() => {
@@ -587,10 +589,12 @@ const Cluster = ({
     )
 
     if (!mounted) return
+
     const z = BASE_LABEL_SCALE - camera.zoom / MAX_ZOOM
     labelRef.current.style.transform = `scale3d(${z},${z},${z})`
 
     const o = labelRef.current.style.opacity
+
     if (label) {
       labelRef.current.style.opacity = lerp(o, 1, LERP_FACTOR)
     } else {
@@ -616,7 +620,7 @@ const Cluster = ({
         <group position={labelPosition}>
           {/* {isDevelopment && <Box position={[0, 0, -20]} scale={1} />} */}
           <Html
-            as="div" // Wrapping element (default: 'div')
+            // as="div" // Wrapping element (default: 'div')
             // wrapperClass // The className of the wrapping element (default: undefined)
             // prepend // Project content behind the canvas (default: false)
             // center // Adds a -50%/-50% css transform (default: false) [ignored in transform mode]
