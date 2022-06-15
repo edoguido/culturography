@@ -84,13 +84,13 @@ export default function Home({ data, stories, footer }) {
               {/*  */}
             </div>
 
-            <motion.div
+            {/* <motion.div
               className=""
               // variants={{
               //   animate: { transition: { staggerChildren: 0.1 } },
               // }}
             >
-              {/* {abstract.map((paragraph, i) => (
+              {abstract.map((paragraph, i) => (
                 <motion.div
                   key={i}
                   className="portable-text grow w-full font-light lg:first:mr-6 tracking-tight"
@@ -103,11 +103,11 @@ export default function Home({ data, stories, footer }) {
                     ease: [0.7, 0, 0, 1],
                     duration: 1.75,
                   }}
-                > */}
+                >
               <div className="max-w-6xl"></div>
-              {/* </motion.div>
-              ))} */}
-            </motion.div>
+              </motion.div>
+              ))}
+            </motion.div> */}
 
             <div className="portable-text px-6 py-4 my-3 w-full text-3xl md:text-5xl lg:flex items-baseline justify-between relative z-10">
               <div>
