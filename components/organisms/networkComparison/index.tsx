@@ -22,6 +22,7 @@ const networkNames = ['source', 'target']
 
 const NetworkComparison = ({ data }) => {
   const [layout, dispatch] = useVizLayout()
+  const { read } = layout
   const { block } = layout.story
   //
   useEffect(() => {
@@ -97,7 +98,7 @@ const NetworkComparison = ({ data }) => {
         },
       }
     },
-    [block]
+    [block, read]
   )
   //
   // if we don't have data about the networks, we simply don't show the comparison

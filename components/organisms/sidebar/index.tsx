@@ -124,6 +124,13 @@ const Sidebar = ({ data }) => {
     })
   }
 
+  function handleKeyPress(e) {
+    const key = e.code
+    if (key === 'KeyR') {
+      dispatch({ type: 'TOGGLE_READ_MODE' })
+    }
+  }
+
   //
   // check scroll on each frame
   useEffect(() => {
@@ -132,6 +139,11 @@ const Sidebar = ({ data }) => {
   }, [storyState])
 
   useEffect(() => updateStoryData(), [storyState])
+
+  useEffect(() => {
+    window.addEventListener('keypress', handleKeyPress)
+    return () => window.removeEventListener('keypress', handleKeyPress)
+  }, [])
 
   return (
     <div

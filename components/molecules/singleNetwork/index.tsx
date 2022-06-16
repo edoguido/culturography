@@ -37,7 +37,7 @@ import {
   round,
   lerp,
   datasetCoordsToArrayOfPoints,
-  polygonCentroid,
+  // polygonCentroid,
 } from 'utils/math'
 import { hideUiControls /* , isDevelopment */ } from 'utils/index'
 import { groupDatapointsByCluster, rankedClusters } from 'utils/data'
@@ -87,14 +87,14 @@ interface DatasetProps {
   extent: { x: number[]; y: number[] }
 }
 
-// components
-
 interface SingleNetwork {
   data: object[]
   activeCluster: ClusterObjectProps
   activeClusterId: number | null
   accessor: 'source' | 'target'
 }
+
+// components
 
 const SingleNetwork = ({ data, activeCluster, activeClusterId, accessor }) => {
   const [layout] = useVizLayout()
@@ -250,7 +250,7 @@ const Scene = ({
   isSourceNetwork,
   zoomLevel,
 }: SceneProps) => {
-  const [_, dispatch] = useVizLayout()
+  const [layout, dispatch] = useVizLayout()
 
   const [{ cameraPosition, cameraZoom }, set] = useControls(
     networkName,
@@ -397,6 +397,33 @@ const Scene = ({
     // setTargetZoom(zoom)
   }
 
+  function handleClusterClick(d) {
+    const { cluster_id /* , cluster_original */ } = d
+
+    let payload
+
+    payload = {
+      networks: {
+        highlight: cluster_id,
+        nameHighlight: cluster_id,
+      },
+    }
+
+    if (cluster_id === layout.networks.nameHighlight) {
+      payload = {
+        networks: {
+          highlight: null,
+          nameHighlight: null,
+        },
+      }
+    }
+
+    dispatch({
+      type: 'UPDATE_NETWORK_STATE',
+      payload,
+    })
+  }
+
   // handle change of block and chapter
   useEffect(() => {
     // if we're not highlighting we reset the view
@@ -528,7 +555,7 @@ const Scene = ({
                 color={color}
                 label={showLabel}
                 cameraRef={cameraRef}
-                // onClick={handleClusterClick}
+                onClick={() => handleClusterClick(d)}
               />
             )
           })}
@@ -597,9 +624,9 @@ const Cluster = ({
     const o = labelRef.current.style.opacity
 
     if (label) {
-      labelRef.current.style.opacity = lerp(o, 1, LERP_FACTOR)
+      labelRef.current.style.opacity = lerp(o, 1, 0.65)
     } else {
-      labelRef.current.style.opacity = lerp(o, 0, LERP_FACTOR)
+      labelRef.current.style.opacity = lerp(o, 0.1, 0.65)
     }
   })
 
@@ -616,7 +643,7 @@ const Cluster = ({
   // }
 
   return (
-    <group onClick={onClick}>
+    <group>
       {labelPosition && pointsRef.current && (
         <group position={labelPosition}>
           {/* {isDevelopment && <Box position={[0, 0, -20]} scale={1} />} */}
@@ -637,9 +664,13 @@ const Cluster = ({
             // {...groupProps} // All THREE.Group props are valid
             // {...divProps} // All HTMLDivElement props are valid
           >
-            <h2 ref={labelRef} className="text-3xl font-medium">
+            <motion.h2
+              ref={labelRef}
+              className="text-3xl font-medium cursor-pointer select-none transition-opacity"
+              onClick={onClick}
+            >
               {data.name}
-            </h2>
+            </motion.h2>
           </Html>
         </group>
       )}

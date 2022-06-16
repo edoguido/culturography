@@ -3,11 +3,25 @@ import { rankedClusters } from 'utils/data'
 
 // types
 
-interface NetworkNode {
-  id: string
-  x: number
-  y: number
-  cluster_id: string | number
+export interface VizLayoutState extends VizLayoutAction {
+  development?: boolean
+  read?: boolean
+  story?: { phase: string; chapter: number | null; block: number | null }
+  clusters?: object[]
+  networks?: {
+    highlight: string
+    legend: string[]
+    nameHighlight: string
+    zoomLevel: number
+    source: NetworkStateProps
+    target: NetworkStateProps
+  }
+}
+
+export interface NetworkStateProps {
+  name: string
+  show: boolean
+  zoomLevel: string | null
 }
 
 export interface ClusterObjectProps {
@@ -26,25 +40,11 @@ export interface VizLayoutAction {
   type: string
 }
 
-export interface NetworkStateProps {
-  name: string
-  show: boolean
-  zoomLevel: string | null
-}
-
-export interface VizLayoutState extends VizLayoutAction {
-  development?: boolean
-  read?: boolean
-  story?: { phase: string; chapter: number | null; block: number | null }
-  clusters?: object[]
-  networks?: {
-    highlight: string
-    legend: string[]
-    nameHighlight: string
-    zoomLevel: number
-    source: NetworkStateProps
-    target: NetworkStateProps
-  }
+export interface NetworkNode {
+  id: string
+  x: number
+  y: number
+  cluster_id: string | number
 }
 
 export interface VizLayoutContextUpdater {
@@ -115,6 +115,7 @@ export const vizLayoutReducer = (state: VizLayoutState, action) => {
 
       const { phase, chapter, block } = story
 
+      // means networks have not been loaded yet
       if (!networks) {
         return {
           story: {
@@ -142,6 +143,20 @@ export const vizLayoutReducer = (state: VizLayoutState, action) => {
           nameHighlight,
           source,
           target,
+        },
+      }
+    }
+
+    case 'UPDATE_NETWORK_STATE': {
+      const { networks } = payload
+      const { highlight, nameHighlight } = networks
+
+      return {
+        ...state,
+        networks: {
+          ...state.networks,
+          highlight,
+          nameHighlight,
         },
       }
     }
