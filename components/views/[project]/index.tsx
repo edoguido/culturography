@@ -45,7 +45,7 @@ const ProjectPage = ({ data }) => {
               duration: 1.25,
             }}
           >
-            <div className="overflow-hidden fixed h-screen inset-0 bg-secondary">
+            <div className="overflow-hidden fixed h-screen inset-0 bg-text">
               <div className="relative w-full h-full">
                 <Nav title={title} />
                 <div className="relative w-full h-full">

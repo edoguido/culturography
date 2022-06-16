@@ -21,18 +21,22 @@ const Nav = ({ title }) => {
   }
 
   return (
-    <div className="relative h-[var(--nav-height)] z-[999] text-text px-2">
+    <div className="relative h-[var(--nav-height)] z-[999] px-2">
       <div className="h-full flex justify-between items-center">
         <div className="flex items-center m-0">
           <Link href="/" passHref>
             <a>
-              <motion.h1 className="text-2xl mr-4">Culturography</motion.h1>
+              <motion.h1 className="text-2xl text-white">
+                Culturography
+              </motion.h1>
             </a>
           </Link>
           {/* <h2 className="bg-white text-black text-xl py-1 px-4 rounded-full mx-2">
             {title}
           </h2> */}
-          <NetworkComparisonAnnouncer />
+          <div className="ml-4">
+            <NetworkComparisonAnnouncer />
+          </div>
         </div>
         <div>
           <button

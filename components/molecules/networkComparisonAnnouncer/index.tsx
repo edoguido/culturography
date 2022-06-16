@@ -59,7 +59,7 @@ const NetworkComparisonAnnouncer = () => {
                 ease: [0, 0, 0, 1],
                 duration: 0.35,
               }}
-              className="bg-text text-white font-medium tracking-wide mx-1 py-1 px-3 rounded-full my-1"
+              className="bg-white text-text font-medium tracking-wide mx-1 py-1 px-3 rounded-full my-1"
             >
               {highlightedSourceNetworkCluster.name}
             </motion.h3>
@@ -87,7 +87,7 @@ const NetworkComparisonAnnouncer = () => {
 }
 
 const Pill = ({ data }) => (
-  <h3 className="bg-text text-white font-medium tracking-wide mx-1 py-1 px-3 rounded-full my-1">
+  <h3 className="bg-white text-text font-medium tracking-wide mx-1 py-1 px-3 rounded-full my-1">
     {data.name}
   </h3>
 )
