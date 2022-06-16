@@ -152,6 +152,11 @@ const NetworkComparison = ({ data }) => {
                 initial={false}
                 animate={animate}
                 style={style}
+                transition={{
+                  type: 'spring',
+                  stiffness: 1800,
+                  damping: 220,
+                }}
               >
                 <SingleNetwork
                   data={networksData}
