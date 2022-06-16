@@ -13,6 +13,11 @@ import { ClusterObjectProps, useVizLayout } from '@/context/vizLayoutContext'
 import Legend from 'components/molecules/legend'
 import { motion } from 'framer-motion'
 
+// Network viz layout props
+const HALF_WIDTH = '49.75%'
+const EXPANDED_WIDTH = '75%'
+const HALF_LEFT = '50.25%'
+
 const networkNames = ['source', 'target']
 
 const NetworkComparison = ({ data }) => {
@@ -45,24 +50,37 @@ const NetworkComparison = ({ data }) => {
   }, [data.network_metadata?.asset])
 
   const networkLayoutProperties = useCallback(
-    (source) => {
-      const show = source
-        ? networksProperties.source.show
-        : networksProperties.target.show
+    ({ source, visible }) => {
+      const show = visible
 
-      const width = showBothNetworks ? '49.5%' : show ? '75%' : '49.5%'
-      const left = source
-        ? '0%'
-        : showBothNetworks
-        ? '50.5%'
-        : show
-        ? '25%'
-        : '50.5%'
-      const zIndex = showBothNetworks ? 1 : show ? 2 : 1
+      const width = (() => {
+        if (!read) return HALF_WIDTH
+        if (showBothNetworks) return HALF_WIDTH
+        if (show) return EXPANDED_WIDTH
+        return HALF_WIDTH
+      })()
+
+      const left = (() => {
+        if (source) return '0%'
+        if (!read && source) return '0%'
+        if (!read && !source) return HALF_LEFT
+        if (showBothNetworks) return HALF_LEFT
+        if (show) return '25%'
+        return HALF_LEFT
+      })()
+
+      const opacity = (() => {
+        if (showBothNetworks || show || !read) return 1
+        return 0.05
+      })()
+
+      const zIndex = (() => {
+        if (showBothNetworks) return 1
+        if (show) return 2
+        return 1
+      })()
+
       const transformOrigin = source ? '100% 50% 0px' : '0% 50% 0px'
-      const x = source ? (show ? 0 : showBothNetworks ? -20 : 0) : show ? 0 : 0
-      // const scale = show ? 1 : 0.9
-      const opacity = showBothNetworks || show ? 1 : 0.05
 
       return {
         show: show,
@@ -70,7 +88,7 @@ const NetworkComparison = ({ data }) => {
           zIndex: zIndex,
           width: width,
           left: left,
-          x: x,
+          // x: x,
           // scale: scale,
           opacity: opacity,
         },
@@ -86,7 +104,7 @@ const NetworkComparison = ({ data }) => {
   if (!layout.networks) return null
   //
   // story properties
-  const { networks: networksProperties } = layout
+  const { networks: networksVisibility } = layout
   //
   // net properties
   const networksData = data.story_chapters[layout.story.chapter]
@@ -94,7 +112,6 @@ const NetworkComparison = ({ data }) => {
   //
   // clusters properties
   const rawClusterId = +layout.networks?.nameHighlight
-
   const activeClusterId: number = isNaN(rawClusterId) ? null : rawClusterId
   //
   const clusterIdMatch = (c: ClusterObjectProps) =>
@@ -106,7 +123,7 @@ const NetworkComparison = ({ data }) => {
 
   // layout properties
   const showBothNetworks =
-    networksProperties.source.show && networksProperties.target.show
+    networksVisibility.source.show && networksVisibility.target.show
 
   return (
     <motion.div
@@ -121,7 +138,11 @@ const NetworkComparison = ({ data }) => {
           {/*  */}
           {networkNames.map((n) => {
             const isSource = n === 'source'
-            const { animate, style } = networkLayoutProperties(isSource)
+            const isVisible = networksVisibility[n].show
+            const { animate, style } = networkLayoutProperties({
+              source: isSource,
+              visible: isVisible,
+            })
             return (
               <motion.div
                 key={n}
