@@ -28,10 +28,10 @@ const handleBlockChange = (refs, { trigger, callback }) => {
 
     const blockRefs = ref.blocks
 
-    const { y: cy, height: ch } = chapterRef.getBoundingClientRect()
+    const { y: cy, height: ch } = chapterRef?.getBoundingClientRect()
 
     blockRefs.forEach((bRef, j) => {
-      const { y: by, height: bh } = bRef.current.getBoundingClientRect()
+      const { y: by, height: bh } = bRef.current?.getBoundingClientRect()
 
       // we first check blocks coords
       if (trigger < by) return
@@ -65,10 +65,22 @@ const SERIALIZERS = {
   },
 }
 
+const STORY_BLOCKS_VARIANTS = {
+  hidden: {
+    opacity: 0,
+    scale: 0.9,
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+  },
+}
+
 const Sidebar = ({ data }) => {
   const [layout, dispatch] = useVizLayout()
   //
   const [storyState, setStoryState] = useState<number[]>([0, 0])
+  const { read: isReadMode } = layout
   //
   const storyRef = useRef<HTMLDivElement>(null)
   const storyContentRef = useRef<HTMLDivElement>(null)
@@ -80,6 +92,8 @@ const Sidebar = ({ data }) => {
       })),
     []
   )
+  //
+  const storyBlocksVariantString = isReadMode ? 'visible' : 'hidden'
   //
   const networksState = layout.networks
   const showSourceNetwork = networksState?.source.show
@@ -150,15 +164,25 @@ const Sidebar = ({ data }) => {
       ref={storyRef}
       className="z-[100] fixed w-full top-0 bottom-0 max-h-screen pointer-events-none"
     >
+      {storyContentRef.current && (
+        <ScrollProgress
+          containerRef={storyContentRef}
+          // chapterIndex={storyState[1]}
+          // storyRefs={storyRefs}
+        />
+      )}
       <AnimatePresence>
-        {storyContentRef.current && (
-          <ScrollProgress
-            containerRef={storyContentRef}
-            storyRefs={storyRefs}
-            chapterIndex={storyState[1]}
-          />
-        )}
-        <div className="h-full pointer-events-auto">
+        <motion.div
+          animate={STORY_BLOCKS_VARIANTS[storyBlocksVariantString]}
+          transition={{
+            type: 'spring',
+            damping: 20,
+          }}
+          className="h-full"
+          style={{
+            pointerEvents: isReadMode ? 'auto' : 'none',
+          }}
+        >
           {/* {layout.story && (
           <SidebarChapterSelector
             chapters={data.story_chapters}
@@ -255,13 +279,13 @@ const Sidebar = ({ data }) => {
               </motion.div>
             </div>
           )}
-        </div>
+        </motion.div>
       </AnimatePresence>
     </div>
   )
 }
 
-const ScrollProgress = ({ containerRef, chapterIndex, storyRefs }) => {
+const ScrollProgress = ({ containerRef }) => {
   const scrollHeight =
     containerRef.current.children[0].getBoundingClientRect().height
   //
@@ -295,7 +319,7 @@ const ScrollProgress = ({ containerRef, chapterIndex, storyRefs }) => {
 
   return (
     containerRef && (
-      <div className="relative mt-[var(--nav-height)] w-full h-[calc(var(--nav-height)/2)]">
+      <motion.div className="relative mt-[var(--nav-height)] w-full h-[calc(var(--nav-height)/2)]">
         <div className="rail absolute bg-gray-400 top-1/2 left-0 right-0 mx-2 h-0.5 rounded-full" />
         <motion.div
           className="scroll-progress absolute bg-accent top-1/2 left-0 right-0 mx-2 h-0.5 rounded-full"
@@ -323,7 +347,7 @@ const ScrollProgress = ({ containerRef, chapterIndex, storyRefs }) => {
             </div>
           ))}
         </div> */}
-      </div>
+      </motion.div>
     )
   )
 }
