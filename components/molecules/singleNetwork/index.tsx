@@ -77,6 +77,7 @@ const BASE_LABEL_SCALE = 4
 const NO_OVERLAP_COLOR = '#222222'
 // motion
 const LERP_FACTOR = 0.075
+const SCALES_RANGE = [-65, 65]
 
 // sub-types
 
@@ -272,11 +273,11 @@ const Scene = ({
   //
   // scales
   const xScale = useMemo(
-    () => d3.scaleLinear().domain(dataset.extent.x).range([-55, 55]),
+    () => d3.scaleLinear().domain(dataset.extent.x).range(SCALES_RANGE),
     [networkName]
   )
   const yScale = useMemo(
-    () => d3.scaleLinear().domain(dataset.extent.y).range([-55, 55]),
+    () => d3.scaleLinear().domain(dataset.extent.y).range(SCALES_RANGE),
     [networkName]
   )
 
