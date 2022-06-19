@@ -11,9 +11,9 @@ import {
   LANDING_QUERY,
 } from 'utils/cms/queries'
 import { StoriesProvider } from '@/context/storiesContext'
-import BlockSerializer from 'components/blocks/blockSerializer'
+import BlockSerializer from 'components/landing/blocks/blockSerializer'
 
-const Splashes = dynamic(() => import('components/atoms/splashes'), {
+const Splashes = dynamic(() => import('components/landing/atoms/splashes'), {
   ssr: false,
 })
 

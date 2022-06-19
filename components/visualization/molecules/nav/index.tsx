@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { AnimatePresence, motion } from 'framer-motion'
 
-import Tutorial from 'components/organisms/tutorial'
+import Tutorial from 'components/visualization/organisms/tutorial'
 import NetworkComparisonAnnouncer from '../networkComparisonAnnouncer'
 
 // import ModeSwitcher from 'components/atoms/modeSwitcher'

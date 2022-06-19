@@ -1,24 +1,31 @@
 import { useCallback, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 
-const SingleNetwork = dynamic(
-  () => import('components/molecules/singleNetwork'),
-  { ssr: false }
-)
-
 //
 import { motionOptions } from '@/const/motionProps'
 import { ClusterObjectProps, useVizLayout } from '@/context/vizLayoutContext'
 
-import Legend from 'components/molecules/legend'
+import Legend from 'components/visualization/molecules/legend'
 import { motion } from 'framer-motion'
+import { NetworkName } from '@/types/visualization'
+import { SOURCE_NETWORK_NAME, TARGET_NETWORK_NAME } from '@/const/visualization'
+
+const SingleNetwork = dynamic(
+  () => import('components/visualization/molecules/singleNetwork'),
+  { ssr: false }
+)
 
 // Network viz layout props
 const HALF_WIDTH = '49.75%'
 const EXPANDED_WIDTH = '75%'
 const HALF_LEFT = '50.25%'
 
-const networkNames = ['source', 'target']
+//
+
+const networkNames: [NetworkName, NetworkName] = [
+  SOURCE_NETWORK_NAME,
+  TARGET_NETWORK_NAME,
+]
 
 const NetworkComparison = ({ data }) => {
   const [layout, dispatch] = useVizLayout()
@@ -29,12 +36,10 @@ const NetworkComparison = ({ data }) => {
     if (!layout.networks) return null
 
     const fetchMetadata = async () => {
-      let clusterMetadata
+      const metadataPath = data.network_metadata.asset.path
 
-      const clustersMetadataPath = data.network_metadata.asset.path
-
-      clusterMetadata = await fetch(
-        `https://api.sanity.io/${clustersMetadataPath}`
+      const clusterMetadata = await fetch(
+        `https://api.sanity.io/${metadataPath}`
       ).then((r) => r.json())
 
       return clusterMetadata
@@ -50,14 +55,12 @@ const NetworkComparison = ({ data }) => {
     fetchMetadata().then(updateMetadata)
   }, [data.network_metadata?.asset])
 
-  const networkLayoutProperties = useCallback(
+  const computeNetworkLayoutProperties = useCallback(
     ({ source, visible }) => {
-      const show = visible
-
       const width = (() => {
         if (!read) return HALF_WIDTH
         if (showBothNetworks) return HALF_WIDTH
-        if (show) return EXPANDED_WIDTH
+        if (visible) return EXPANDED_WIDTH
         return HALF_WIDTH
       })()
 
@@ -66,31 +69,29 @@ const NetworkComparison = ({ data }) => {
         if (!read && source) return '0%'
         if (!read && !source) return HALF_LEFT
         if (showBothNetworks) return HALF_LEFT
-        if (show) return '25%'
+        if (visible) return '25%'
         return HALF_LEFT
       })()
 
       const opacity = (() => {
-        if (showBothNetworks || show || !read) return 1
+        if (showBothNetworks || visible || !read) return 1
         return 0.05
       })()
 
       const zIndex = (() => {
         if (showBothNetworks) return 1
-        if (show) return 2
+        if (visible) return 2
         return 1
       })()
 
       const transformOrigin = source ? '100% 50% 0px' : '0% 50% 0px'
 
       return {
-        show: show,
+        show: visible,
         animate: {
           zIndex: zIndex,
           width: width,
           left: left,
-          // x: x,
-          // scale: scale,
           opacity: opacity,
         },
         style: {
@@ -101,7 +102,7 @@ const NetworkComparison = ({ data }) => {
     [block, read]
   )
   //
-  // if we don't have data about the networks, we simply don't show the comparison
+  // if we don't have data about the networks, we simply don't render
   if (!layout.networks) return null
   //
   // story properties
@@ -109,17 +110,16 @@ const NetworkComparison = ({ data }) => {
   //
   // net properties
   const networksData = data.story_chapters[layout.story.chapter]
-  // const targetNetworkName = networksData.networks.target_network_name
   //
   // clusters properties
-  const rawClusterId = +layout.networks?.nameHighlight
-  const activeClusterId: number = isNaN(rawClusterId) ? null : rawClusterId
+  const rawClusterId = +layout.networks.nameHighlight
+  const activeClusterId: number = !isNaN(rawClusterId) ? rawClusterId : null
   //
   const clusterIdMatch = (c: ClusterObjectProps) =>
     c.cluster_id == activeClusterId
 
   const activeCluster: ClusterObjectProps = activeClusterId
-    ? layout?.clusters?.find(clusterIdMatch)
+    ? layout.clusters?.find(clusterIdMatch)
     : null
 
   // layout properties
@@ -137,12 +137,10 @@ const NetworkComparison = ({ data }) => {
           {/*  */}
           <Legend />
           {/*  */}
-          {networkNames.map((n) => {
-            const isSource = n === 'source'
-            const isVisible = networksVisibility[n].show
-            const { animate, style } = networkLayoutProperties({
-              source: isSource,
-              visible: isVisible,
+          {networkNames.map((n: NetworkName) => {
+            const { animate, style } = computeNetworkLayoutProperties({
+              source: n === SOURCE_NETWORK_NAME,
+              visible: networksVisibility[n].show,
             })
             return (
               <motion.div
@@ -159,10 +157,9 @@ const NetworkComparison = ({ data }) => {
                 }}
               >
                 <SingleNetwork
-                  data={networksData}
-                  activeCluster={activeCluster}
-                  activeClusterId={activeClusterId}
                   accessor={n}
+                  data={networksData.networks}
+                  activeCluster={activeCluster}
                 />
               </motion.div>
             )

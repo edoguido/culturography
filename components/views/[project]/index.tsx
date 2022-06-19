@@ -5,10 +5,10 @@ import client from 'utils/cms'
 import { PROJECT_QUERY, ALL_PROJECTS_QUERY } from 'utils/cms/queries'
 import { globalCSSVarToPixels } from 'utils/theme'
 
-import Nav from 'components/molecules/nav'
-import DefaultLayout from 'components/layout/main'
-import Sidebar from 'components/organisms/sidebar'
-import NetworkComparison from 'components/organisms/networkComparison'
+import Nav from 'components/visualization/molecules/nav'
+import DefaultLayout from 'components/visualization/layout/main'
+import Sidebar from 'components/visualization/organisms/sidebar'
+import NetworkComparison from 'components/visualization/organisms/networkComparison'
 
 import { Leva } from 'leva'
 import { hideUiControls } from 'utils/index'
@@ -23,8 +23,7 @@ const ProjectPage = ({ data }) => {
     dispatch({
       type: 'SET',
       payload: {
-        // read this from localStorage
-        read: false,
+        read: true,
         sidebarWidth: globalCSSVarToPixels('--sidebar-width'),
       },
     })

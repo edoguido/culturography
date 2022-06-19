@@ -18,7 +18,7 @@ import {
 import { makeStoryPayload, useVizLayout } from '@/context/vizLayoutContext'
 
 // import SidebarChapterSelector from 'components/molecules/sidebarChapterSelector'
-import ChartSerializer from 'components/molecules/chartSerializer'
+import ChartSerializer from 'components/visualization/molecules/chartSerializer'
 
 const handleBlockChange = (refs, { trigger, callback }) => {
   refs.forEach((ref, i) => {
