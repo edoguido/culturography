@@ -1,10 +1,10 @@
 const LEGEND_LABELS = [
   'None',
-  'Very weak',
+  // 'Very weak',
   'Weak',
   'Medium',
   'Strong',
-  'Very strong',
+  // 'Very strong',
 ]
 const LEGEND_NUM_STEPS = LEGEND_LABELS.length - 1
 
