@@ -11,7 +11,7 @@ import Sidebar from 'components/visualization/organisms/sidebar'
 import NetworkComparison from 'components/visualization/organisms/networkComparison'
 
 import { Leva } from 'leva'
-import { hideUiControls } from 'utils/index'
+// import { hideUiControls } from 'utils/index'
 import { MotionConfig } from 'framer-motion'
 
 const ProjectPage = ({ data }) => {
