@@ -9,6 +9,7 @@ import Legend from 'components/visualization/molecules/legend'
 import { motion } from 'framer-motion'
 import { NetworkName } from '@/types/visualization'
 import { SOURCE_NETWORK_NAME, TARGET_NETWORK_NAME } from '@/const/visualization'
+import DetailSidebar from 'components/visualization/molecules/detailSidebar'
 
 const SingleNetwork = dynamic(
   () => import('components/visualization/molecules/singleNetwork'),
@@ -166,6 +167,7 @@ const NetworkComparison = ({ data }) => {
               </motion.div>
             )
           })}
+          <DetailSidebar activeCluster={activeCluster} />
         </div>
       )}
     </motion.div>
