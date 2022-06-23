@@ -17,8 +17,10 @@ const SingleNetwork = dynamic(
 
 // Network viz layout props
 const HALF_WIDTH = '49.75%'
+const HALF_WIDTH_READ = '37.75%'
 const EXPANDED_WIDTH = '75%'
 const HALF_LEFT = '50.25%'
+const HALF_LEFT_READ = '38.25%'
 
 //
 
@@ -58,7 +60,7 @@ const NetworkComparison = ({ data }) => {
   const computeNetworkLayoutProperties = useCallback(
     ({ source, visible }) => {
       const width = (() => {
-        if (!read) return HALF_WIDTH
+        if (!read) return HALF_WIDTH_READ
         if (showBothNetworks) return HALF_WIDTH
         if (visible) return EXPANDED_WIDTH
         return HALF_WIDTH
@@ -67,7 +69,7 @@ const NetworkComparison = ({ data }) => {
       const left = (() => {
         if (source) return '0%'
         if (!read && source) return '0%'
-        if (!read && !source) return HALF_LEFT
+        if (!read && !source) return HALF_LEFT_READ
         if (showBothNetworks) return HALF_LEFT
         if (visible) return '25%'
         return HALF_LEFT
@@ -145,7 +147,7 @@ const NetworkComparison = ({ data }) => {
             return (
               <motion.div
                 key={n}
-                className="absolute inset-0 w-1/2 rounded-lg overflow-hidden bg-black flex flex-1 justify-center items-center"
+                className="absolute z-10 inset-0 w-1/2 rounded-lg overflow-hidden bg-black flex flex-1 justify-center items-center"
                 layout
                 initial={false}
                 animate={animate}

@@ -4,7 +4,7 @@ export const MIN_SIMILARITY_THRESHOLD = 0
 export const SCENE_CENTER = [0, 0]
 export const INITIAL_ZOOM = 5
 export const MAX_ZOOM = 60
-export const ZOOMED_IN = 14
+export const ZOOMED_IN = 11
 // appearance
 export const BASE_POINT_SIZE = 1
 export const BASE_LABEL_SCALE = 4

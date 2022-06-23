@@ -4,7 +4,7 @@ import { Color, Vector3 } from 'three'
 import { Html } from '@react-three/drei'
 import { OrthographicCameraProps, useFrame } from '@react-three/fiber'
 //
-import { ClusterObjectProps } from '@/context/vizLayoutContext'
+import { ClusterObjectProps, useVizLayout } from '@/context/vizLayoutContext'
 import { datasetCoordsToArrayOfPoints, lerp } from 'utils/math'
 import {
   BASE_LABEL_SCALE,
@@ -36,6 +36,8 @@ const Cluster = ({
   const { xScale, yScale } = scales
 
   const [mounted, setMounted] = useState(false)
+  const [layout] = useVizLayout()
+  const isSelected = +layout.networks?.nameHighlight === data.cluster_id
 
   const [cx, cy] = data.pca_centroid
   const labelPosition = new Vector3(xScale(cx), yScale(cy), 0)
@@ -101,10 +103,24 @@ const Cluster = ({
           >
             <motion.h2
               ref={labelRef}
-              className="text-3xl font-medium cursor-pointer select-none transition-opacity"
+              className="text-3xl block font-medium cursor-pointer select-none transition-opacity"
               onClick={onClick}
             >
-              {data.name}
+              <motion.div
+                animate={{
+                  scale: isSelected ? 1.1 : 1,
+                }}
+                whileHover={{
+                  scale: isSelected ? 1 : 1.1,
+                }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 4800,
+                  damping: 320,
+                }}
+              >
+                {data.name}
+              </motion.div>
             </motion.h2>
           </Html>
         </group>

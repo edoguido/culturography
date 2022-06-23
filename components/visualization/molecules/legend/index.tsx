@@ -10,6 +10,8 @@ const Legend = () => {
 
   const isHighlighting = useMemo(() => {
     if (layout?.networks?.nameHighlight === undefined) return undefined
+
+    // why the f*ck did I write this?
     return JSON.parse(layout?.networks?.nameHighlight)
   }, [legend])
 
@@ -38,7 +40,7 @@ const Legend = () => {
             type: 'ease',
             ease: [0, 0, 0, 1],
           }}
-          className="absolute z-10 right-0 bottom-0 origin-bottom-right text-white bg-white bg-opacity-10 rounded-tl-lg p-4"
+          className="absolute z-10 right-0 bottom-0 origin-bottom-right text-white bg-black box-border bg-opacity-10 rounded-tl-lg p-3"
         >
           <div>Overlap</div>
           <div className="flex mt-2">
