@@ -1,5 +1,6 @@
 import { ClusterObjectProps, useVizLayout } from '@/context/vizLayoutContext'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
+import { getColor } from 'utils/scales'
 
 const detailVariants: Variants = {
   initial: { opacity: 1, x: '100%' },
@@ -11,6 +12,12 @@ const emptyStateVariants: Variants = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
   exit: { opacity: 0 },
+}
+
+const childVariants: Variants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -10 },
 }
 
 const DUMMY_CONTENT = {
@@ -30,14 +37,42 @@ const DetailSidebar = ({
 }: {
   activeCluster: ClusterObjectProps
 }) => {
-  const [layout] = useVizLayout()
-  const { read } = layout
+  const [layout, dispatch] = useVizLayout()
+  const { read, clusters } = layout
+
+  const activeClusterSimilarities = activeCluster
+    ? Object.entries(activeCluster?.similarities)
+        .filter(([_, value]) => value > 0)
+        .slice(0, 3)
+        .sort(([k1, a], [k2, b]) => b - a)
+    : null
+
+  function handleClick({ cluster_id, cluster_original }) {
+    const payload = {
+      networks: {
+        highlight: cluster_original,
+        nameHighlight: cluster_id,
+      },
+    }
+
+    dispatch({
+      type: 'UPDATE_NETWORK_STATE',
+      payload,
+    })
+  }
+
+  const allClustersID: number[] = clusters.map(
+    (c: ClusterObjectProps) => c.cluster_id
+  )
+
+  // TO-DO: make labels for overlap
 
   return (
     <>
-      <AnimatePresence>
+      <AnimatePresence exitBeforeEnter>
         {activeCluster && !read && (
           <motion.div
+            className="absolute z-0 top-0 bottom-0 right-0 p-4 overflow-scroll w-[23.5%] rounded-lg outline-hidden bg-black flex-1"
             initial="initial"
             animate="animate"
             exit="exit"
@@ -46,20 +81,60 @@ const DetailSidebar = ({
               type: 'spring',
               stiffness: 1800,
               damping: 220,
+              staggerChildren: 0.25,
             }}
-            className="absolute z-10 top-0 bottom-0 right-0 overflow-scroll w-[23.5%] rounded-lg outline-hidden bg-black flex flex-1"
           >
-            <pre>
-              {JSON.stringify(
-                {
-                  name: activeCluster.name,
-                  network: activeCluster.network,
-                  similarities: activeCluster.similarities,
-                },
-                null,
-                2
-              )}
-            </pre>
+            <motion.div className="text-sm mb-2" variants={childVariants}>
+              Cluster overlaps and details
+            </motion.div>
+            {layout.clusters.map(
+              (c: ClusterObjectProps) =>
+                activeCluster.name === c.name && (
+                  <>
+                    <motion.h2
+                      className="font-medium text-2xl"
+                      variants={childVariants}
+                    >
+                      {activeCluster.name}
+                    </motion.h2>
+                    <motion.div
+                      className="my-4 rounded-lg overflow-hidden"
+                      variants={childVariants}
+                    >
+                      {activeClusterSimilarities.map(([key, value]) => {
+                        const clusterData: ClusterObjectProps = clusters.find(
+                          (c: ClusterObjectProps) =>
+                            c.cluster_id.toString() === key.toString()
+                        )
+
+                        const { name, cluster_id, cluster_original } =
+                          clusterData
+
+                        const clusterColor = getColor({
+                          id: cluster_id,
+                          activeCluster,
+                          allClustersID,
+                        })
+
+                        return (
+                          <motion.button
+                            className="border-b-black border-b-[1px] border-opacity-10 flex items-center w-full p-4 hover:py-8 text-left transition-all ease-out duration-300"
+                            style={{
+                              backgroundColor: clusterColor,
+                            }}
+                            onClick={() =>
+                              handleClick({ cluster_id, cluster_original })
+                            }
+                          >
+                            <motion.div>{name}</motion.div>
+                            {/* <div>{value}</div> */}
+                          </motion.button>
+                        )
+                      })}
+                    </motion.div>
+                  </>
+                )
+            )}
           </motion.div>
         )}
       </AnimatePresence>
