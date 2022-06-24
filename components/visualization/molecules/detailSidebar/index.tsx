@@ -42,8 +42,8 @@ const DetailSidebar = ({
 
   const activeClusterSimilarities = activeCluster
     ? Object.entries(activeCluster?.similarities)
+        // .slice(0, 3)
         .filter(([_, value]) => value > 0)
-        .slice(0, 3)
         .sort(([k1, a], [k2, b]) => b - a)
     : null
 
@@ -72,7 +72,7 @@ const DetailSidebar = ({
       <AnimatePresence exitBeforeEnter>
         {activeCluster && !read && (
           <motion.div
-            className="absolute z-0 top-0 bottom-0 right-0 p-4 overflow-scroll w-[23.5%] rounded-lg outline-hidden bg-black flex-1"
+            className="absolute z-0 top-0 h-[calc(100vh-var(--nav-height)-8.5rem)] right-0 p-4 overflow-scroll w-[23.5%] rounded-lg outline-hidden bg-black flex-1"
             initial="initial"
             animate="animate"
             exit="exit"
@@ -84,7 +84,7 @@ const DetailSidebar = ({
               staggerChildren: 0.25,
             }}
           >
-            <motion.div className="text-sm mb-2" variants={childVariants}>
+            <motion.div className="text-sm" variants={childVariants}>
               Cluster overlaps and details
             </motion.div>
             {layout.clusters.map(
@@ -92,13 +92,13 @@ const DetailSidebar = ({
                 activeCluster.name === c.name && (
                   <>
                     <motion.h2
-                      className="font-medium text-2xl"
+                      className="font-medium text-2xl my-2 py-2"
                       variants={childVariants}
                     >
                       {activeCluster.name}
                     </motion.h2>
                     <motion.div
-                      className="my-4 rounded-lg overflow-hidden"
+                      className=" rounded-lg overflow-hidden"
                       variants={childVariants}
                     >
                       {activeClusterSimilarities.map(([key, value]) => {
