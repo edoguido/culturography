@@ -167,6 +167,7 @@ const Sidebar = ({ data }) => {
       {storyContentRef.current && (
         <ScrollProgress
           containerRef={storyContentRef}
+          isReadMode={layout.read}
           // chapterIndex={storyState[1]}
           // storyRefs={storyRefs}
         />
@@ -285,7 +286,7 @@ const Sidebar = ({ data }) => {
   )
 }
 
-const ScrollProgress = ({ containerRef }) => {
+const ScrollProgress = ({ containerRef, isReadMode }) => {
   const scrollHeight =
     containerRef.current.children[0].getBoundingClientRect().height
   //
@@ -319,7 +320,15 @@ const ScrollProgress = ({ containerRef }) => {
 
   return (
     containerRef && (
-      <motion.div className="relative mt-[var(--nav-height)] w-full h-[calc(var(--nav-height)/2)]">
+      <motion.div
+        className="relative mt-[var(--nav-height)] w-full h-[calc(var(--nav-height)/2)]"
+        animate={{
+          opacity: isReadMode ? 1 : 0.2,
+        }}
+        transition={{
+          ease: [1, 0, 0, 0],
+        }}
+      >
         <div className="rail absolute bg-gray-400 top-1/2 left-0 right-0 mx-2 h-0.5 rounded-full" />
         <motion.div
           className="scroll-progress absolute bg-accent top-1/2 left-0 right-0 mx-2 h-0.5 rounded-full"
