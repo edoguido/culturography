@@ -24,6 +24,10 @@ export interface NetworkStateProps {
   zoomLevel: string | null
 }
 
+export interface ClusterSimilarity {
+  [key: number]: number
+}
+
 export interface ClusterObjectProps {
   network?: string
   cluster_original?: number
@@ -32,7 +36,7 @@ export interface ClusterObjectProps {
   centroid?: [number, number]
   pca_centroid?: [number, number]
   shape?: number[]
-  similarities?: object
+  similarities?: ClusterSimilarity
   nodes?: NetworkNode[]
 }
 
