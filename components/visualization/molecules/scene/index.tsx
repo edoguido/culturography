@@ -69,7 +69,10 @@ const Scene = ({
     [networkName]
   )
 
-  const activeClusterId = activeCluster?.cluster_id || 0
+  const activeClusterId = !isNaN(activeCluster?.cluster_id)
+    ? activeCluster?.cluster_id
+    : null
+
   const allClustersID = dataset.allClusters.map(
     (d: ClusterObjectProps) => d.cluster_id
   )
@@ -154,7 +157,7 @@ const Scene = ({
 
   useEffect(() => {
     // if we're not highlighting we reset the view
-    if (!activeCluster) {
+    if (activeClusterId === null) {
       resetView()
       return
     }

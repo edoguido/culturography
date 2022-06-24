@@ -115,15 +115,15 @@ const NetworkComparison = ({ data }) => {
   const networksData = data.story_chapters[layout.story.chapter]
   //
   // clusters properties
-  const rawClusterId = +layout.networks.nameHighlight
-  const activeClusterId: number = !isNaN(rawClusterId) ? rawClusterId : null
+  const rawClusterId = JSON.parse(layout.networks.nameHighlight)
+  const isHighlighting = !isNaN(rawClusterId)
+  const activeClusterId = isHighlighting ? rawClusterId : null
   //
   const clusterIdMatch = (c: ClusterObjectProps) =>
     c.cluster_id == activeClusterId
 
-  const activeCluster: ClusterObjectProps = activeClusterId
-    ? layout.clusters?.find(clusterIdMatch)
-    : null
+  const activeCluster: ClusterObjectProps =
+    layout.clusters?.find(clusterIdMatch) || null
 
   // layout properties
   const showBothNetworks =
