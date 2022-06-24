@@ -20,6 +20,7 @@ import {
   ZOOMED_IN,
 } from '@/const/visualization'
 import { DatasetProps } from '@/types/visualization'
+import { getColor, makeHueScale, makeQuantizedColorScale } from 'utils/scales'
 
 const Cluster = dynamic(
   () => import('components/visualization/atoms/cluster'),
@@ -59,12 +60,12 @@ const Scene = ({
   const groupRef = useRef(null)
 
   // scales
-  const xScale = useMemo(
-    () => d3.scaleLinear().domain(dataset.extent.x).range(SCALES_RANGE),
+  const xScale = useCallback(
+    d3.scaleLinear().domain(dataset.extent.x).range(SCALES_RANGE),
     [networkName]
   )
-  const yScale = useMemo(
-    () => d3.scaleLinear().domain(dataset.extent.y).range(SCALES_RANGE),
+  const yScale = useCallback(
+    d3.scaleLinear().domain(dataset.extent.y).range(SCALES_RANGE),
     [networkName]
   )
 
@@ -73,66 +74,32 @@ const Scene = ({
     (d: ClusterObjectProps) => d.cluster_id
   )
 
-  const hueScale = useMemo(
-    () =>
-      d3
-        .scaleQuantize()
-        .domain(d3.extent(allClustersID))
-        .range(d3.quantize(d3.interpolateSinebow, allClustersID.length)),
+  const hueScale = useCallback(
+    (clustersid, id) => makeHueScale(clustersid, id),
     [allClustersID]
   )
 
-  const intensityColorScaleQuantized = useMemo(
-    () => (targetColor) =>
-      d3.quantize(
-        d3.scaleLinear().range(['#666666', targetColor]),
-        LEGEND_NUM_STEPS
-      ),
-    []
-  )
-
   const highlightColor = activeCluster
-    ? hueScale(activeCluster.cluster_id)
+    ? hueScale(allClustersID, activeCluster.cluster_id)
     : undefined
+
+  const intensityColorScaleQuantized = useCallback(
+    (targetColor) => makeQuantizedColorScale(targetColor),
+    [highlightColor]
+  )
 
   const quantizedColorRange = activeCluster
     ? intensityColorScaleQuantized(highlightColor)
     : undefined
 
-  const similarityScale = activeCluster
-    ? d3.scaleQuantize().domain([0, 1]).range(quantizedColorRange)
-    : undefined
+  // const similarityScale = activeCluster
+  //   ? d3.scaleQuantize().domain([0, 1]).range(quantizedColorRange)
+  //   : undefined
 
-  const getColor = useCallback(
-    (id) => {
-      // we're not highlighting any cluster at the moment
-      if (!activeClusterId) return hueScale(id)
-
-      // otherwise we're highlighting a cluster
-      // --
-      // if we're in the source network...
-      if (id === activeCluster.cluster_id) {
-        return hueScale(id)
-      }
-      // but if we're not in the source network, we must find
-      // source network similarities in target network
-      const similarityWithHighlightedCluster =
-        activeCluster.similarities[id] * 1000
-
-      if (
-        similarityWithHighlightedCluster &&
-        similarityWithHighlightedCluster > MIN_SIMILARITY_THRESHOLD
-      ) {
-        const similarityScaleValue = similarityScale(
-          similarityWithHighlightedCluster
-        )
-
-        return similarityScaleValue
-      }
-
-      return NO_OVERLAP_COLOR
-    },
-    [hueScale]
+  const clusterColor = useCallback(
+    ({ id, activeCluster, allClustersID }) =>
+      getColor({ id, activeCluster, allClustersID }),
+    [highlightColor]
   )
 
   // we should set initial zoom here
@@ -196,7 +163,6 @@ const Scene = ({
     const activeClusterIsInThisNetwork =
       activeCluster.network === dataset.clusters[0].network
 
-    // we only zoom and pan if we're in source network
     if (activeClusterIsInThisNetwork) {
       // we move to its cluster centroid...
       const {
@@ -242,7 +208,7 @@ const Scene = ({
 
   //
   // **
-  // render state changes
+  // render camera changes
   useFrame(() => {
     // updating zoom
     if (!cameraRef.current) return
@@ -308,7 +274,11 @@ const Scene = ({
       >
         {dataset &&
           dataset.clusters.map((d: ClusterObjectProps, i) => {
-            const color = getColor(d.cluster_id)
+            const color = clusterColor({
+              id: d.cluster_id,
+              activeCluster,
+              allClustersID,
+            })
 
             const showLabel =
               !activeCluster ||
