@@ -21,6 +21,10 @@ import {
 } from '@/const/visualization'
 import { DatasetProps } from '@/types/visualization'
 import { getColor, makeHueScale, makeQuantizedColorScale } from 'utils/scales'
+import {
+  allMatchingClustersCetroids,
+  matchingClustersMiddlePoint,
+} from 'utils/data'
 
 const Cluster = dynamic(
   () => import('components/visualization/atoms/cluster'),
@@ -181,19 +185,17 @@ const Scene = ({
       //
     } else {
       // otherwise we have to find the matching clusters
-      const matchingClusters = dataset.allClusters.filter(
-        ({ cluster_id }: ClusterObjectProps) => {
-          const similarity = activeCluster.similarities[cluster_id]
-          return similarity > MIN_SIMILARITY_THRESHOLD
-        }
+      const matchingClustersCentroids = allMatchingClustersCetroids(
+        activeCluster,
+        layout.clusters
       )
-      const matchingClustersCentroids = matchingClusters.map(
-        (c: ClusterObjectProps) => c.pca_centroid
+
+      const allClustersCentroid = matchingClustersMiddlePoint(
+        matchingClustersCentroids,
+        { xScale, yScale }
       )
-      // we compute the centroid of all the matching polygons
-      const [x, y] = polygonCentroid(matchingClustersCentroids)
-      const rescaledCentroidCoords = [xScale(x), -yScale(y)]
-      moveTo({ location: rescaledCentroidCoords, zoom: INITIAL_ZOOM })
+
+      moveTo({ location: allClustersCentroid, zoom: INITIAL_ZOOM })
     }
   }, [activeClusterId])
 
