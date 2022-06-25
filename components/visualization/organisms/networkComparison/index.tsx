@@ -156,7 +156,7 @@ const NetworkComparison = ({ data }) => {
                 transition={{
                   type: 'spring',
                   stiffness: 1800,
-                  damping: 220,
+                  damping: 280,
                 }}
               >
                 <SingleNetwork
