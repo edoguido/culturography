@@ -321,7 +321,7 @@ const ScrollProgress = ({ containerRef, isReadMode }) => {
   return (
     containerRef && (
       <motion.div
-        className="relative mt-[var(--nav-height)] w-full h-[calc(var(--nav-height)/2)]"
+        className="relative mt-[calc(var(--nav-height)-.5rem)] w-full h-[calc(var(--nav-height)/2)]"
         animate={{
           opacity: isReadMode ? 1 : 0.2,
         }}
