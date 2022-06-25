@@ -86,7 +86,6 @@ const DetailSidebar = ({
   // TO-DO: make labels for overlap
 
   return (
-            className="absolute z-0 top-0 h-[calc(100vh-var(--nav-height)-8.5rem)] right-0 p-4 overflow-scroll w-[23.5%] rounded-lg outline-hidden bg-black flex-1"
     <AnimatePresence>
       {!read && (
         <motion.div
