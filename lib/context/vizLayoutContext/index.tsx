@@ -28,6 +28,8 @@ export interface ClusterSimilarity {
   [key: number]: number
 }
 
+export type CoordinatesProps = [number, number]
+
 export interface ClusterObjectProps {
   network?: string
   cluster_original?: number
