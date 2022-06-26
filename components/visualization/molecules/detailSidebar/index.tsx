@@ -219,21 +219,15 @@ const DetailSidebar = ({
                       allClustersID,
                     })
 
-                    const color = textColor(clusterColor)
-
                     return (
-                      <motion.button
-                        className={`${color} rounded-lg my-2 flex items-center w-full p-4 hover:py-6 text-left transition-all ease-out duration-300`}
-                        variants={childVariants}
-                        style={{
-                          backgroundColor: clusterColor,
-                        }}
+                      <ClusterButton
+                        key={i}
+                        label={c.name}
+                        color={clusterColor}
                         onClick={() =>
                           handleClick({ cluster_id, cluster_original })
                         }
-                      >
-                        {c.name}
-                      </motion.button>
+                      />
                     )
                   })}
                 </motion.div>
@@ -243,6 +237,73 @@ const DetailSidebar = ({
         </motion.div>
       )}
     </AnimatePresence>
+  )
+}
+
+const ClusterButton = ({ label, color, onClick }) => {
+  const [hovering, setHovering] = useState(false)
+
+  const textColor = getTextColor(color)
+
+  function hoverIn() {
+    setHovering(true)
+  }
+
+  function hoverOut() {
+    setHovering(false)
+  }
+
+  function handleClick() {
+    onClick()
+  }
+
+  return (
+    <motion.button
+      className={`${textColor} relative rounded-full my-1 text-center w-full p-4 hover:py-6 text-clip transition-all ease-out duration-300 select-none`}
+      variants={childVariants}
+      style={{
+        backgroundColor: color,
+      }}
+      onClick={handleClick}
+      onPointerEnter={hoverIn}
+      onPointerLeave={hoverOut}
+    >
+      <span>{label}</span>
+      <AnimatePresence>
+        {hovering && (
+          <motion.div
+            className="absolute top-1/3 right-0 px-4"
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            variants={{
+              initial: { opacity: 0, x: -40 },
+              animate: { opacity: 1, x: 0 },
+              exit: { opacity: 0, x: -40 },
+            }}
+          >
+            →
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.button>
+  )
+}
+
+const CloseButton = () => {
+  const [_, dispatch] = useVizLayout()
+
+  function handleClick() {
+    dispatch({ type: 'TOGGLE_READ_MODE' })
+  }
+
+  return (
+    <button
+      className="absolute right-4 top-4 w-auto h-8 hover:bg-neutral-700 text-sm flex justify-center items-center px-3 rounded-full select-none"
+      onClick={handleClick}
+    >
+      Close
+    </button>
   )
 }
 
