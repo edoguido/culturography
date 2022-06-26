@@ -6,8 +6,9 @@ import {
   Variants,
   Transition,
 } from 'framer-motion'
-import { getColor } from 'utils/scales'
+import { getColor, getTextColor } from 'utils/scales'
 import * as chroma from 'chroma-js'
+import { useState } from 'react'
 
 const sidebarVariants: Variants = {
   initial: { opacity: 1, x: '110%' },
@@ -23,7 +24,7 @@ const detailVariants: Variants = {
 
 const childVariants: Variants = {
   initial: { opacity: 0, y: 60 },
-  animate: { opacity: 1, y: 0 },
+  animate: (c = 1) => ({ opacity: c, y: 0 }),
   exit: { opacity: 0, y: -10 },
 }
 
@@ -45,9 +46,6 @@ const DUMMY_CONTENT = {
   },
 }
 
-const textColor = (color) =>
-  chroma(color).luminance() > 0.28 ? 'text-text' : 'text-white'
-
 const DetailSidebar = ({
   activeCluster,
 }: {
@@ -55,13 +53,6 @@ const DetailSidebar = ({
 }) => {
   const [layout, dispatch] = useVizLayout()
   const { read, clusters } = layout
-
-  const activeClusterSimilarities = activeCluster
-    ? Object.entries(activeCluster?.similarities)
-        // .slice(0, 3)
-        .filter(([_, value]) => value > 0)
-        .sort(([k1, a], [k2, b]) => b - a)
-    : null
 
   function handleClick({ cluster_id, cluster_original }) {
     const payload = {
@@ -83,8 +74,6 @@ const DetailSidebar = ({
 
   const motionKey = activeCluster ? 'active' : 'non-active'
 
-  // TO-DO: make labels for overlap
-
   return (
     <AnimatePresence>
       {!read && (
@@ -101,6 +90,7 @@ const DetailSidebar = ({
           }}
           className="bg-black p-4 overflow-scroll w-[23.5%] rounded-lg absolute z-0 top-0 h-[calc(100vh-var(--nav-height)-8.5rem)] right-0 flex-1"
         >
+          <CloseButton />
           <MotionConfig transition={childrenVariantsTransition}>
             <AnimatePresence key={motionKey} exitBeforeEnter>
               {motionKey === 'active' && (
@@ -114,7 +104,7 @@ const DetailSidebar = ({
                   }}
                 >
                   <motion.div
-                    className="text-sm inline-flex items-center rounded-full hover:bg-white hover:bg-opacity-20"
+                    className="text-sm inline-flex items-center rounded-full hover:bg-white hover:bg-opacity-20 select-none"
                     variants={childVariants}
                   >
                     <button
@@ -126,61 +116,18 @@ const DetailSidebar = ({
                         })
                       }
                     >
-                      <span className="px-1">←</span> All clusters
+                      <span className="px-1">←</span> All communities
                     </button>
                   </motion.div>
                   <AnimatePresence>
                     {layout.clusters.map(
                       (c: ClusterObjectProps) =>
                         activeCluster.name === c.name && (
-                          <>
-                            <motion.h2
-                              className="font-medium text-2xl mt-1 pt-1 mb-2 pb-2"
-                              variants={childVariants}
-                            >
-                              {activeCluster.name}
-                            </motion.h2>
-                            <motion.div variants={childVariants}>
-                              {activeClusterSimilarities.map(([clusterKey]) => {
-                                const clusterData: ClusterObjectProps =
-                                  clusters.find(
-                                    (c: ClusterObjectProps) =>
-                                      c.cluster_id.toString() ===
-                                      clusterKey.toString()
-                                  )
-
-                                const { name, cluster_id, cluster_original } =
-                                  clusterData
-
-                                const clusterColor = getColor({
-                                  id: cluster_id,
-                                  activeCluster,
-                                  allClustersID,
-                                })
-
-                                const color = textColor(clusterColor)
-
-                                return (
-                                  <motion.button
-                                    className={`${color} rounded-lg my-2 flex items-center w-full p-4 hover:py-8 text-left transition-all ease-out duration-300`}
-                                    variants={childVariants}
-                                    style={{
-                                      backgroundColor: clusterColor,
-                                    }}
-                                    onClick={() =>
-                                      handleClick({
-                                        cluster_id,
-                                        cluster_original,
-                                      })
-                                    }
-                                  >
-                                    <motion.div>{name}</motion.div>
-                                    {/* <div>{value}</div> */}
-                                  </motion.button>
-                                )
-                              })}
-                            </motion.div>
-                          </>
+                          <ActiveClusterDetails
+                            activeCluster={activeCluster}
+                            allClustersID={allClustersID}
+                            onClick={handleClick}
+                          />
                         )
                     )}
                   </AnimatePresence>
@@ -197,20 +144,20 @@ const DetailSidebar = ({
                   }}
                 >
                   <motion.h2
-                    className="font-medium text-3xl mb-1"
+                    className="font-medium text-2xl mb-1"
                     variants={childVariants}
                   >
-                    Choose a cluster
+                    Choose a community
                   </motion.h2>
                   <motion.div
                     className="text-sm font-light text-slate-500 mb-1 pb-1"
                     variants={childVariants}
                   >
-                    Click on a cluster in the network or in the list below to
+                    Click on a community in the network or in the list below to
                     explore its overlaps with other clusters and get more
                     information about it
                   </motion.div>
-                  {layout.clusters.map((c: ClusterObjectProps) => {
+                  {layout.clusters.map((c: ClusterObjectProps, i) => {
                     const { cluster_id, cluster_original } = c
 
                     const clusterColor = getColor({
@@ -237,6 +184,137 @@ const DetailSidebar = ({
         </motion.div>
       )}
     </AnimatePresence>
+  )
+}
+
+const ActiveClusterDetails = ({
+  activeCluster,
+  allClustersID,
+  onClick,
+}: {
+  activeCluster: ClusterObjectProps
+  allClustersID: number[]
+  onClick: (p) => void
+}) => {
+  const [layout] = useVizLayout()
+  const { clusters } = layout
+
+  const activeClusterSimilarities = activeCluster
+    ? Object.entries(activeCluster?.similarities)
+        .filter(([_, value]) => value > 0)
+        .slice(0, 3)
+        .sort(([k1, a], [k2, b]) => b - a)
+    : null
+
+  const hasSimilarities = activeClusterSimilarities.length > 0
+
+  const details = DUMMY_CONTENT['instagram-post']
+
+  return (
+    <>
+      <motion.div className="mt-1 pt-1">
+        <motion.h2
+          className="sidebar-section-heading text-2xl"
+          variants={childVariants}
+        >
+          {activeCluster.name}
+        </motion.h2>
+        {activeCluster.description && (
+          <motion.div className="text-sm opacity-50" variants={childVariants}>
+            {activeCluster.description}
+          </motion.div>
+        )}
+      </motion.div>
+      {hasSimilarities ? (
+        <>
+          <Divider />
+          <motion.div
+            className="text-sm opacity-50 my-2"
+            variants={childVariants}
+            custom={0.5}
+          >
+            Main communities linked to it
+          </motion.div>
+          <motion.div variants={childVariants}>
+            {activeClusterSimilarities.map(([clusterKey], i) => {
+              const clusterData: ClusterObjectProps = clusters.find(
+                (c: ClusterObjectProps) =>
+                  c.cluster_id.toString() === clusterKey.toString()
+              )
+
+              const { name, cluster_id, cluster_original } = clusterData
+
+              const clusterColor = getColor({
+                id: cluster_id,
+                activeCluster,
+                allClustersID,
+              })
+
+              return (
+                <ClusterButton
+                  key={i}
+                  label={name}
+                  color={clusterColor}
+                  onClick={() => onClick({ cluster_id, cluster_original })}
+                />
+              )
+            })}
+          </motion.div>
+        </>
+      ) : (
+        <NoClusterSimilarities />
+      )}
+      {activeCluster.details && (
+        <motion.div layout>
+          <Divider />
+          <motion.div className="my-4" variants={childVariants}>
+            <motion.h2 className="text-lg font-display tracking-wide">
+              Insights about this community
+            </motion.h2>
+            {/* <motion.div>Description here</motion.div> */}
+          </motion.div>
+        </motion.div>
+      )}
+    </>
+  )
+}
+
+const NoClusterSimilarities = () => {
+  const [layout, dispatch] = useVizLayout()
+
+  function setRandomCluster() {
+    const randomIndex = Math.round(Math.random() * layout.clusters.length - 1)
+    const randomCluster: ClusterObjectProps = layout.clusters[randomIndex]
+
+    dispatch({
+      type: 'UPDATE_NETWORK_STATE',
+      payload: {
+        networks: {
+          highlight: randomCluster.cluster_original,
+          nameHighlight: randomCluster.cluster_id,
+        },
+      },
+    })
+  }
+
+  return (
+    <>
+      <motion.div
+        className="text-sm opacity-50"
+        variants={childVariants}
+        custom={0.5}
+      >
+        This community does not have meaningful links with others in the target
+        network
+      </motion.div>
+      <motion.button
+        className="my-4 px-4 py-2 bg-accent text-text font-display font-medium rounded-full"
+        variants={childVariants}
+        onClick={setRandomCluster}
+      >
+        Try another one?
+      </motion.button>
+    </>
   )
 }
 
@@ -304,6 +382,16 @@ const CloseButton = () => {
     >
       Close
     </button>
+  )
+}
+
+const Divider = () => {
+  return (
+    <motion.div
+      className="w-full h-[1px] bg-white opacity-20 my-3"
+      variants={childVariants}
+      custom={0.2}
+    />
   )
 }
 
