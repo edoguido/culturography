@@ -48,14 +48,14 @@ const NetworkComparison = ({ data }) => {
       return clusterMetadata
     }
 
-    const updateMetadata = (metadata) => {
+    const dispatchClustersState = (metadata) => {
       dispatch({
         type: 'UPDATE_STORY_METADATA',
         payload: { metadata },
       })
     }
 
-    fetchMetadata().then(updateMetadata)
+    fetchMetadata().then(dispatchClustersState)
   }, [data.network_metadata?.asset])
 
   const computeNetworkLayoutProperties = useCallback(
