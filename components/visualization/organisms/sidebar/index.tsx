@@ -237,28 +237,16 @@ const Sidebar = ({ data }) => {
 
                         {blocks &&
                           blocks.map(
-                            (
-                              { /* block_title, */ block_content },
-                              j: number
-                            ) => {
-                              const isHighlighted =
-                                i === storyState[0] && j === storyState[1]
-
-                              const highlightedClassName = isHighlighted
-                                ? 'current'
-                                : ''
-
+                            ({ block_title, block_content }, j: number) => {
                               return (
                                 <div
                                   key={j}
                                   ref={storyRefs[i].blocks[j]}
-                                  className={`h-[200vh] max-w-[var(--sidebar-width)] mx-auto ${highlightedClassName}`}
+                                  className={`h-[200vh] max-w-[var(--sidebar-width)] mx-auto`}
                                 >
                                   {block_content && (
                                     <div className="p-3 rounded-lg bg-opacity-50 bg-black backdrop-blur-lg">
-                                      {/* <h2>
-                                {block_title}
-                              </h2> */}
+                                      {/* <h2>{block_title}</h2> */}
                                       {block_content.map((c, t: number) => (
                                         <div key={t} className="rich-text">
                                           <BlockContent
