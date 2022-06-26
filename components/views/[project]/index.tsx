@@ -3,7 +3,6 @@ import { useEffect, useReducer } from 'react'
 import { VizLayoutContext, vizLayoutReducer } from '@/context/vizLayoutContext'
 import client from 'utils/cms'
 import { PROJECT_QUERY, ALL_PROJECTS_QUERY } from 'utils/cms/queries'
-import { globalCSSVarToPixels } from 'utils/theme'
 
 import Nav from 'components/visualization/molecules/nav'
 import DefaultLayout from 'components/visualization/layout/main'
@@ -24,7 +23,6 @@ const ProjectPage = ({ data }) => {
       type: 'SET',
       payload: {
         read: true,
-        sidebarWidth: globalCSSVarToPixels('--sidebar-width'),
       },
     })
   }, [])
