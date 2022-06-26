@@ -64,38 +64,6 @@ export const getColor = ({ id, activeCluster, allClustersID }: { id: number, act
   return NO_OVERLAP_COLOR
 }
 
-const getColorLegacy = ({ id, activeCluster, allClustersID }: {
-  id: number, activeCluster: ClusterObjectProps, allClustersID: ClusterObjectProps[]
 export function getTextColor(color) {
   return chroma(color).luminance() > 0.28 ? 'text-text' : 'text-white'
-}
-) => {
-  // we're not highlighting any cluster at the moment
-  if (!activeCluster.cluster_id) return makeHueScale(allClustersID, id)
-
-  // otherwise we're highlighting a cluster
-  // --
-  // if we're in the source network...
-  if (id === activeCluster.cluster_id) {
-    return makeHueScale(allClustersID, id)
-  }
-  // but if we're not in the source network, we must find
-  // source network similarities in target network
-  const similarityWithHighlightedCluster =
-    activeCluster.similarities[id] * 1000
-
-  if (
-    similarityWithHighlightedCluster &&
-    similarityWithHighlightedCluster > MIN_SIMILARITY_THRESHOLD
-  ) {
-    // const similarityScaleValue = similarityScale(
-    //   similarityWithHighlightedCluster
-    // )
-
-    const similarityScaleValue = '#ff0000'
-
-    return similarityScaleValue
-  }
-
-  return NO_OVERLAP_COLOR
 }
