@@ -35,6 +35,8 @@ export interface ClusterObjectProps {
   cluster_original?: number
   cluster_id?: number
   name?: string
+  description?: string
+  details?: object
   centroid?: [number, number]
   pca_centroid?: [number, number]
   shape?: number[]
