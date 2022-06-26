@@ -1,4 +1,5 @@
 import * as d3 from 'd3'
+import * as chroma from 'chroma-js'
 import { LEGEND_NUM_STEPS } from '@/const/legend'
 import { ClusterObjectProps } from '@/context/vizLayoutContext'
 import { MIN_SIMILARITY_THRESHOLD, NO_OVERLAP_COLOR } from '@/const/visualization'
@@ -65,6 +66,8 @@ export const getColor = ({ id, activeCluster, allClustersID }: { id: number, act
 
 const getColorLegacy = ({ id, activeCluster, allClustersID }: {
   id: number, activeCluster: ClusterObjectProps, allClustersID: ClusterObjectProps[]
+export function getTextColor(color) {
+  return chroma(color).luminance() > 0.28 ? 'text-text' : 'text-white'
 }
 ) => {
   // we're not highlighting any cluster at the moment
