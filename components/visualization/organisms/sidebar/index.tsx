@@ -62,7 +62,31 @@ const SERIALIZERS = {
     'story.chart': function storyChart(props) {
       return <ChartSerializer {...props} />
     },
+    'story.exploreButton': function storyExploreButton(props) {
+      return <ExploreButton {...props} />
+    },
   },
+}
+
+const ExploreButton = ({ node }) => {
+  const { label } = node
+
+  const [layout, dispatch] = useVizLayout()
+
+  function handleClick() {
+    dispatch({ type: 'TOGGLE_READ_MODE' })
+  }
+
+  return (
+    <div className="flex justify-center items-center">
+      <button
+        onClick={handleClick}
+        className=" font-display bg-accent text-text font-medium rounded-full py-2 px-4 my-4"
+      >
+        {label || 'Explore it yourself'}
+      </button>
+    </div>
+  )
 }
 
 const STORY_BLOCKS_VARIANTS = {
