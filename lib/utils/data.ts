@@ -2,24 +2,19 @@ import { ClusterObjectProps, CoordinatesProps } from "@/context/vizLayoutContext
 import { MIN_SIMILARITY_THRESHOLD } from "@/const/visualization"
 import { polygonCentroid } from "./math"
 
-export const rankedClusters = (metadata) =>
-  metadata.filter((d) => d.pca_centroid.length > 0)
+export const rankedClusters = (allClustersArray: ClusterObjectProps[]): ClusterObjectProps[] =>
+  allClustersArray.filter((d) => d.pca_centroid.length > 0)
 
 export const groupDatapointsByCluster = ({ dataset, clusters }) =>
   clusters
     .map((c) => {
       const out = { ...c, nodes: [] }
-      //
 
       dataset.forEach((d) => {
         if (d.cluster_id === c.cluster_id) {
           out.nodes.push(d)
         }
       })
-
-      // if (out.nodes.length === 0) {
-      //   console.log(out)
-      // }
 
       return out
     })
