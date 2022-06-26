@@ -6,6 +6,6 @@ export interface DatasetProps {
   extent: { x: number[]; y: number[] }
 }
 
-export type SourceNetworkName = 'source'
-export type TargetNetworkName = 'target'
-export type NetworkName = SourceNetworkName | TargetNetworkName
+export type SourceNetworkNameType = 'source'
+export type TargetNetworkNameType = 'target'
+export type NetworkName = SourceNetworkNameType | TargetNetworkNameType
