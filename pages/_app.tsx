@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import ReactGA from 'react-ga'
 
 import '../styles/globals.css'
+import { isDevelopment } from 'utils/dev'
 
 const TRACKING_ID = process.env.TRACKING_ID
 
@@ -15,6 +16,8 @@ function App({ Component, pageProps }) {
     ReactGA.pageview(window.location.pathname + window.location.search)
 
   useEffect(() => {
+    if (isDevelopment) return
+
     initializeTracker()
     router.events.on('routeChangeComplete', handleRouteChange)
 
