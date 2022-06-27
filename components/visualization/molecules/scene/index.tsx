@@ -88,7 +88,7 @@ const Scene = ({
 
   const highlightColor = activeCluster
     ? hueScale(allClustersID, activeCluster.cluster_id)
-    : undefined
+    : null
 
   const intensityColorScaleQuantized = useCallback(
     (targetColor) => makeQuantizedColorScale(targetColor),
@@ -97,11 +97,11 @@ const Scene = ({
 
   const quantizedColorRange = activeCluster
     ? intensityColorScaleQuantized(highlightColor)
-    : undefined
+    : null
 
   // const similarityScale = activeCluster
   //   ? d3.scaleQuantize().domain([0, 1]).range(quantizedColorRange)
-  //   : undefined
+  //   : null
 
   const clusterColor = useCallback(
     ({ id, activeCluster, allClustersID }) =>
