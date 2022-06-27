@@ -132,6 +132,11 @@ export const vizLayoutReducer = (state: VizLayoutState, action) => {
             chapter,
             block,
           },
+          networks: {
+            ...state.networks,
+            highlight: null,
+            nameHighlight: null,
+          },
         }
       }
 
@@ -193,7 +198,9 @@ export const makeStoryPayload = ({ source, chapterIndex, blockIndex }) => {
   const block = chapter.blocks[blockIndex]
 
   if (!chapter.networks) {
-    return { story: { title, phase, chapter: chapterIndex, block: blockIndex } }
+    return {
+      story: { title, phase, chapter: chapterIndex, block: blockIndex },
+    }
   }
 
   const {
@@ -214,11 +221,15 @@ export const makeStoryPayload = ({ source, chapterIndex, blockIndex }) => {
     // target_cluster_zoom,
   } = block.network_control
 
+  // sometimes it's not defined from Sanity so we set it here
+  // bad solution, but...
+  let cluster_highlight = network_cluster_highlight || null
+
   return {
     story: { title, phase, chapter: chapterIndex, block: blockIndex },
     networks: {
       highlight: highlight,
-      nameHighlight: network_cluster_highlight,
+      nameHighlight: cluster_highlight,
       source: {
         // id: source_network_id,
         name: source_network_name,

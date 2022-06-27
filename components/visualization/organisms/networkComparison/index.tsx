@@ -115,7 +115,9 @@ const NetworkComparison = ({ data }) => {
   const networksData = data.story_chapters[layout.story.chapter]
   //
   // clusters properties
-  const rawClusterId = JSON.parse(layout.networks.nameHighlight)
+  const rawClusterId = layout.networks.nameHighlight
+    ? JSON.parse(layout.networks.nameHighlight)
+    : null
   const isHighlighting = !isNaN(rawClusterId)
   const activeClusterId = isHighlighting ? rawClusterId : null
   //
