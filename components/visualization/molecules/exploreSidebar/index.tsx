@@ -7,7 +7,6 @@ import {
   Transition,
 } from 'framer-motion'
 import { getColor, getTextColor } from 'utils/scales'
-import * as chroma from 'chroma-js'
 import { useState } from 'react'
 
 const sidebarVariants: Variants = {
@@ -34,19 +33,41 @@ const childrenVariantsTransition: Transition = {
   damping: 210,
 }
 
-const DUMMY_CONTENT = {
-  'instagram-post': {
-    url: '',
-    text: {
-      content: ['', ''],
-    },
-  },
-  text: {
-    content: ['', ''],
-  },
+interface ExploreSidebarClusterDetail {
+  type:
+    | ExploreSidebarTextContent['type']
+    | ExploreSidebarInstagramContent['type']
 }
 
-const DetailSidebar = ({
+interface ExploreSidebarTextContent extends ExploreSidebarClusterDetail {
+  type: 'text'
+  text: string[]
+}
+
+interface ExploreSidebarInstagramContent extends ExploreSidebarClusterDetail {
+  type: 'instagram-embed'
+  image: string
+  caption: string
+  text: ExploreSidebarTextContent['text']
+}
+
+const DUMMY_CONTENT: (
+  | ExploreSidebarInstagramContent
+  | ExploreSidebarTextContent
+)[] = [
+  {
+    type: 'instagram-embed',
+    image: '',
+    caption: '',
+    text: [],
+  },
+  {
+    type: 'text',
+    text: [],
+  },
+]
+
+const ExploreSidebar = ({
   activeCluster,
 }: {
   activeCluster: ClusterObjectProps
@@ -395,4 +416,4 @@ const Divider = () => {
   )
 }
 
-export default DetailSidebar
+export default ExploreSidebar
