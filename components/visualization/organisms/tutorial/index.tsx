@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 //
-import Spinner from 'components/atoms/spinner'
+import Spinner from 'components/visualization/atoms/spinner'
 
 const embedUrl =
   'https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2F38IPI1qJGKVA1ORVF8zYPf%2FCultural-Impact-Index%3Fpage-id%3D405%253A2895%26node-id%3D642%253A3312%26viewport%3D241%252C48%252C0.07%26scaling%3Dcontain%26starting-point-node-id%3D642%253A3312%26hotspot-hints%3D0'

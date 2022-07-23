@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fullstory/browser": "^1.6.1",
     "@nivo/bar": "^0.79.1",
     "@nivo/core": "^0.79.0",
     "@nivo/sankey": "^0.79.1",
@@ -19,6 +20,7 @@
     "@sanity/client": "^2.22.3",
     "@sentry/nextjs": "^6.19.6",
     "@types/three": "^0.136.1",
+    "chroma-js": "^2.4.2",
     "cors": "^2.8.5",
     "d3": "^7.3.0",
     "framer-motion": "^5.0.0",
@@ -26,8 +28,10 @@
     "module-alias": "^2.2.2",
     "next": "11.1.2",
     "react": "17.0.2",
+    "react-device-detect": "^2.2.2",
     "react-dom": "17.0.2",
     "react-ga": "^3.3.0",
+    "react-ga4": "^1.4.1",
     "react-media": "^1.10.0",
     "three": "^0.136.0"
   },

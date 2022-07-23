@@ -1,8 +1,7 @@
+import { LEGEND_LABELS } from '@/const/legend'
 import { useVizLayout } from '@/context/vizLayoutContext'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useMemo } from 'react'
-
-const labels = ['None', 'Very weak', 'Weak', 'Medium', 'Strong', 'Very strong']
 
 const Legend = () => {
   const [layout] = useVizLayout()
@@ -11,6 +10,8 @@ const Legend = () => {
 
   const isHighlighting = useMemo(() => {
     if (layout?.networks?.nameHighlight === undefined) return undefined
+
+    // why the f*ck did I write this?
     return JSON.parse(layout?.networks?.nameHighlight)
   }, [legend])
 
@@ -39,9 +40,12 @@ const Legend = () => {
             type: 'ease',
             ease: [0, 0, 0, 1],
           }}
-          className="absolute z-10 right-0 bottom-0 origin-bottom-right text-white bg-white bg-opacity-10 rounded-tl-lg p-4"
+          className="absolute z-10 w-[23.5%] right-0 bottom-0 origin-bottom-right text-white bg-black box-border bg-opacity-10 rounded-tl-lg p-3"
         >
-          <div>Overlap</div>
+          <div className="flex justify-between">
+            <span className="mr-2">Overlap</span>
+            <button className="text-sm underline">what is this?</button>
+          </div>
           <div className="flex mt-2">
             {legend &&
               legend.map((color, i) => {
@@ -52,7 +56,7 @@ const Legend = () => {
                       style={{ backgroundColor: color }}
                     />
                     <span key={i} className="mt-2 text-xs">
-                      {labels[i]}
+                      {LEGEND_LABELS[i]}
                     </span>
                   </div>
                 )

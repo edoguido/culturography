@@ -3,15 +3,14 @@ import { useEffect, useReducer } from 'react'
 import { VizLayoutContext, vizLayoutReducer } from '@/context/vizLayoutContext'
 import client from 'utils/cms'
 import { PROJECT_QUERY, ALL_PROJECTS_QUERY } from 'utils/cms/queries'
-import { globalCSSVarToPixels } from 'utils/theme'
 
-import Nav from 'components/molecules/nav'
-import DefaultLayout from 'components/layout/main'
-import Sidebar from 'components/organisms/sidebar'
-import NetworkComparison from 'components/organisms/networkComparison'
+import Nav from 'components/visualization/molecules/nav'
+import DefaultLayout from 'components/visualization/layout/main'
+import Sidebar from 'components/visualization/organisms/sidebar'
+import NetworkComparison from 'components/visualization/organisms/networkComparison'
 
 import { Leva } from 'leva'
-import { hideUiControls } from 'utils/index'
+// import { hideUiControls } from 'utils/index'
 import { MotionConfig } from 'framer-motion'
 
 const ProjectPage = ({ data }) => {
@@ -23,9 +22,7 @@ const ProjectPage = ({ data }) => {
     dispatch({
       type: 'SET',
       payload: {
-        // read this from localStorage
         read: true,
-        sidebarWidth: globalCSSVarToPixels('--sidebar-width'),
       },
     })
   }, [])
@@ -45,7 +42,7 @@ const ProjectPage = ({ data }) => {
               duration: 1.25,
             }}
           >
-            <div className="overflow-hidden fixed h-screen inset-0 bg-secondary">
+            <div className="overflow-hidden fixed h-screen inset-0 bg-text">
               <div className="relative w-full h-full">
                 <Nav title={title} />
                 <div className="relative w-full h-full">

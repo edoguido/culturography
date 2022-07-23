@@ -19,6 +19,7 @@ import blockText from './block.text'
 import blockContact from './block.contact'
 import richText from './richText'
 import footer from './footer'
+import storyExploreButton from './story.exploreButton'
 
 // Then we give our schema to the builder and provide the result to Sanity
 export default createSchema({
@@ -36,6 +37,7 @@ export default createSchema({
     storyNetwork,
     storyNetworkControl,
     storyChart,
+    storyExploreButton,
     // Landing page
     landing,
     blockText,

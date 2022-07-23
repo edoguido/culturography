@@ -4,7 +4,7 @@ import { PortableText } from '@portabletext/react'
 
 import useStories from '@/context/storiesContext'
 import { useState } from 'react'
-import Tutorial from 'components/organisms/tutorial'
+import Tutorial from 'components/visualization/organisms/tutorial'
 
 interface PhaseObject {
   description: string

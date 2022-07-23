@@ -1,8 +1,8 @@
 import { createElement, useEffect, useState } from 'react'
 import { apiFetch } from 'utils/cms'
 
-import BarChart from '../barChart'
-import SankeyChart from '../sankeyChart'
+import BarChart from './barChart'
+import SankeyChart from './sankeyChart'
 
 const CHART_TYPES = {
   sankey: SankeyChart,

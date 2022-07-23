@@ -16,6 +16,9 @@ export default {
           type: 'block',
         },
         {
+          type: 'story.exploreButton',
+        },
+        {
           type: 'story.chart',
         },
       ],
