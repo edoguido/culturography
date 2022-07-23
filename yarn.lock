@@ -152,6 +152,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@fullstory/browser@^1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@fullstory/browser/-/browser-1.6.1.tgz#dd3f2d3ce1dc72aa8e896f30cb5da83c72097816"
+  integrity sha512-WZ8mR5nluF7W8OhSe7J8FAyxDLOwDnI+0Jj8f+qBd5WsExwrtwb2LOO2064Gn+U3m2WI3tEo6WbHeMs6qtv0YA==
+
 "@hapi/accept@5.0.2":
   version "5.0.2"
   resolved "https://registry.npmjs.org/@hapi/accept/-/accept-5.0.2.tgz"
@@ -4536,6 +4541,11 @@ react-dropzone@^11.4.2:
     attr-accept "^2.2.1"
     file-selector "^0.2.2"
     prop-types "^15.7.2"
+
+react-ga4@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/react-ga4/-/react-ga4-1.4.1.tgz#6ee2a2db115ed235b2f2092bc746b4eeeca9e206"
+  integrity sha512-ioBMEIxd4ePw4YtaloTUgqhQGqz5ebDdC4slEpLgy2sLx1LuZBC9iYCwDymTXzcntw6K1dHX183ulP32nNdG7w==
 
 react-ga@^3.3.0:
   version "3.3.0"
