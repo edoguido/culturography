@@ -40,6 +40,8 @@ const SingleNetwork = ({ accessor, data, activeCluster }) => {
   //
   const accessorKey: string = `${accessor}_network_shapefile`
   const networkName: string = data[`${accessor}_network_name`]
+  const networkID: string = data[`${accessor}_network_id`].toUpperCase()
+
   const zoomLevel: string = layout.networks[accessor].zoomLevel
   //
   // is this the network on the left? or on the right?
@@ -97,7 +99,10 @@ const SingleNetwork = ({ accessor, data, activeCluster }) => {
   return (
     <div className="relative w-full h-full">
       {fetching && <Spinner />}
-      <NetworkLabel label={networkName} isSource={isSourceNetwork} />
+      <NetworkLabel
+        label={`${networkName} - ${networkID}`}
+        isSource={isSourceNetwork}
+      />
       <Cursor />
       <Canvas ref={canvasRef}>
         <ContextBridge>
