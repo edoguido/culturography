@@ -8,6 +8,7 @@ import {
 } from 'framer-motion'
 import { getColor, getTextColor } from 'utils/scales'
 import { useState } from 'react'
+import { NETWORK_MAP } from '@/const/networks'
 
 const sidebarVariants: Variants = {
   initial: { opacity: 1, x: '110%' },
@@ -179,7 +180,7 @@ const ExploreSidebar = ({
                     information about it
                   </motion.div>
                   {layout.clusters.map((c: ClusterObjectProps, i) => {
-                    const { cluster_id, cluster_original } = c
+                    const { cluster_id, cluster_original, network } = c
 
                     const clusterColor = getColor({
                       id: cluster_id,
@@ -187,10 +188,13 @@ const ExploreSidebar = ({
                       allClustersID,
                     })
 
+                    // const networkName = NETWORK_MAP[network]
+
                     return (
                       <ClusterButton
                         key={i}
                         label={c.name}
+                        network={network}
                         color={clusterColor}
                         onClick={() =>
                           handleClick({ cluster_id, cluster_original })
@@ -254,7 +258,7 @@ const ActiveClusterDetails = ({
             variants={childVariants}
             custom={0.5}
           >
-            Main communities linked to it
+            Strongest overlapping communities
           </motion.div>
           <motion.div variants={childVariants}>
             {activeClusterSimilarities.map(([clusterKey], i) => {
@@ -263,7 +267,8 @@ const ActiveClusterDetails = ({
                   c.cluster_id.toString() === clusterKey.toString()
               )
 
-              const { name, cluster_id, cluster_original } = clusterData
+              const { name, cluster_id, cluster_original, network } =
+                clusterData
 
               const clusterColor = getColor({
                 id: cluster_id,
@@ -275,6 +280,7 @@ const ActiveClusterDetails = ({
                 <ClusterButton
                   key={i}
                   label={name}
+                  network={network}
                   color={clusterColor}
                   onClick={() => onClick({ cluster_id, cluster_original })}
                 />
@@ -325,8 +331,7 @@ const NoClusterSimilarities = () => {
         variants={childVariants}
         custom={0.5}
       >
-        This community does not have meaningful links with others in the target
-        network
+        This community of users is not represented in the other network.
       </motion.div>
       <motion.button
         className="my-4 px-4 py-2 bg-accent text-text font-display font-medium rounded-full"
@@ -339,7 +344,7 @@ const NoClusterSimilarities = () => {
   )
 }
 
-const ClusterButton = ({ label, color, onClick }) => {
+const ClusterButton = ({ label, network, color, onClick }) => {
   const [hovering, setHovering] = useState(false)
 
   const textColor = getTextColor(color)
@@ -358,7 +363,7 @@ const ClusterButton = ({ label, color, onClick }) => {
 
   return (
     <motion.button
-      className={`${textColor} relative rounded-full my-1 text-center w-full p-4 hover:py-6 text-clip transition-all ease-out duration-300 select-none`}
+      className={`${textColor} relative rounded-full my-1 flex items-baseline justify-between w-full p-4 hover:py-6 text-clip transition-all ease-out duration-300 select-none`}
       variants={childVariants}
       style={{
         backgroundColor: color,
@@ -367,7 +372,8 @@ const ClusterButton = ({ label, color, onClick }) => {
       onPointerEnter={hoverIn}
       onPointerLeave={hoverOut}
     >
-      <span>{label}</span>
+      <span className="text-sm uppercase opacity-80">{network}</span>
+      <span className="flex-grow">{label}</span>
       <AnimatePresence>
         {hovering && (
           <motion.div

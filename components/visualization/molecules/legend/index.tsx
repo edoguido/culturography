@@ -44,7 +44,7 @@ const Legend = () => {
         >
           <div className="flex justify-between">
             <span className="mr-2">Overlap</span>
-            <button className="text-sm underline">what is this?</button>
+            {/* <button className="text-sm underline">what is this?</button> */}
           </div>
           <div className="flex mt-2">
             {legend &&
