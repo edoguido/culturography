@@ -33,14 +33,15 @@ const networkNames: [NetworkName, NetworkName] = [
 const NetworkComparison = ({ data }) => {
   const [layout, dispatch] = useVizLayout()
   const { read } = layout
-  const { block } = layout.story
+  const { block, chapter } = layout.story
+  //
+  const currentChapterData = data.story_chapters[chapter]
+  const metadataPath = currentChapterData.network_metadata.asset.path
   //
   useEffect(() => {
     if (!layout.networks) return null
 
     const fetchMetadata = async () => {
-      const metadataPath = data.network_metadata.asset.path
-
       const clusterMetadata = await fetch(
         `https://api.sanity.io/${metadataPath}`
       ).then((r) => r.json())
@@ -56,7 +57,7 @@ const NetworkComparison = ({ data }) => {
     }
 
     fetchMetadata().then(dispatchClustersState)
-  }, [data.network_metadata?.asset])
+  }, [metadataPath])
 
   const computeNetworkLayoutProperties = useCallback(
     ({ source, visible }) => {

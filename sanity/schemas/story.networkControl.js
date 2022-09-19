@@ -1,4 +1,4 @@
-import ClustersList from '../components/clustersList.jsx'
+// import ClustersList from '../components/clustersList.jsx'
 
 export default {
   name: 'story.networkControl',
@@ -17,13 +17,13 @@ export default {
       title: 'Show target network',
       initialValue: true,
     },
-    {
-      name: 'network_cluster_highlight',
-      type: 'string',
-      title: 'Cluster highlight',
-      description: 'Which cluster should be highighted?',
-      inputComponent: ClustersList,
-    },
+    // {
+    //   name: 'network_cluster_highlight',
+    //   type: 'string',
+    //   title: 'Cluster highlight',
+    //   description: 'Which cluster should be highighted?',
+    //   inputComponent: ClustersList,
+    // },
     {
       name: 'zoom_source_level',
       type: 'string',

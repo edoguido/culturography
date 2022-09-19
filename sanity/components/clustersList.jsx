@@ -5,7 +5,7 @@ import PatchEvent, { set, unset } from '@sanity/form-builder/PatchEvent'
 import { withDocument } from 'part:@sanity/form-builder'
 import { useId } from '@reach/auto-id'
 
-const accessorKey = 'network_metadata'
+const networkMetadata = 'network_metadata'
 
 function groupByNetwork(data) {
   const relevantClusters = data.filter((c) =>
@@ -49,7 +49,23 @@ const ClustersList = React.forwardRef((props, ref) => {
 
   React.useEffect(() => {
     async function getNetworkData() {
-      const fileReference = document[accessorKey].asset._ref
+      // How do we access the parent of the parent,
+      // so that I can populate the dropdown with the
+      // list of the current story chapter clusters?
+
+      const titleMatch = (c) => c.chapter_title === props.parent.block_title
+
+      function findChapterBlockIndex(chapter) {
+        return chapter.blocks.findIndex(titleMatch)
+      }
+
+      const storyBlockIndex = document.story_chapters.findIndex((chapter) => {
+        return findChapterBlockIndex(chapter)
+      })
+
+      const currentStoryBlock = document.story_chapters[storyBlockIndex]
+
+      const fileReference = currentStoryBlock[networkMetadata].asset._ref
       const [elementType, id, kind] = fileReference.split('-')
 
       const jsonData = await fetch(
@@ -60,7 +76,7 @@ const ClustersList = React.forwardRef((props, ref) => {
     }
 
     getNetworkData()
-      .then((data) => setListItems(data))
+      .then(setListItems)
       .catch((e) => {
         console.error(e)
         setListItems(null)
