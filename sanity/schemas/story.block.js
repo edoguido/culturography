@@ -1,3 +1,5 @@
+import clustersList from '../components/clustersList'
+
 export default {
   name: 'story.block',
   type: 'object',
@@ -7,6 +9,7 @@ export default {
       name: 'block_title',
       type: 'string',
       title: 'Block Title',
+      validation: (Rule) => Rule.required(),
     },
     {
       name: 'block_content',
@@ -22,6 +25,13 @@ export default {
           type: 'story.chart',
         },
       ],
+    },
+    {
+      name: 'network_cluster_highlight',
+      type: 'string',
+      title: 'Cluster highlight',
+      description: 'Which cluster should be highighted?',
+      inputComponent: clustersList,
     },
     {
       name: 'network_control',

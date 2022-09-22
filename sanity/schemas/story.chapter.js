@@ -9,6 +9,15 @@ export default {
       title: 'Chapter title',
     },
     {
+      name: 'network_metadata',
+      type: 'file',
+      title: 'Network metadata',
+      description: 'Information regarding clusters overlap',
+      options: {
+        accept: '.json',
+      },
+    },
+    {
       name: 'networks',
       type: 'story.network',
       title: 'Networks',

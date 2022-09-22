@@ -8,7 +8,8 @@ import {
 } from 'framer-motion'
 import { getColor, getTextColor } from 'utils/scales'
 import { useState } from 'react'
-import { NETWORK_MAP } from '@/const/networks'
+import { LAYOUT_MOTION_OPTIONS } from '@/const/motionProps'
+// import { NETWORK_MAP } from '@/const/networks'
 
 const sidebarVariants: Variants = {
   initial: { opacity: 1, x: '110%' },
@@ -104,12 +105,7 @@ const ExploreSidebar = ({
           animate="animate"
           exit="exit"
           variants={sidebarVariants}
-          transition={{
-            type: 'spring',
-            stiffness: 1800,
-            damping: 280,
-            staggerChildren: 0.15,
-          }}
+          transition={LAYOUT_MOTION_OPTIONS}
           className="bg-black p-4 overflow-scroll w-[23.5%] rounded-lg absolute z-0 top-0 h-[calc(100vh-var(--nav-height)-8.5rem)] right-0 flex-1"
         >
           <CloseButton />

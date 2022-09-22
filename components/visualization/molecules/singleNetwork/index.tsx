@@ -58,16 +58,6 @@ const SingleNetwork = ({ accessor, data, activeCluster }) => {
     const { asset }: { asset: { url: string; path: string } } =
       data[accessorKey]
 
-    // const options = {
-    //   method: 'GET',
-    //   mode: 'no-cors' as RequestMode,
-    //   headers: {
-    //     'Access-Control-Allow-Origin': '*',
-    //     'Content-Type': 'application/json',
-    //     accepts: 'application/json',
-    //   },
-    // }
-
     const dataset = await fetch(asset.url).then((r) => r.json())
     setFetching(false)
 

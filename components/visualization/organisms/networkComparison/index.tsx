@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 
 //
-import { motionOptions } from '@/const/motionProps'
+import { LAYOUT_MOTION_OPTIONS, motionOptions } from '@/const/motionProps'
 import { ClusterObjectProps, useVizLayout } from '@/context/vizLayoutContext'
 
 import Legend from 'components/visualization/molecules/legend'
@@ -33,14 +33,15 @@ const networkNames: [NetworkName, NetworkName] = [
 const NetworkComparison = ({ data }) => {
   const [layout, dispatch] = useVizLayout()
   const { read } = layout
-  const { block } = layout.story
+  const { block, chapter } = layout.story
+  //
+  const currentChapterData = data.story_chapters[chapter]
+  const metadataPath = currentChapterData.network_metadata.asset.path
   //
   useEffect(() => {
     if (!layout.networks) return null
 
     const fetchMetadata = async () => {
-      const metadataPath = data.network_metadata.asset.path
-
       const clusterMetadata = await fetch(
         `https://api.sanity.io/${metadataPath}`
       ).then((r) => r.json())
@@ -56,7 +57,7 @@ const NetworkComparison = ({ data }) => {
     }
 
     fetchMetadata().then(dispatchClustersState)
-  }, [data.network_metadata?.asset])
+  }, [metadataPath])
 
   const computeNetworkLayoutProperties = useCallback(
     ({ source, visible }) => {
@@ -155,11 +156,7 @@ const NetworkComparison = ({ data }) => {
                 initial={false}
                 animate={animate}
                 style={style}
-                transition={{
-                  type: 'spring',
-                  stiffness: 1800,
-                  damping: 280,
-                }}
+                transition={LAYOUT_MOTION_OPTIONS}
               >
                 <SingleNetwork
                   accessor={n}

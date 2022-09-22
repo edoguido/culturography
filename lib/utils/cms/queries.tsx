@@ -17,6 +17,9 @@ export const PROJECT_QUERY = (project) => `
     story_chapters[] {
       chapter_title,
       snapshot_date,
+      network_metadata {
+        asset ->
+      },
       networks {
         source_network_id,
         source_network_name,
@@ -30,6 +33,7 @@ export const PROJECT_QUERY = (project) => `
         }
       },
       blocks[] {
+        network_cluster_highlight,
         network_control,
         block_title,
         block_content[] {

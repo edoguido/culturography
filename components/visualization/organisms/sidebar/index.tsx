@@ -19,6 +19,7 @@ import { makeStoryPayload, useVizLayout } from '@/context/vizLayoutContext'
 
 // import SidebarChapterSelector from 'components/molecules/sidebarChapterSelector'
 import ChartSerializer from 'components/visualization/molecules/chartSerializer'
+import { LAYOUT_MOTION_OPTIONS } from '@/const/motionProps'
 
 const handleBlockChange = (refs, { trigger, callback }) => {
   refs.forEach((ref, i) => {
@@ -71,7 +72,7 @@ const SERIALIZERS = {
 const ExploreButton = ({ node }) => {
   const { label } = node
 
-  const [layout, dispatch] = useVizLayout()
+  const [, dispatch] = useVizLayout()
 
   function handleClick() {
     dispatch({ type: 'TOGGLE_READ_MODE' })
@@ -225,11 +226,7 @@ const Sidebar = ({ data }) => {
                 initial={false}
                 animate={{
                   left: sidebarShift,
-                  transition: {
-                    type: 'ease',
-                    ease: [0.8, 0, 0, 1],
-                    duration: 1.25,
-                  },
+                  transition: LAYOUT_MOTION_OPTIONS,
                 }}
               >
                 {data.story_chapters.map(
@@ -266,7 +263,7 @@ const Sidebar = ({ data }) => {
                                 <div
                                   key={j}
                                   ref={storyRefs[i].blocks[j]}
-                                  className={`h-[200vh] max-w-[var(--sidebar-width)] mx-auto`}
+                                  className={`h-[150vh] max-w-[var(--sidebar-width)] mx-auto`}
                                 >
                                   {block_content && (
                                     <div className="p-3 rounded-lg bg-opacity-50 bg-black backdrop-blur-lg">
