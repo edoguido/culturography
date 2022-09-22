@@ -93,7 +93,7 @@ button {
 
 .rich-text p {
   margin: 0;
-  line-height: 1.5;
+  font-weight: 400;
 }
 
 .rich-text ul {
@@ -107,7 +107,7 @@ button {
 
 @layer components {
   .rich-text {
-    @apply text-lg;
+    @apply text-xl;
   }
 }
 
