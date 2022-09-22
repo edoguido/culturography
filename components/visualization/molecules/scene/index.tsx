@@ -1,19 +1,17 @@
 import { Ref, useCallback, useEffect, useMemo, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import * as d3 from 'd3'
+import { useFrame } from '@react-three/fiber'
+import { OrthographicCamera } from '@react-three/drei'
 import { useControls } from 'leva'
 //
 import { ClusterObjectProps, useVizLayout } from '@/context/vizLayoutContext'
-import { LEGEND_NUM_STEPS } from '@/const/legend'
-import { useFrame } from '@react-three/fiber'
-import { lerp, polygonCentroid, round } from 'utils/math'
-import { OrthographicCamera } from '@react-three/drei'
+import { lerp, round } from 'utils/math'
 
 import {
   INITIAL_ZOOM,
   LERP_FACTOR,
   MAX_ZOOM,
-  MIN_SIMILARITY_THRESHOLD,
   NO_OVERLAP_COLOR,
   SCALES_RANGE,
   SCENE_CENTER,
@@ -81,6 +79,17 @@ const Scene = ({
     (d: ClusterObjectProps) => d.cluster_id
   )
 
+  const maxOverlap = useMemo(() => {
+    const out = []
+    dataset.allClusters.forEach((c: any) =>
+      Object.values(c.similarities)
+        .filter((s) => s > 0)
+        .map((s) => out.push(s))
+    )
+
+    return d3.max(out)
+  }, [])
+
   const hueScale = useCallback(
     (clustersid, id) => makeHueScale(clustersid, id),
     [allClustersID]
@@ -105,7 +114,7 @@ const Scene = ({
 
   const clusterColor = useCallback(
     ({ id, activeCluster, allClustersID }) =>
-      getColor({ id, activeCluster, allClustersID }),
+      getColor({ id, activeCluster, allClustersID, maxOverlap }),
     [highlightColor]
   )
 
