@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 
 //
-import { motionOptions } from '@/const/motionProps'
+import { LAYOUT_MOTION_OPTIONS, motionOptions } from '@/const/motionProps'
 import { ClusterObjectProps, useVizLayout } from '@/context/vizLayoutContext'
 
 import Legend from 'components/visualization/molecules/legend'
@@ -156,11 +156,7 @@ const NetworkComparison = ({ data }) => {
                 initial={false}
                 animate={animate}
                 style={style}
-                transition={{
-                  type: 'spring',
-                  stiffness: 1800,
-                  damping: 280,
-                }}
+                transition={LAYOUT_MOTION_OPTIONS}
               >
                 <SingleNetwork
                   accessor={n}
