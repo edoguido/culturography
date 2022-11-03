@@ -109,12 +109,16 @@ export default function Home({ data, stories, footer }) {
               ))}
             </motion.div> */}
 
-            <div className="relative z-30">
+            <div className="relative flex items-center justify-center z-30 bg-black">
               <iframe
-                src="https://dms.licdn.com/playlist/C4E05AQEdPPsaF4x7bw/mp4-720p-30fp-crf28/0/1663838884046?e=1666368000&v=beta&t=c2q4u5JCErL5efRGXN_Fm6D33Inm2i6eKzDwaAjDpZM"
-                width="100%"
-                className="z-50 aspect-video"
-              />
+                width="960"
+                height="640"
+                src="https://www.youtube.com/embed/OUHSarvuCxo?controls=0"
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
             </div>
 
             <div className="portable-text px-6 py-4 my-3 w-full text-3xl md:text-5xl lg:flex items-baseline justify-between relative z-10">
