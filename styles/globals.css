@@ -105,6 +105,10 @@ button {
   padding: 0.3125rem 0;
 }
 
+.iframe video.media-document.audio.mac {
+  height: 50vh;
+}
+
 @layer components {
   .rich-text {
     @apply text-xl;
