@@ -57,6 +57,10 @@ h6 {
   color: var(--accent);
 }
 
+.portable-text p {
+  letter-spacing: -0.5px;
+}
+
 a {
   color: black;
   text-decoration: none;

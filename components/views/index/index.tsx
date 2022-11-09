@@ -121,30 +121,52 @@ export default function Home({ data, stories, footer }) {
               ></iframe>
             </div>
 
-            <div className="portable-text px-6 py-4 my-3 w-full text-3xl md:text-5xl lg:flex items-baseline justify-between relative z-10">
-              <div>
-                <h2 className="font-display text-left">
-                  What is Culturography?
-                </h2>
-              </div>
-              <h3 className="leading-[1.25] font-sans font-light text-2xl md:text-4xl max-w-5xl">
-                <PortableText value={abstract} />
-              </h3>
-            </div>
-
-            <div className="px-6 pt-4">
-              <BlockSerializer blocks={blocks} accessor={(b) => b._type} />
-
-              <div className="py-4 border-t-2 border-text">
-                <div className="shrink py-4">
-                  Curious to know more about the project and the method? ↘
+            <div className="portable-text text-3xl md:text-4xl">
+              <div className="px-6 py-4 my-3 w-full lg:flex items-baseline justify-between relative z-10">
+                <div>
+                  <h2 className="font-display text-left">Why Culturography?</h2>
                 </div>
-                <div className="leading-[1.25] text-2xl lg:text-3xl lg:flex lg:justify-between">
-                  {strings.contact.map((line, i) => (
-                    <p key={i} className="w-full py-1">
-                      {line}
-                    </p>
-                  ))}
+                <h3 className="leading-[1.25] font-sans font-light text-2xl md:text-3xl max-w-5xl">
+                  <p>
+                    In the 21st century, debates about societal issues are not
+                    only taking place in public squares, on TV or in salons. On
+                    a daily basis, people interact with each other and discuss
+                    important issues in a new arena - online.
+                  </p>
+                  <p>
+                    It is therefore essential for organizations who want to take
+                    a stand on important agendas such as climate, equality,
+                    youth empowerment, etc, to understand how their communities
+                    engage in these topics online.
+                  </p>
+                </h3>
+              </div>
+
+              <div className="px-6 py-4 my-3 w-full lg:flex items-baseline justify-between relative z-10">
+                <div>
+                  <h2 className="font-display text-left">
+                    What is Culturography?
+                  </h2>
+                </div>
+                <h3 className="leading-[1.25] font-sans font-light text-2xl md:text-3xl max-w-5xl">
+                  <PortableText value={abstract} />
+                </h3>
+              </div>
+
+              <div className="px-6 pt-4">
+                <BlockSerializer blocks={blocks} accessor={(b) => b._type} />
+
+                <div className="py-4 border-t-[1px] border-text">
+                  <div className="shrink py-4 font-display text-3xl lg:text-5xl">
+                    Curious to know more about the project? ↘
+                  </div>
+                  <div className="leading-[1.25] text-2xl lg:text-3xl lg:flex lg:justify-between">
+                    {strings.contact.map((line, i) => (
+                      <p key={i} className="w-full py-1">
+                        {line}
+                      </p>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

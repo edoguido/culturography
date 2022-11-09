@@ -32,7 +32,7 @@ const ProjectPhasesBlock = (props) => {
 
   return (
     <>
-      <div className="portable-text py-4 my-3 w-full text-3xl md:text-5xl lg:flex items-baseline justify-between">
+      <div className="portable-text pt-8 py-4 my-3 w-full lg:flex items-baseline justify-between border-t-2 border-accent">
         <div>
           <h2 className="font-display text-left">{title}</h2>
           <button className="w-full text-left" onClick={showTutorial}>
@@ -44,7 +44,7 @@ const ProjectPhasesBlock = (props) => {
         <AnimatePresence>
           {tutorial && <Tutorial onClose={hideTutorial} />}
         </AnimatePresence>
-        <h3 className="leading-[1.25] font-sans font-light text-2xl md:text-4xl max-w-5xl">
+        <h3 className="leading-[1.25] font-sans font-light text-2xl md:text-3xl max-w-5xl">
           <PortableText value={description} />
         </h3>
         {/* <h3 className="leading-[1.25] font-sans font-light text-2xl md:text-4xl max-w-5xl text-right">
@@ -77,16 +77,18 @@ const ProjectPhasesBlock = (props) => {
             return (
               <motion.div
                 key={i}
-                className="relative w-full mb-12 lg:mx-4 first:ml-0 last:ml-0 border-t-2 border-accent"
+                className="relative w-full mb-12 lg:mx-4 first:ml-0 last:ml-0 border-t-[1px] border-accent"
               >
-                <div className="shrink my-2">{phase_title} ↘</div>
-                <h3 className="my-2 text-4xl">{phase_description}</h3>
+                <div className="shrink my-2 py-2 text-sm">
+                  {phase_title} Phase ↘
+                </div>
+                <h3 className="my-2 text-3xl">{phase_description}</h3>
                 {/* <div className="shrink my-2">{label}</div> */}
                 <div>
                   {storiesOfPhase.map(({ slug, title }) => (
                     <Link key={slug.current} href={slug.current}>
                       <a className="inline-block bg-accent rounded-full text-xl px-4 py-2 my-2">
-                        <h3 className="font-medium">{title} →</h3>
+                        <h3 className="font-medium text-black">{title} →</h3>
                       </a>
                     </Link>
                   ))}

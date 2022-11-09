@@ -5,8 +5,13 @@ const TextBlock = (props) => {
 
   return (
     <>
-      <div id={hash} className="portable-text py-4 border-t-2 border-text">
-        <div className="shrink py-4">{title} ↘</div>
+      <div
+        id={hash}
+        className="portable-text py-4 pb-8 border-t-[1px] border-text"
+      >
+        <div className="font-display shrink py-4 text-3xl lg:text-5xl">
+          {title} ↘
+        </div>
         <div className="leading-[1.25] text-2xl lg:text-3xl lg:grid grid-cols-2 gap-16">
           <PortableText value={blocks} />
           {/* <p className="">
